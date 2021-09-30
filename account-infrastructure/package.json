@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "scripts": {
+    "archive": "zip -r archive.zip . -x .terraform/\\*"
+  }
+}

@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "./.github/workflows",
+			"name": "GitHub Actions"
+		},
+		{
+			"path": "./api",
+			"name": "API"
+		},
+		{
+			"path": "./account-infrastructure",
+			"name": "Account Infrastructure"
+		},
+		{
+			"path": "./env-infrastructure",
+			"name": "Env Infrastructure"
+		}
+	],
+	"settings": {}
+}
