@@ -13,7 +13,7 @@ export type Token = {
   permissions: string[]
   scopes: string[]
   entity: string
-  provider: 'or' | 'google'
+  provider: 'nfg' | 'google'
   atok?: string
 }
 
@@ -26,7 +26,7 @@ export const create = ({
   ttl = 60,
   permissions = [],
   scopes = [],
-  provider = 'or',
+  provider = 'nfg',
   extra = {}
 }: {
   entity: string
@@ -37,7 +37,7 @@ export const create = ({
   ttl?: number
   permissions?: Permission[]
   scopes?: string[]
-  provider?: 'or' | 'google',
+  provider?: 'nfg' | 'google',
   extra?: any
 }): string => {
 

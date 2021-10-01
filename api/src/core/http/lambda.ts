@@ -13,7 +13,7 @@ import logger from '../../core/logger'
 
 export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambda.APIGatewayEvent, context: AWSLambda.Context) => {
 
-  const rid = `or.rid.${uuid().substr(0, 7)}`
+  const rid = `nfg.rid.${uuid().substr(0, 7)}`
 
   logger.debug(`[${rid}] aws lambda event: `)
   logger.debug(event)

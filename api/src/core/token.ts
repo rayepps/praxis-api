@@ -16,10 +16,10 @@ export function generateToken(user: t.User, aptoToken?: string) {
     return createToken({
         sub: user.id,
         type: 'id',
-        aud: 'or.app',
-        iss: 'or.api',
+        aud: 'nfg.app',
+        iss: 'nfg.api',
         entity: 'user',
-        provider: 'or',
+        provider: 'nfg',
         permissions: permissionsForUser(user),
         extra: {
             atok: aptoToken ?? null,

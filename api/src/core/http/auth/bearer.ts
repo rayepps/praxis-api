@@ -13,7 +13,7 @@ import config from '../../../config'
 
 interface JWTAuthOptions {
     type?: 'id' | 'access'
-    iss?: 'or.api'
+    iss?: 'nfg.api'
     permission?: Permission
     scope?: string
     [key: string]: string | number | any

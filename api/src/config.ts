@@ -24,15 +24,13 @@ const config = {
     service: get('NOTFORGLORY_SERVICE'),
     function: get('NOTFORGLORY_FUNCTION'),
     baseUrl: get('NOTFORGLORY_API_URL'),
-    developer: get('NOTFORGLORY_LOCAL_DEVELOPER'),
-    stripeKey: get('STRIPE_KEY'),
-    stripeSecret: get('STRIPE_SECRET'),
-    stripeWebhookSecret: get('STRIPE_WEBHOOK_SECRET'),
+    developer: get('LOCAL_DEVELOPER'),
     tokenSignatureSecret: get('TOKEN_SIG_SECRET'),
-    dynamoTableName: get('DYNAMO_TABLE_NAME'),
-    googleClientEmail: get('GOOGLE_CLIENT_EMAIL'),
-    googlePrivateKey: get('GOOGLE_PRIVATE_KEY'),
-    googleProjectId: get('GOOGLE_PROJECT_ID')
+    graphcmsWebhookSignatureSecret: get('GRAPHCMS_WEBHOOK_SIGNATURE_SECRET'),
+    graphcmsWebhookKey: get('GRAPHCMS_WEBHOOK_KEY'),
+    graphcmsApiToken: get('GRAPHCMS_API_TOKEN'),
+    graphcmsApiUrl: get('GRAPHCMS_API_URL'),
+    googleGeocodingApiKey: get('GOOGLE_GEOCODING_API_KEY')
 }
 
 export type Config = typeof config

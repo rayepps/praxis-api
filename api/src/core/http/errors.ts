@@ -1,7 +1,7 @@
 import { ApiError } from './types'
 import _ from 'radash'
 
-export const ERROR_KEY = 'or.api.err'
+export const ERROR_KEY = 'nfg.api.err'
 
 
 const createError = (error: Omit<ApiError, 'name'>) => ({

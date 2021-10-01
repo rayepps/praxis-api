@@ -6,7 +6,7 @@ import { json } from 'body-parser'
 import * as lama from 'aws-lama'
 import { APIGatewayProxyEvent, APIGatewayEventRequestContext } from 'aws-lambda'
 
-const PORT = 7700
+const PORT = 8800
 
 const api = express()
 api.use(json())
