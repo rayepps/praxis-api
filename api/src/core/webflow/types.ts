@@ -77,7 +77,6 @@ export interface Training extends BaseEntity {
     slug: string
     webflowId: string
     hash: Hash | null
-    displayPrice: string | null
 }
 
 export interface Instructor extends BaseEntity {

@@ -12,13 +12,9 @@ import errors from '../http/errors'
  */
 export async function withWebhookSignature(func: ComposedApiFunc, secret: string, props: ApiRequestProps) {
 
-  console.log('withWebhookSignature(): secret: ', secret)
-
   const { headers, body } = props.meta
   
   const signature = headers['gcms-signature']
-
-  console.log('withWebhookSignature(): signature: ', signature)
 
   if (!signature) {
     throw errors.unauthorized({

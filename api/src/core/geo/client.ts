@@ -19,4 +19,15 @@ export class GeoClient {
     }
   }
 
+  async lookupAddress(address: string): Promise<{
+    lat: number
+    lon: number
+  }> {
+    const [location] = await this.geocoder.geocode(address)
+    return {
+      lat: location.latitude,
+      lon: location.longitude
+    }
+  }
+
 }

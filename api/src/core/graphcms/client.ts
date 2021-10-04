@@ -37,9 +37,13 @@ export class GraphCMS {
           type
           name
           link
+          price
           company {
             id
             name
+            thumbnail {
+              id
+            }
           }
           gallery {
             id
@@ -73,7 +77,7 @@ export class GraphCMS {
     const response = await this.client.request<{ training: Partial<t.Training> }>(query)
     return response.training.updatedBy
   }
-  
+
   async findEvent(id: string): Promise<t.Event> {
     const query = gql`
       query findEvent {
@@ -144,30 +148,40 @@ export class GraphCMS {
     await this.client.request(mutation)
   }
 
-  async updateTraining(id: string, data: Partial<t.Training>): Promise<void> {
+  async updateTraining(id: string, data: Pick<t.Training, 'gallery' | 'thumbnail' | 'hash' | 'displayPrice'>): Promise<void> {
     const mutation = gql`
-      mutation {
+      mutation enrichTraining($data: TrainingUpdateInput!) {
         updateTraining(
           where: {
             id: "${id}"
           }
-          data: {
-            thumbnail: {
-              connect: {
-                id: "${data.thumbnail.id}"
-              }
-            }
-            hash: {
-              raw: "${data.hash.raw}"
-              fields: [${data.hash.fields.map(f => `"${f}"`).join(',')}]
-            }
-          }
+          data: $data
         ) {
           id
         }
       }
     `
-    await this.client.request(mutation)
+    await this.client.request(mutation, {
+      data: {
+        gallery: {
+          connect: data.gallery.map(asset => ({
+            where: {
+              id: asset.id
+            }
+          }))
+        },
+        thumbnail: {
+          connect: {
+            id: data.thumbnail.id
+          }
+        },
+        hash: {
+          raw: data.hash.raw,
+          fields: data.hash.fields
+        },
+        displayPrice: data.displayPrice
+      }
+    })
   }
 
 

@@ -34,16 +34,19 @@ async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args
         return
     }
 
-    if (training.gallery.length === 0) {
-        return
-    }
-
-    const thumbnail = training.gallery[0]
+    // If no gallery images were added. We should set the
+    // gallery and the thumbnail to the company's images
+    const hasGalleryImages = training.gallery.length > 0
+    const gallery = hasGalleryImages
+        ? training.gallery
+        : [training.company.thumbnail]
 
     await graphcms.updateTraining(training.id, {
+        gallery,
         thumbnail: {
-            id: thumbnail.id
+            id: gallery[0].id
         } as t.Asset,
+        displayPrice: formatPrice(training.price),
         hash: Hashable.hash(training, identify)
     })
 }
@@ -51,8 +54,22 @@ async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args
 const identify = (training: t.Training): object => {
     return {
         id: training.id,
-        gallery: training.gallery.map(asset => asset.id).join("-")
+        price: training.price
     }
+}
+
+/**
+ * 23      -> $23
+ * 458     -> $458
+ * 800.50  -> $800.50
+ * 12345   -> $12,345
+ * 1452.02 -> $1,452.02
+ */
+const formatPrice = (price: number): string => {
+    if (!price) return null
+    const withCommas = price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    const withoutEmptyDecimals = withCommas.replace(/\.00$/, '')
+    return `$${withoutEmptyDecimals}`
 }
 
 export default _.compose(
