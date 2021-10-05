@@ -62,3 +62,27 @@ jobs:
         working-directory: ./api/tf
       - run: terraform apply -auto-approve -var-file uat.tfvars
         working-directory: ./api/tf
+  app:
+    name: Deploy Search App
+    runs-on: ubuntu-latest
+    needs: infrastructure
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          cache: 'yarn'
+          cache-dependency-path: search-app/yarn.lock
+      - run: yarn
+        working-directory: ./search-app
+      - run: yarn build
+        working-directory: ./search-app
+      - run: terraform init
+        working-directory: ./search-app/tf
+      - run: terraform workspace select uat
+        working-directory: ./search-app/tf
+      - run: terraform apply -auto-approve -var-file uat.tfvars
+        working-directory: ./search-app/tf

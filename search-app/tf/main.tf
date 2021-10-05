@@ -5,11 +5,11 @@
 
 locals {
   env_domain_map = {
-    "pr" : "pr-${var.pr_number}-app.lunez.run",
-    "eng" : "eng-${var.engineer}-app.lunez.run",
-    "staging" : "staging-app.lunez.run",
-    "uat" : "uat-app.lunez.run",
-    "prod" : "app.lunecard.com"
+    "pr" : "pr-${var.pr_number}-app.notforglory.link",
+    "eng" : "eng-${var.engineer}-app.notforglory.link",
+    "staging" : "staging-app.notforglory.link",
+    "uat" : "uat-app.notforglory.link",
+    "prod" : "app.notforglory.link"
   }
   env_name_map = {
     "pr" : "pr-${var.pr_number}",
@@ -18,15 +18,13 @@ locals {
     "uat" : "uat",
     "prod" : "prod"
   }
-
   domain   = local.env_domain_map[var.env]
   env_name = local.env_name_map[var.env]
-  is_prod  = var.env == "prod"
-  tld      = local.is_prod ? "lunecard.com" : "lunez.run"
+  tld      = "notforglory.link"
   tags = {
-    LuneEnv     = var.env
-    LuneEnvName = local.env_name
-    LuneProject = "lune-app"
+    PraxisEnv     = var.env
+    PraxisEnvName = local.env_name
+    PraxisProject = "praxis-search-app"
   }
 }
 
@@ -54,7 +52,7 @@ data "aws_route53_zone" "main" {
 locals {
   account_number = data.aws_caller_identity.current.account_id
   project_root   = abspath("..")
-  project_name   = "lune-app"
+  project_name   = "praxis-search-app"
 }
 
 
@@ -201,7 +199,6 @@ resource "aws_route53_record" "website_cdn_root_record" {
   zone_id = data.aws_route53_zone.main.zone_id
   name    = local.domain
   type    = "A"
-
   alias {
     name                   = aws_cloudfront_distribution.website_cdn_root.domain_name
     zone_id                = aws_cloudfront_distribution.website_cdn_root.hosted_zone_id

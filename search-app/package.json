@@ -5,7 +5,7 @@
   "scripts": {
     "dev": ". ./env.sh && PORT=7705 SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "dev-local-api": "SKIP_PREFLIGHT_CHECK=true PORT=7705 react-scripts start",
-    "build": "SKIP_PREFLIGHT_CHECK=true CI= react-scripts build && node ./directify.js",
+    "build": "SKIP_PREFLIGHT_CHECK=true CI= react-scripts build",
     "archive": "zip -r archive.zip . -x node_modules/\\* -x src/\\* -x \\*.zip",
     "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test",
     "eject": "react-scripts eject",
