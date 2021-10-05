@@ -66,11 +66,6 @@ export default function SearchScene() {
     const companies = listCompaniesRequest.data?.companies ?? []
     const tags = listTagsRequest.data?.tags ?? []
 
-    console.log('\nevents:')
-    console.log(events)
-    console.log('\nfilters:')
-    console.log(filters)
-
     return (
         <Split>
             <SearchForm

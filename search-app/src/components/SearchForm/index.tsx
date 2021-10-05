@@ -36,14 +36,14 @@ export default function SearchForm({
 
   const [from, setFrom] = useState<DayValue | null>(null)
 
-  const removeType = (type: t.TrainingType) => onFiltersChange({
+  const setType = (type: t.TrainingType) => onFiltersChange({
     ...filters,
-    types: (filters.types ?? []).filter(t => t !== type)
+    type: type
   })
 
-  const addType = (type: t.TrainingType) => onFiltersChange({
+  const clearType = () => onFiltersChange({
     ...filters,
-    types: [...(filters.types ?? []), type]
+    type: undefined
   })
 
   const updateCompany = (companyId: string) => {
@@ -155,18 +155,18 @@ export default function SearchForm({
         <Heading marginBottom={majorScale(1)}>Type</Heading>
         <Checkbox
           label="Tactical"
-          checked={filters.types?.includes('tactical')}
-          onChange={e => (e.target.checked ? addType : removeType)('tactical')}
+          checked={filters.type === 'tactical'}
+          onChange={(e) => e.target.checked ? setType('tactical') : clearType()}
         />
         <Checkbox
           label="Survival"
-          checked={filters.types?.includes('survival')}
-          onChange={e => (e.target.checked ? addType : removeType)('survival')}
+          checked={filters.type === 'survival'}
+          onChange={(e) => e.target.checked ? setType('survival') : clearType()}
         />
         <Checkbox
           label="Medical"
-          checked={filters.types?.includes('medical')}
-          onChange={e => (e.target.checked ? addType : removeType)('medical')}
+          checked={filters.type === 'medical'}
+          onChange={(e) => e.target.checked ? setType('medical') : clearType()}
         />
       </Pane>
       {/* COMPANY */}
@@ -180,16 +180,16 @@ export default function SearchForm({
             filterPlaceholder="Choose company"
             onSelect={(item) => updateCompany(item.value as string)}
           >
-            <Button 
-              flex={1} 
+            <Button
+              flex={1}
               marginRight={majorScale(1)}
             >
               {companies.find(c => c.id === filters.company)?.name || 'Select company'}
             </Button>
           </SelectMenu>
-          <IconButton 
-            icon={HiX} 
-            onClick={clearCompany} 
+          <IconButton
+            icon={HiX}
+            onClick={clearCompany}
           />
         </Split>
       </Pane>

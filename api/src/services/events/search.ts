@@ -10,7 +10,7 @@ import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 
 interface Args {
   filters: {
-    types?: t.TrainingType[]
+    type?: t.TrainingType
     tags?: string[]
     state?: string
     city?: string
@@ -59,7 +59,7 @@ export default _.compose(
   useLambda(),
   useJsonArgs<Args>(yup => ({
     filters: yup.object({
-      types: yup.array().of(yup.string()),
+      type: yup.string(),
       tags: yup.array().of(yup.string()),
       state: yup.string(),
       city: yup.string(),

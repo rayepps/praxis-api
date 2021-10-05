@@ -7,6 +7,7 @@ import {
   Pane,
   Text,
   Heading,
+  Tooltip,
   minorScale,
   majorScale
 } from 'evergreen-ui'
@@ -37,25 +38,25 @@ export default function EventCard({
         position='relative'
         borderRadius={4}
       >
-        <Pane
-          backgroundImage={`url(${event.training.company?.thumbnail.url})`}
-          width={40}
-          height={40}
-          backgroundPosition='center center'
-          backgroundRepeat='no-repeat'
-          backgroundSize='cover'
-          position='absolute'
-          bottom={10}
-          right={10}
-        />
+        <Tooltip content={event.training.company?.name}>
+          <Pane
+            backgroundImage={`url(${event.training.company?.thumbnail?.url})`}
+            width={40}
+            height={40}
+            backgroundPosition='center center'
+            backgroundRepeat='no-repeat'
+            backgroundSize='cover'
+            position='absolute'
+            bottom={10}
+            right={10}
+          />
+        </Tooltip>
       </Pane>
       <Pane paddingTop={majorScale(1)}>
         <Split>
           <Text fontWeight='bold' color={theme.colors.green}>{format(start)}</Text>
           <Text marginX={minorScale(2)} color={theme.colors.yellow}>|</Text>
           <Text fontWeight='bold' color={theme.colors.green}>{event.city}, {event.state}</Text>
-          <Text marginX={minorScale(2)} color={theme.colors.yellow}>|</Text>
-          <Text fontWeight='bold' color={theme.colors.green}>{event.training.company.name}</Text>
         </Split>
         <Heading size={600}>{event.training.name}</Heading>
       </Pane>

@@ -319,7 +319,7 @@ export class GraphCMS {
     page
   }: {
     filters: {
-      types?: t.TrainingType[]
+      type?: t.TrainingType
       tags?: string[]
       state?: string
       city?: string
@@ -414,10 +414,10 @@ export class GraphCMS {
         })
       }
 
-      if (filters.types) {
+      if (filters.type) {
         vars.where.AND.push({
           training: {
-            type_in: filters.types
+            type: filters.type
           }
         })
       }

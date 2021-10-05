@@ -4,7 +4,7 @@ export type Dict<T> = { [key: string]: T }
 export type TrainingType = 'tactical' | 'medical' | 'survival'
 
 export interface SearchFilter {
-    types?: TrainingType[]
+    type?: TrainingType
     tags?: string[]
     state?: string
     city?: string
