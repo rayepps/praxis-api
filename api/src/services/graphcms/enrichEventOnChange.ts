@@ -2,6 +2,7 @@ import _ from 'radash'
 import * as t from '../../core/types'
 import formatDate from 'date-fns/format'
 import Hashable from '../../core/graphcms/hashable'
+import { slugger } from '../../core/model'
 import {
     useLambda,
     useService,
@@ -14,7 +15,7 @@ import config from '../../config'
 
 
 interface Args {
-    operation: 'update' | 'create' | 'delete'
+    operation: 'update' | 'create'
     data: {
         __typename: 'Event'
         id: string
@@ -38,6 +39,16 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
     }
 
     const location = await geo.lookupCoordinates(event.location.latitude, event.location.longitude)
+
+    const previousLocation = event.state ? slugger(`${event.state}-${event.city}`) : null
+    const newLocation = slugger(`${location.state}-${location.city}`)
+    const locationHasChange = previousLocation !== newLocation
+    if (locationHasChange) {
+        if (previousLocation) {
+            await graphcms.disconnectFromLocationMapping(event)
+        }
+        await graphcms.connectToLocationMapping(event)
+    }
 
     const newEvent = {
         ...event,

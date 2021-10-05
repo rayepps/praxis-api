@@ -19,7 +19,7 @@ const csvFile = (name: string) => {
 }
 
 const slug = (str: string) => {
-  return str.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-')
+  return str.toLowerCase().replace(/\s/g, '').replace(/[^a-z0-9]/g, '-')
 }
 
 const client = new GraphQLClient(config.graphcmsApiUrl, {

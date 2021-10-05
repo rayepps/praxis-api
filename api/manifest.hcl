@@ -11,4 +11,25 @@ service "graphcms" {
   endpoint "enrichTrainingOnChange" {
     version = "0.0.1"
   }
+  endpoint "cleanupEventOnDelete" {
+    version = "0.0.1"
+  }
+}
+
+service "events" {
+  endpoint "search" {
+    version = "0.0.1"
+  }
+}
+
+service "system" {
+  endpoint "listCompanies" {
+    version = "0.0.1"
+  }
+  endpoint "listCitiesInState" {
+    version = "0.0.1"
+  }
+  endpoint "listTags" {
+    version = "0.0.1"
+  }
 }

@@ -51,6 +51,11 @@ export interface Tag extends BaseEntity {
     slug: string
 }
 
+export interface LocationMetadata extends BaseEntity {
+    state: USState
+    cities: Record<string, number>
+}
+
 export interface Company extends BaseEntity {
     name: string
     key: string
@@ -98,7 +103,67 @@ export interface Event extends BaseEntity {
     link: string
     slug: string
     city: string
-    state: string
+    state: USState
     webflowId: string
     hash: Hash | null
 }
+
+export interface LocationMapping extends BaseEntity {
+    state: USState
+    city: string
+    slug: string
+    events: Event[]
+}
+
+export enum USState {
+    'AL' = 'AL',
+    'AK' = 'AK',
+    'AZ' = 'AZ',
+    'AR' = 'AR',
+    'CA' = 'CA',
+    'CO' = 'CO',
+    'CT' = 'CT',
+    'DE' = 'DE',
+    'FL' = 'FL',
+    'GA' = 'GA',
+    'HI' = 'HI',
+    'ID' = 'ID',
+    'IL' = 'IL',
+    'IN' = 'IN',
+    'IA' = 'IA',
+    'KS' = 'KS',
+    'KY' = 'KY',
+    'LA' = 'LA',
+    'ME' = 'ME',
+    'MD' = 'MD',
+    'MA' = 'MA',
+    'MI' = 'MI',
+    'MN' = 'MN',
+    'MS' = 'MS',
+    'MO' = 'MO',
+    'MT' = 'MT',
+    'NE' = 'NE',
+    'NV' = 'NV',
+    'NH' = 'NH',
+    'NJ' = 'NJ',
+    'NM' = 'NM',
+    'NY' = 'NY',
+    'NC' = 'NC',
+    'ND' = 'ND',
+    'OH' = 'OH',
+    'OK' = 'OK',
+    'OR' = 'OR',
+    'PA' = 'PA',
+    'RI' = 'RI',
+    'SC' = 'SC',
+    'SD' = 'SD',
+    'TN' = 'TN',
+    'TX' = 'TX',
+    'UT' = 'UT',
+    'VT' = 'VT',
+    'VA' = 'VA',
+    'WA' = 'WA',
+    'WV' = 'WV',
+    'WI' = 'WI',
+    'WY' = 'WY'
+  }

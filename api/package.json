@@ -13,7 +13,8 @@
     "lint": "eslint ./src --ext .ts",
     "precheck": "CI=true yarn test && CI=true yarn build && yarn transpile",
     "make-manifest": "ts-node src/ci/manifest.ts",
-    "importer": "source ./env.sh && ts-node src/dev/importer.ts"
+    "importer": "source ./env.sh && ts-node src/dev/importer.ts",
+    "seed": "source ./env.sh && ts-node src/dev/seed.ts"
   },
   "devDependencies": {
     "@graphcms/management": "^1.1.2",

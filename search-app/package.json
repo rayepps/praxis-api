@@ -1,0 +1,61 @@
+{
+  "name": "praxis-search-app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": ". ./env.sh && PORT=7705 SKIP_PREFLIGHT_CHECK=true react-scripts start",
+    "dev-local-api": "SKIP_PREFLIGHT_CHECK=true PORT=7705 react-scripts start",
+    "build": "SKIP_PREFLIGHT_CHECK=true CI= react-scripts build && node ./directify.js",
+    "archive": "zip -r archive.zip . -x node_modules/\\* -x src/\\* -x \\*.zip",
+    "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test",
+    "eject": "react-scripts eject",
+    "dir": "node ./directify.js",
+    "lint": "eslint ./src --ext .ts,.tsx",
+    "precheck": "CI=true yarn test && CI=true yarn build"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^2.7.1",
+    "date-fns": "^2.23.0",
+    "evergreen-ui": "^6.4.0",
+    "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
+    "radash": "^1.1.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.12.2",
+    "react-icons": "^4.2.0",
+    "react-modern-calendar-datepicker": "^3.1.6",
+    "react-scripts": "^4.0.3",
+    "recoil": "^0.4.0",
+    "styled-components": "^5.3.0",
+    "zod": "^3.7.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/lodash.debounce": "^4.0.6",
+    "@types/lodash.throttle": "^4.1.6",
+    "@types/node": "^16.6.1",
+    "@types/react": "^17.0.18",
+    "@types/react-dom": "^17.0.9",
+    "@types/styled-components": "^5.1.12",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "eslint": "^7.32.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "fs-extra": "^10.0.0",
+    "typescript": "^4.3.5"
+  }
+}
