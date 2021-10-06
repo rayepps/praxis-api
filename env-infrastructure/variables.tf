@@ -44,26 +44,30 @@ variable "api_key" {
   type = string
 }
 
-variable "stripe_key" {
+variable "graphcms_webhook_signature_secret" {
   type = string
 }
 
-variable "stripe_secret" {
+variable "graphcms_webhook_key" {
   type = string
 }
 
-variable "stripe_webhook_secret" {
+variable "graphcms_api_token" {
   type = string
 }
 
-variable "google_client_email" {
+variable "graphcms_api_url" {
   type = string
 }
 
-variable "google_private_key" {
+variable "webflow_api_token" {
   type = string
 }
 
-variable "google_project_id" {
+variable "webflow_site_id" {
+  type = string
+}
+
+variable "google_geocoding_api_key" {
   type = string
 }
