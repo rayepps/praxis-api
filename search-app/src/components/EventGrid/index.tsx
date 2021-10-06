@@ -17,6 +17,7 @@ export default function EventGrid({
       gridTemplateColumns='repeat(4, 1fr)'
       columnGap={majorScale(4)}
       rowGap={majorScale(4)}
+      paddingTop={majorScale(4)}
       paddingBottom={majorScale(4)}
     >
       {events.map(event => (
