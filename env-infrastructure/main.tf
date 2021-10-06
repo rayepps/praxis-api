@@ -39,63 +39,63 @@ locals {
 ##
 
 resource "aws_ssm_parameter" "token_sig_secret" {
-  name  = "/${local.env_name}/praxis/infrastructure/token_sig_secret"
+  name  = "/${local.env_name}/praxis_infrastructure/token_sig_secret"
   type  = "String"
   value = var.token_signature_secret
   tags  = local.tags
 }
 
 resource "aws_ssm_parameter" "api_key" {
-  name  = "/${local.env_name}/praxis/infrastructure/api_key"
+  name  = "/${local.env_name}/praxis_infrastructure/api_key"
   type  = "String"
   value = var.api_key
   tags  = local.tags
 }
 
 resource "aws_ssm_parameter" "graphcms_webhook_signature_secret" {
-  name  = "/${local.env_name}/praxis/infrastructure/graphcms_webhook_signature_secret"
+  name  = "/${local.env_name}/praxis_infrastructure/graphcms_webhook_signature_secret"
   type  = "String"
   value = var.graphcms_webhook_signature_secret
   tags  = local.tags
 }
 
 resource "aws_ssm_parameter" "graphcms_webhook_key" {
-  name  = "/${local.env_name}/praxis/infrastructure/graphcms_webhook_key"
+  name  = "/${local.env_name}/praxis_infrastructure/graphcms_webhook_key"
   type  = "String"
   value = var.graphcms_webhook_key
   tags  = local.tags
 }
 
 resource "aws_ssm_parameter" "graphcms_api_token" {
-  name  = "/${local.env_name}/praxis/infrastructure/graphcms_api_token"
+  name  = "/${local.env_name}/praxis_infrastructure/graphcms_api_token"
   type  = "String"
   value = var.graphcms_api_token
   tags  = local.tags
 }
 
 resource "aws_ssm_parameter" "graphcms_api_url" {
-  name  = "/${local.env_name}/praxis/infrastructure/graphcms_api_url"
+  name  = "/${local.env_name}/praxis_infrastructure/graphcms_api_url"
   type  = "String"
   value = var.graphcms_api_url
   tags  = local.tags
 }
 
 resource "aws_ssm_parameter" "webflow_api_token" {
-  name  = "/${local.env_name}/praxis/infrastructure/webflow_api_token"
+  name  = "/${local.env_name}/praxis_infrastructure/webflow_api_token"
   type  = "String"
   value = var.webflow_api_token
   tags  = local.tags
 }
 
 resource "aws_ssm_parameter" "webflow_site_id" {
-  name  = "/${local.env_name}/praxis/infrastructure/webflow_site_id"
+  name  = "/${local.env_name}/praxis_infrastructure/webflow_site_id"
   type  = "String"
   value = var.webflow_site_id
   tags  = local.tags
 }
 
 resource "aws_ssm_parameter" "google_geocoding_api_key" {
-  name  = "/${local.env_name}/praxis/infrastructure/google_geocoding_api_key"
+  name  = "/${local.env_name}/praxis_infrastructure/google_geocoding_api_key"
   type  = "String"
   value = var.google_geocoding_api_key
   tags  = local.tags

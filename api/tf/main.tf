@@ -6,15 +6,15 @@ locals {
   project_root = abspath("..")
   project_name = "praxis"
   domains = {
-    "pr" : "pr-${var.pr_number}-api.praxis.link",
-    "eng" : "eng-${var.engineer}-api.praxis.link",
-    "staging" : "staging-api.praxis.link",
-    "qa" : "qa-api.praxis.link",
-    "uat" : "uat-api.praxis.link",
-    "prod" : "api.praxis.link"
+    "pr" : "pr-${var.pr_number}-api.praxisco.link",
+    "eng" : "eng-${var.engineer}-api.praxisco.link",
+    "staging" : "staging-api.praxisco.link",
+    "qa" : "qa-api.praxisco.link",
+    "uat" : "uat-api.praxisco.link",
+    "prod" : "api.praxisco.link"
   }
   domain = local.domains[var.env]
-  tld    = "praxis.link"
+  tld    = "praxisco.link"
   env_name_map = {
     "pr" : "pr-${var.pr_number}",
     "eng" : "eng-${var.engineer}",
