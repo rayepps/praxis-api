@@ -1,5 +1,5 @@
 # Local values
-export NOTFORGLORY_ENV="local"
+export PRAXIS_ENV="local"
 export TOKEN_SIG_SECRET="nfg.token.signature"
 export LOG_LEVEL="debug"
 

@@ -9,18 +9,18 @@ locals {
     "prod" : "prod"
   }
   env_domain_map = {
-    "pr" : "notforglory.link",
-    "eng" : "notforglory.link",
-    "staging" : "notforglory.link",
-    "uat" : "notforglory.link",
-    "prod" : "notforglory.link"
+    "pr" : "praxisco.link",
+    "eng" : "praxisco.link",
+    "staging" : "praxisco.link",
+    "uat" : "praxisco.link",
+    "prod" : "praxisco.link"
   }
   asset_domain_map = {
-    "pr" : "pr-${var.pr_number}-assets.notforglory.link",
-    "eng" : "eng-${var.engineer}-assets.notforglory.link",
-    "staging" : "staging-assets.notforglory.link",
-    "uat" : "uat-assets.notforglory.link",
-    "prod" : "assets.notforglory.link"
+    "pr" : "pr-${var.pr_number}-assets.praxisco.link",
+    "eng" : "eng-${var.engineer}-assets.praxisco.link",
+    "staging" : "staging-assets.praxisco.link",
+    "uat" : "uat-assets.praxisco.link",
+    "prod" : "assets.praxisco.link"
   }
   is_prod      = var.env == "prod"
   domain       = local.env_domain_map[var.env]
@@ -28,9 +28,9 @@ locals {
   asset_domain = local.asset_domain_map[var.env]
   project      = "env-infrastructure"
   tags = {
-    NotForGloryEnv     = var.env
-    NotForGloryEnvName = local.env_name
-    NotForGloryProject = local.project
+    PraxisEnv     = var.env
+    PraxisEnvName = local.env_name
+    PraxisProject = local.project
   }
 }
 
@@ -39,58 +39,65 @@ locals {
 ##
 
 resource "aws_ssm_parameter" "token_sig_secret" {
-  name  = "/${local.env_name}/notforglory_infrastructure/token_sig_secret"
+  name  = "/${local.env_name}/praxis/infrastructure/token_sig_secret"
   type  = "String"
   value = var.token_signature_secret
   tags  = local.tags
 }
 
 resource "aws_ssm_parameter" "api_key" {
-  name  = "/${local.env_name}/notforglory_infrastructure/api_key"
+  name  = "/${local.env_name}/praxis/infrastructure/api_key"
   type  = "String"
   value = var.api_key
   tags  = local.tags
 }
 
-resource "aws_ssm_parameter" "stripe_key" {
-  name  = "/${local.env_name}/notforglory_infrastructure/stripe_key"
+resource "aws_ssm_parameter" "graphcms_webhook_signature_secret" {
+  name  = "/${local.env_name}/praxis/infrastructure/graphcms_webhook_signature_secret"
   type  = "String"
-  value = var.stripe_key
+  value = var.graphcms_webhook_signature_secret
   tags  = local.tags
 }
 
-resource "aws_ssm_parameter" "stripe_secret" {
-  name  = "/${local.env_name}/notforglory_infrastructure/stripe_secret"
+resource "aws_ssm_parameter" "graphcms_webhook_key" {
+  name  = "/${local.env_name}/praxis/infrastructure/graphcms_webhook_key"
   type  = "String"
-  value = var.stripe_secret
+  value = var.graphcms_webhook_key
   tags  = local.tags
 }
 
-resource "aws_ssm_parameter" "stripe_webhook_secret" {
-  name  = "/${local.env_name}/notforglory_infrastructure/stripe_webhook_secret"
+resource "aws_ssm_parameter" "graphcms_api_token" {
+  name  = "/${local.env_name}/praxis/infrastructure/graphcms_api_token"
   type  = "String"
-  value = var.stripe_webhook_secret
+  value = var.graphcms_api_token
   tags  = local.tags
 }
 
-resource "aws_ssm_parameter" "google_client_email" {
-  name  = "/${local.env_name}/notforglory_infrastructure/google_client_email"
+resource "aws_ssm_parameter" "graphcms_api_url" {
+  name  = "/${local.env_name}/praxis/infrastructure/graphcms_api_url"
   type  = "String"
-  value = var.google_client_email
+  value = var.graphcms_api_url
   tags  = local.tags
 }
 
-resource "aws_ssm_parameter" "google_private_key" {
-  name  = "/${local.env_name}/notforglory_infrastructure/google_private_key"
+resource "aws_ssm_parameter" "webflow_api_token" {
+  name  = "/${local.env_name}/praxis/infrastructure/webflow_api_token"
   type  = "String"
-  value = var.google_private_key
+  value = var.webflow_api_token
   tags  = local.tags
 }
 
-resource "aws_ssm_parameter" "google_project_id" {
-  name  = "/${local.env_name}/notforglory_infrastructure/google_project_id"
+resource "aws_ssm_parameter" "webflow_site_id" {
+  name  = "/${local.env_name}/praxis/infrastructure/webflow_site_id"
   type  = "String"
-  value = var.google_project_id
+  value = var.webflow_site_id
+  tags  = local.tags
+}
+
+resource "aws_ssm_parameter" "google_geocoding_api_key" {
+  name  = "/${local.env_name}/praxis/infrastructure/google_geocoding_api_key"
+  type  = "String"
+  value = var.google_geocoding_api_key
   tags  = local.tags
 }
 
@@ -104,9 +111,9 @@ module "cdn" {
   # Cloud Posse recommends pinning every module to a specific version
   version = "0.68.0"
 
-  // Ex. bucket name: dev-notforglory-assets, pr-104-notforglory-assets
+  // Ex. bucket name: dev-praxis-assets, pr-104-praxis-assets
   namespace = local.env_name
-  stage     = "notforglory"
+  stage     = "praxis"
   name      = "assets"
   delimiter = "-"
 
@@ -137,7 +144,7 @@ module "cdn" {
 }
 
 resource "aws_ssm_parameter" "asset_cdn_bucket_name" {
-  name  = "/${local.env_name}/notforglory_infrastructure/asset_cdn_bucket_name"
+  name  = "/${local.env_name}/praxis_infrastructure/asset_cdn_bucket_name"
   type  = "String"
   value = module.cdn.s3_bucket
   tags  = local.tags

@@ -32,6 +32,9 @@ jobs:
           terraform_version: 1.0.3
       - run: terraform init
         working-directory: ./env-infrastructure
+      - run: terraform workspace new uat
+        continue-on-error: true # In case workspace already exists (this is anytime after first deploy)
+        working-directory: ./env-infrastructure
       - run: terraform workspace select uat
         working-directory: ./env-infrastructure
       - run: terraform apply -auto-approve -var-file uat.tfvars
@@ -58,6 +61,9 @@ jobs:
         working-directory: ./api
       - run: terraform init
         working-directory: ./api/tf
+      - run: terraform workspace new uat
+        continue-on-error: true # In case workspace already exists (this is anytime after first deploy)
+        working-directory: ./api/tf
       - run: terraform workspace select uat
         working-directory: ./api/tf
       - run: terraform apply -auto-approve -var-file uat.tfvars
@@ -81,6 +87,9 @@ jobs:
       - run: yarn build
         working-directory: ./search-app
       - run: terraform init
+        working-directory: ./search-app/tf
+      - run: terraform workspace new uat
+        continue-on-error: true # In case workspace already exists (this is anytime after first deploy)
         working-directory: ./search-app/tf
       - run: terraform workspace select uat
         working-directory: ./search-app/tf

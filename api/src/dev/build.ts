@@ -3,7 +3,7 @@ import shell from '../core/util/shell'
 
 const root = __dirname.replace('/src/dev', '')
 const build = `${root}/build`
-const zip = `${root}/notforglory-api.zip`
+const zip = `${root}/praxis-api.zip`
 
 async function main () {
 

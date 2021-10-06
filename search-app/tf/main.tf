@@ -5,11 +5,11 @@
 
 locals {
   env_domain_map = {
-    "pr" : "pr-${var.pr_number}-app.notforglory.link",
-    "eng" : "eng-${var.engineer}-app.notforglory.link",
-    "staging" : "staging-app.notforglory.link",
-    "uat" : "uat-app.notforglory.link",
-    "prod" : "app.notforglory.link"
+    "pr" : "pr-${var.pr_number}-app.praxisco.link",
+    "eng" : "eng-${var.engineer}-app.praxisco.link",
+    "staging" : "staging-app.praxisco.link",
+    "uat" : "uat-app.praxisco.link",
+    "prod" : "app.praxisco.link"
   }
   env_name_map = {
     "pr" : "pr-${var.pr_number}",
@@ -20,7 +20,7 @@ locals {
   }
   domain   = local.env_domain_map[var.env]
   env_name = local.env_name_map[var.env]
-  tld      = "notforglory.link"
+  tld      = "praxisco.link"
   tags = {
     PraxisEnv     = var.env
     PraxisEnvName = local.env_name

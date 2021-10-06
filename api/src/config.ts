@@ -13,17 +13,17 @@ const getRegion = (env: string) => {
     if (env === 'prod') return 'us-east-1'
 }
 
-const env = get('NOTFORGLORY_ENV')
+const env = get('PRAXIS_ENV')
 
 const config = {
     env,
     region: getRegion(env),
     logLevel: get('LOG_LEVEL'),
-    version: get('NOTFORGLORY_VERSION'),
-    apiKey: get('NOTFORGLORY_API_KEY'),
-    service: get('NOTFORGLORY_SERVICE'),
-    function: get('NOTFORGLORY_FUNCTION'),
-    baseUrl: get('NOTFORGLORY_API_URL'),
+    version: get('PRAXIS_VERSION'),
+    apiKey: get('PRAXIS_API_KEY'),
+    service: get('PRAXIS_SERVICE'),
+    function: get('PRAXIS_FUNCTION'),
+    baseUrl: get('PRAXIS_API_URL'),
     developer: get('LOCAL_DEVELOPER'),
     tokenSignatureSecret: get('TOKEN_SIG_SECRET'),
     graphcmsWebhookSignatureSecret: get('GRAPHCMS_WEBHOOK_SIGNATURE_SECRET'),

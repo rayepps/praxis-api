@@ -1,7 +1,7 @@
 
 resource "aws_dynamodb_table" "main" {
 
-  name              = "${local.env_name}_notforglory"
+  name              = "${local.env_name}_praxis"
   billing_mode      = "PAY_PER_REQUEST"
   stream_enabled    = true
   stream_view_type  = "NEW_IMAGE"

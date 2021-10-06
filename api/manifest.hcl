@@ -1,9 +1,10 @@
 
 service "graphcms" {
   environment = [
-    "GOOGLE_CLIENT_EMAIL",
-    "GOOGLE_PRIVATE_KEY",
-    "GOOGLE_PROJECT_ID"
+    "GRAPHCMS_WEBHOOK_KEY",
+    "GRAPHCMS_API_TOKEN",
+    "GRAPHCMS_API_URL",
+    "GOOGLE_GEOCODING_API_KEY"
   ]
   endpoint "enrichEventOnChange" {
     version = "0.0.1"
@@ -17,12 +18,20 @@ service "graphcms" {
 }
 
 service "events" {
+  environment = [
+    "GRAPHCMS_API_TOKEN",
+    "GRAPHCMS_API_URL"
+  ]
   endpoint "search" {
     version = "0.0.1"
   }
 }
 
 service "system" {
+  environment = [
+    "GRAPHCMS_API_TOKEN",
+    "GRAPHCMS_API_URL"
+  ]
   endpoint "listCompanies" {
     version = "0.0.1"
   }

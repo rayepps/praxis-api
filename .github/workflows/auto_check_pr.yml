@@ -149,7 +149,7 @@ jobs:
           Hack, terraform expects this file to exist, will fail if it does not.
           However, this file is produced by a build which we don't want/need to
           take the time to do here.
-        run: echo "{}" > ./manifest.json && touch ./notforglory-api.zip
+        run: echo "{}" > ./manifest.json && touch ./praxis-api.zip
         working-directory: ./api
       - run: terraform validate .
         working-directory: ./api/tf

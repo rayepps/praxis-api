@@ -4,17 +4,17 @@
 ##
 locals {
   project_root = abspath("..")
-  project_name = "notforglory"
+  project_name = "praxis"
   domains = {
-    "pr" : "pr-${var.pr_number}-api.notforglory.link",
-    "eng" : "eng-${var.engineer}-api.notforglory.link",
-    "staging" : "staging-api.notforglory.link",
-    "qa" : "qa-api.notforglory.link",
-    "uat" : "uat-api.notforglory.link",
-    "prod" : "api.notforglory.link"
+    "pr" : "pr-${var.pr_number}-api.praxis.link",
+    "eng" : "eng-${var.engineer}-api.praxis.link",
+    "staging" : "staging-api.praxis.link",
+    "qa" : "qa-api.praxis.link",
+    "uat" : "uat-api.praxis.link",
+    "prod" : "api.praxis.link"
   }
   domain = local.domains[var.env]
-  tld    = "notforglory.link"
+  tld    = "praxis.link"
   env_name_map = {
     "pr" : "pr-${var.pr_number}",
     "eng" : "eng-${var.engineer}",
@@ -25,9 +25,9 @@ locals {
   }
   env_name = local.env_name_map[var.env]
   tags = {
-    NotForGloryEnv     = var.env
-    NotForGloryEnvName = local.env_name
-    NotForGloryProject = "notforglory-api"
+    PraxisEnv     = var.env
+    PraxisEnvName = local.env_name
+    PraxisProject = "praxis-api"
   }
 }
 
@@ -38,39 +38,39 @@ locals {
 data "aws_caller_identity" "current" {}
 
 data "aws_ssm_parameter" "token_sig_secret" {
-  name = "/${local.env_name}/notforglory_infrastructure/token_sig_secret"
+  name = "/${local.env_name}/praxis_infrastructure/token_sig_secret"
 }
 
-data "aws_ssm_parameter" "notforglory_api_key" {
-  name = "/${local.env_name}/notforglory_infrastructure/api_key"
+data "aws_ssm_parameter" "praxis_api_key" {
+  name = "/${local.env_name}/praxis_infrastructure/api_key"
 }
 
-data "aws_ssm_parameter" "stripe_key" {
-  name = "/${local.env_name}/notforglory_infrastructure/stripe_key"
+data "aws_ssm_parameter" "graphcms_webhook_signature_secret" {
+  name = "/${local.env_name}/praxis_infrastructure/graphcms_webhook_signature_secret"
 }
 
-data "aws_ssm_parameter" "stripe_secret" {
-  name = "/${local.env_name}/notforglory_infrastructure/stripe_secret"
+data "aws_ssm_parameter" "graphcms_webhook_key" {
+  name = "/${local.env_name}/praxis_infrastructure/graphcms_webhook_key"
 }
 
-data "aws_ssm_parameter" "stripe_webhook_secret" {
-  name = "/${local.env_name}/notforglory_infrastructure/stripe_webhook_secret"
+data "aws_ssm_parameter" "graphcms_api_token" {
+  name = "/${local.env_name}/praxis_infrastructure/graphcms_api_token"
 }
 
-data "aws_ssm_parameter" "asset_cdn_bucket_name" {
-  name = "/${local.env_name}/notforglory_infrastructure/asset_cdn_bucket_name"
+data "aws_ssm_parameter" "graphcms_api_url" {
+  name = "/${local.env_name}/praxis_infrastructure/graphcms_api_url"
 }
 
-data "aws_ssm_parameter" "google_client_email" {
-  name = "/${local.env_name}/notforglory_infrastructure/google_client_email"
+data "aws_ssm_parameter" "webflow_api_token" {
+  name = "/${local.env_name}/praxis_infrastructure/webflow_api_token"
 }
 
-data "aws_ssm_parameter" "google_private_key" {
-  name = "/${local.env_name}/notforglory_infrastructure/google_private_key"
+data "aws_ssm_parameter" "webflow_site_id" {
+  name = "/${local.env_name}/praxis_infrastructure/webflow_site_id"
 }
 
-data "aws_ssm_parameter" "google_project_id" {
-  name = "/${local.env_name}/notforglory_infrastructure/google_project_id"
+data "aws_ssm_parameter" "google_geocoding_api_key" {
+  name = "/${local.env_name}/praxis_infrastructure/google_geocoding_api_key"
 }
 
 data "aws_acm_certificate" "wildcard_domain" {
@@ -167,8 +167,8 @@ locals {
         memory      = lookup(local.manifestJson[service][function], "memory", 256)
 
         key      = "${service}.${function}"
-        zip      = "notforglory-api.zip"
-        location = "${local.project_root}/notforglory-api.zip"
+        zip      = "praxis-api.zip"
+        location = "${local.project_root}/praxis-api.zip"
       }
     ]
   ])
@@ -188,9 +188,9 @@ resource "aws_s3_bucket" "zips" {
 
 resource "aws_s3_bucket_object" "zip" {
   bucket = aws_s3_bucket.zips.bucket
-  key    = "notforglory-api-${local.version}.zip"
-  source = "${local.project_root}/notforglory-api.zip"
-  etag   = filemd5("${local.project_root}/notforglory-api.zip")
+  key    = "praxis-api-${local.version}.zip"
+  source = "${local.project_root}/praxis-api.zip"
+  etag   = filemd5("${local.project_root}/praxis-api.zip")
   tags   = local.tags
 }
 
@@ -203,12 +203,14 @@ locals {
   // Secrets and uncommon environment vars. Must be named in the environment
   // list for a function in the manifest to be be applied.
   available_environment_variables = {
-    STRIPE_KEY              = data.aws_ssm_parameter.stripe_key.value
-    STRIPE_SECRET           = data.aws_ssm_parameter.stripe_secret.value
-    STRIPE_WEBHOOK_SECRET   = data.aws_ssm_parameter.stripe_webhook_secret.value
-    GOOGLE_CLIENT_EMAIL     = data.aws_ssm_parameter.google_client_email.value
-    GOOGLE_PRIVATE_KEY      = data.aws_ssm_parameter.google_private_key.value
-    GOOGLE_PROJECT_ID       = data.aws_ssm_parameter.google_project_id.value
+    API_KEY                 = data.aws_ssm_parameter.api_key.value
+    GRAPHCMS_WEBHOOK_SIGNATURE_SECRET = data.aws_ssm_parameter.graphcms_webhook_signature_secret.value
+    GRAPHCMS_WEBHOOK_KEY    = data.aws_ssm_parameter.graphcms_webhook_key.value
+    GRAPHCMS_API_TOKEN      = data.aws_ssm_parameter.graphcms_api_token.value
+    GRAPHCMS_API_URL        = data.aws_ssm_parameter.graphcms_api_url.value
+    WEBFLOW_API_TOKEN       = data.aws_ssm_parameter.webflow_api_token.value
+    WEBFLOW_SITE_ID         = data.aws_ssm_parameter.webflow_site_id.value
+    GOOGLE_GEOCODING_API_KEY = data.aws_ssm_parameter.google_geocoding_api_key.value
   }
 }
 
@@ -235,15 +237,15 @@ module "lambda" {
   runtime = "nodejs14.x"
 
   environment_variables = merge({ for var_name in each.value.environment : var_name => local.available_environment_variables[var_name] }, {
-    NOTFORGLORY_API_KEY        = data.aws_ssm_parameter.notforglory_api_key.value
-    NOTFORGLORY_ENV            = var.env
-    NOTFORGLORY_ENV_NAME       = local.env_name
-    NOTFORGLORY_SERVICE        = each.value.service
-    NOTFORGLORY_FUNCTION       = each.value.function
-    NOTFORGLORY_VERSION        = each.value.version
-    NOTFORGLORY_API_URL        = "https://${aws_apigatewayv2_stage.default.invoke_url}"
-    TOKEN_SIG_SECRET         = data.aws_ssm_parameter.token_sig_secret.value
-    DYNAMO_TABLE_NAME        = aws_dynamodb_table.main.name
+    PRAXIS_API_KEY        = data.aws_ssm_parameter.praxis_api_key.value
+    PRAXIS_ENV            = var.env
+    PRAXIS_ENV_NAME       = local.env_name
+    PRAXIS_SERVICE        = each.value.service
+    PRAXIS_FUNCTION       = each.value.function
+    PRAXIS_VERSION        = each.value.version
+    PRAXIS_API_URL        = "https://${aws_apigatewayv2_stage.default.invoke_url}"
+    TOKEN_SIG_SECRET           = data.aws_ssm_parameter.token_sig_secret.value
+    DYNAMO_TABLE_NAME          = aws_dynamodb_table.main.name
   })
 
   tags = local.tags

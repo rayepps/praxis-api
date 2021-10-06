@@ -88,6 +88,9 @@ jobs:
         working-directory: ./search-app
       - run: terraform init
         working-directory: ./search-app/tf
+      - run: terraform workspace new staging
+        continue-on-error: true # In case workspace already exists (this is anytime after first deploy)
+        working-directory: ./search-app/tf
       - run: terraform workspace select prod
         working-directory: ./search-app/tf
       - run: terraform apply -auto-approve -var-file prod.tfvars
