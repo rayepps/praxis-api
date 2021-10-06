@@ -88,7 +88,7 @@ jobs:
         working-directory: ./search-app
       - run: terraform init
         working-directory: ./search-app/tf
-      - run: terraform workspace new staging
+      - run: terraform workspace new prod
         continue-on-error: true # In case workspace already exists (this is anytime after first deploy)
         working-directory: ./search-app/tf
       - run: terraform workspace select prod
