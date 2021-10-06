@@ -38,6 +38,17 @@ export default function EventCard({
         position='relative'
         borderRadius={4}
       >
+        <Pane
+          backgroundColor='rgba(255, 255, 255, 0.8)'
+          position='absolute'
+          top={10}
+          right={10}
+          paddingX={minorScale(2)}
+          paddingY={minorScale(1)}
+          borderRadius={4}
+        >
+          <Text fontWeight='bold'>{event.training.displayPrice}</Text>
+        </Pane>
         <Tooltip content={event.training.company?.name}>
           <Pane
             backgroundImage={`url(${event.training.company?.thumbnail?.url})`}

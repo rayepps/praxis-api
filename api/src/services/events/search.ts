@@ -9,21 +9,19 @@ import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 
 
 interface Args {
-  filters: {
-    type?: t.TrainingType
-    tags?: string[]
-    state?: string
-    city?: string
-    company?: string
-    dates?: {
-      preset: 'this-month' | 'next-month' | 'custom'
-      startsAfter?: string
-      endsBefore?: string
-    }
-  }
-  page: {
-    size: number
-    number: number
+  pageSize: number
+  page: number
+  orderBy?: 'price' | 'date'
+  orderAs?: 'asc' | 'desc'
+  type?: t.TrainingType
+  tags?: string[]
+  state?: string
+  city?: string
+  company?: string
+  dates?: {
+    preset: 'this-month' | 'next-month' | 'custom'
+    startsAfter?: string
+    endsBefore?: string
   }
 }
 
@@ -38,15 +36,12 @@ interface Response {
 
 async function searchEvents({ args, services }: t.ApiRequestProps<Args, Services>): Promise<Response> {
   const { graphcms } = services
-  const { filters, page } = args
+  const query = args
 
   const {
     events,
     total
-  } = await graphcms.searchEvents({
-    filters,
-    page
-  })
+  } = await graphcms.searchEvents(query)
 
   return {
     events,
@@ -58,21 +53,19 @@ async function searchEvents({ args, services }: t.ApiRequestProps<Args, Services
 export default _.compose(
   useLambda(),
   useJsonArgs<Args>(yup => ({
-    filters: yup.object({
-      type: yup.string(),
-      tags: yup.array().of(yup.string()),
-      state: yup.string(),
-      city: yup.string(),
-      company: yup.string(),
-      dates: yup.object({
-        preset: yup.string(),
-        startsAfter: yup.string(),
-        endsBefore: yup.string()
-      })
-    }),
-    page: yup.object({
-      size: yup.number().integer().positive(),
-      number: yup.number().min(0)
+    pageSize: yup.number().integer().positive().required(),
+    page: yup.number().min(0).required(),
+    orderBy: yup.string(),
+    orderAs: yup.string(),
+    type: yup.string(),
+    tags: yup.array().of(yup.string()),
+    state: yup.string(),
+    city: yup.string(),
+    company: yup.string(),
+    dates: yup.object({
+      preset: yup.string(),
+      startsAfter: yup.string(),
+      endsBefore: yup.string()
     })
   })),
   useService<Services>({

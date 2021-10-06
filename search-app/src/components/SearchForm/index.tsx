@@ -28,10 +28,10 @@ export default function SearchForm({
   companies,
   onFiltersChange
 }: {
-  filters: t.SearchFilter
+  filters: t.SearchFilters
   tags: t.Tag[]
   companies: t.Company[]
-  onFiltersChange: (arg: t.SearchFilter) => void
+  onFiltersChange: (arg: t.SearchFilters) => void
 }) {
 
   const [from, setFrom] = useState<DayValue | null>(null)
@@ -175,7 +175,7 @@ export default function SearchForm({
         <Split>
           <SelectMenu
             title="Company"
-            options={companies.map(c => ({ label: c.name, value: c.id }))}
+            options={companies.map(c => ({ label: c.name, value: c.key }))}
             selected={filters.company}
             filterPlaceholder="Choose company"
             onSelect={(item) => updateCompany(item.value as string)}
@@ -184,10 +184,11 @@ export default function SearchForm({
               flex={1}
               marginRight={majorScale(1)}
             >
-              {companies.find(c => c.id === filters.company)?.name || 'Select company'}
+              {filters.company ? companies.find(c => c.key === filters.company)?.name : 'Select company'}
             </Button>
           </SelectMenu>
           <IconButton
+            disabled={!filters.company}
             icon={HiX}
             onClick={clearCompany}
           />
@@ -204,9 +205,14 @@ export default function SearchForm({
             filterPlaceholder="Choose state"
             onSelect={(item) => updateState(item.value as string)}
           >
-            <Button flex={1} marginRight={majorScale(1)}>{filters.state || 'Select state'}</Button>
+            <Button 
+              flex={1} 
+              marginRight={majorScale(1)}
+            >
+              {filters.state || 'Select state'}
+            </Button>
           </SelectMenu>
-          <IconButton icon={HiX} onClick={clearState} />
+          <IconButton disabled={!filters.state} icon={HiX} onClick={clearState} />
         </Split>
       </Pane>
       {/* DATES */}

@@ -3,7 +3,17 @@ export type Dict<T> = { [key: string]: T }
 
 export type TrainingType = 'tactical' | 'medical' | 'survival'
 
-export interface SearchFilter {
+export interface SearchPagination {
+    pageSize: number
+    page: number
+}
+
+export interface SearchOrder {
+    orderBy?: 'price' | 'date'
+    orderAs?: 'asc' | 'desc'
+}
+
+export interface SearchFilters {
     type?: TrainingType
     tags?: string[]
     state?: string
@@ -15,6 +25,8 @@ export interface SearchFilter {
         endsBefore?: string
     }
 }
+
+export type SearchQuery = SearchPagination & SearchOrder & SearchFilters
 
 export interface Author {
     id: string

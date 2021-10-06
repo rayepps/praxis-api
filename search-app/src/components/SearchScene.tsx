@@ -4,30 +4,29 @@ import { useEffect } from 'react'
 // } from 'evergreen-ui'
 import { Split } from './Layout'
 import * as api from '../api'
-// import * as t from '../types'
+import * as t from '../types'
 import { useFetch } from 'src/hooks'
 import SearchForm from './SearchForm'
 import EventGrid from './EventGrid'
 import { useRecoilState } from 'recoil'
-import { filtersState } from 'src/state/search'
+import { queryState } from 'src/state/search'
 
 
 export default function SearchScene() {
 
-    const [filters, setFilters] = useRecoilState(filtersState)
+    const [query, setQuery] = useRecoilState(queryState)
 
     const searchEventsRequest = useFetch(api.searchEvents)
     const listCompaniesRequest = useFetch(api.listCompanies)
     const listTagsRequest = useFetch(api.listTags)
 
+    const setFilters = (newFilters: t.SearchFilters) => setQuery({
+        ...query,
+        ...newFilters
+    })
+
     const searchEvents = async () => {
-        const { error } = await searchEventsRequest.fetch({
-            filters,
-            page: {
-                size: 25,
-                number: 0
-            }
-        })
+        const { error } = await searchEventsRequest.fetch(query)
         if (error) {
             // TODO: Show user
             console.error(error)
@@ -55,7 +54,7 @@ export default function SearchScene() {
 
     useEffect(() => {
         searchEvents()
-    }, [filters])
+    }, [query])
 
     useEffect(() => {
         listCompanies()
@@ -69,7 +68,7 @@ export default function SearchScene() {
     return (
         <Split>
             <SearchForm
-                filters={filters}
+                filters={query}
                 companies={companies}
                 tags={tags}
                 onFiltersChange={setFilters}

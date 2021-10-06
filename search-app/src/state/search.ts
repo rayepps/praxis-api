@@ -2,28 +2,24 @@ import _ from 'radash'
 import { atom, selector } from 'recoil'
 import * as t from '../types'
 
-interface SearchState {
-    filters: t.SearchFilter
-}
 
-export const searchState = atom<SearchState>({
+export const searchState = atom<t.SearchQuery>({
     key: 'px.state.search',
     default: {
-        filters: {}
+        page: 0,
+        pageSize: 25
     }
 })
 
-export const filtersState = selector<t.SearchFilter>({
+export const queryState = selector<t.SearchQuery>({
     key: 'px.state.search.filters',
     get: ({ get }) => {
-        return get(searchState).filters
+        return get(searchState)
     },
-    set: ({ get, set }, filters: Partial<t.SearchFilter> | any) => {
-        set(searchState, {
-            filters: _.shake({
-                ...get(searchState).filters,
-                ...filters
-            })
-        })
+    set: ({ get, set }, filters: Partial<t.SearchQuery> | any) => {
+        set(searchState, _.shake({
+            ...get(searchState),
+            ...filters
+        }))
     }
 })

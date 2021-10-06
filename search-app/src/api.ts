@@ -18,6 +18,12 @@ const networkError = {
   details: 'We\'re not sure whats wrong, there was an issue using the network.'
 }
 
+//
+//
+// HOW TO FETCH
+//
+//
+
 export default async function fetcher<T = any>(endpoint: string, options: RequestInit): Promise<[ApiError | null, T | null]> {
   const { apiUrl } = config()
   const [netErr, response] = await _.tryit<Response>(fetch)(`${apiUrl}${endpoint}`, {
@@ -38,24 +44,19 @@ export default async function fetcher<T = any>(endpoint: string, options: Reques
   return [null, json]
 }
 
-export async function searchEvents({
-  filters,
-  page
-}: {
-  filters: t.SearchFilter
-  page: {
-    size: number
-    number: number
-  }
-}): Promise<ApiResponse<{
+
+//
+//
+// API FUNCTIONS
+//
+//
+
+export async function searchEvents(query: t.SearchQuery): Promise<ApiResponse<{
   events: t.Event[]
   total: number
 }>> {
   const [error, json] = await fetcher('/events/search', {
-    body: JSON.stringify({
-      filters,
-      page
-    })
+    body: JSON.stringify(query)
   })
   return { error, data: json?.payload }
 }

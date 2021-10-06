@@ -42,19 +42,18 @@ function UrlStateSync() {
     // set the state to it
     useEffect(() => {
         const qs = window.location.search
-        if (!qs) return undefined
+        if (!qs) return
         const state = ComplexQueryString.deserialize(qs)
+        console.log('got state in qs')
+        console.log(state)
         setSearch(state as any)
     }, [])
 
     // Anytime the state changes, update
     // the url in place
     useEffect(() => {
-        if (Object.keys(search).length === 0) {
-            const url = parseUrl(window.location.href)
-            const newUrl = url.set('query', '')
-            window.history.pushState({}, '', newUrl.toString())
-        }
+        console.log('updating query string')
+        console.log(search)
         const url = parseUrl(window.location.href)
         const state = ComplexQueryString.serialize(search)
         const newUrl = url.set('query', state)

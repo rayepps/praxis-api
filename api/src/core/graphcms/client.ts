@@ -290,6 +290,7 @@ export class GraphCMS {
         companies {
           id
           name
+          key
           thumbnail {
             url
           }
@@ -314,25 +315,20 @@ export class GraphCMS {
     return response.tags
   }
 
-  async searchEvents({
-    filters,
-    page
-  }: {
-    filters: {
-      type?: t.TrainingType
-      tags?: string[]
-      state?: string
-      city?: string
-      company?: string
-      dates?: {
-        preset: 'this-month' | 'next-month' | 'custom'
-        startsAfter?: string
-        endsBefore?: string
-      }
-    },
-    page: {
-      size: number
-      number: number
+  async searchEvents(search: {
+    pageSize: number
+    page: number
+    orderBy?: 'price' | 'date'
+    orderAs?: 'asc' | 'desc'
+    type?: t.TrainingType
+    tags?: string[]
+    state?: string
+    city?: string
+    company?: string
+    dates?: {
+      preset: 'this-month' | 'next-month' | 'custom'
+      startsAfter?: string
+      endsBefore?: string
     }
   }): Promise<{
     events: t.Event[]
@@ -364,6 +360,8 @@ export class GraphCMS {
                 id
                 slug
                 name
+                price
+                displayPrice
                 tags {
                   slug
                   name
@@ -376,6 +374,7 @@ export class GraphCMS {
                   id
                   slug
                   name
+                  key
                   thumbnail {
                     id
                     url
@@ -392,8 +391,8 @@ export class GraphCMS {
     `
     const makeVariables = (): object => {
       const vars = {
-        first: page.size,
-        skip: page.size * page.number,
+        first: search.pageSize,
+        skip: search.pageSize * search.page,
         stage: 'PUBLISHED',
         where: {
           AND: []
@@ -401,49 +400,49 @@ export class GraphCMS {
         orderBy: null // TODO
       }
 
-      console.log('filters')
-      console.log(JSON.stringify(filters, null, 2))
+      console.log('search')
+      console.log(JSON.stringify(search, null, 2))
 
-      if (filters.tags) {
+      if (search.tags) {
         vars.where.AND.push({
           training: {
             tags_some: {
-              slug_in: filters.tags
+              slug_in: search.tags
             }
           }
         })
       }
 
-      if (filters.type) {
+      if (search.type) {
         vars.where.AND.push({
           training: {
-            type: filters.type
+            type: search.type
           }
         })
       }
 
-      if (filters.state) {
+      if (search.state) {
         vars.where.AND.push({
-          state: filters.state
+          state: search.state
         })
       }
 
-      if (filters.company) {
+      if (search.company) {
         vars.where.AND.push({
           training: {
             company: {
-              id: filters.company
+              key: search.company
             }
           }
         })
       }
 
-      if (filters.dates.preset) {
-        const { preset } = filters.dates
+      if (search.dates.preset) {
+        const { preset } = search.dates
         if (preset === 'custom') {
           vars.where.AND.push({
-            startDate_gt: filters.dates.startsAfter,
-            endDate_lt: filters.dates.endsBefore
+            startDate_gt: search.dates.startsAfter,
+            endDate_lt: search.dates.endsBefore
           })
         } else {
           const today = new Date()
