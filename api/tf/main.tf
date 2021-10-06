@@ -203,7 +203,7 @@ locals {
   // Secrets and uncommon environment vars. Must be named in the environment
   // list for a function in the manifest to be be applied.
   available_environment_variables = {
-    API_KEY                 = data.aws_ssm_parameter.api_key.value
+    API_KEY                 = data.aws_ssm_parameter.praxis_api_key.value
     GRAPHCMS_WEBHOOK_SIGNATURE_SECRET = data.aws_ssm_parameter.graphcms_webhook_signature_secret.value
     GRAPHCMS_WEBHOOK_KEY    = data.aws_ssm_parameter.graphcms_webhook_key.value
     GRAPHCMS_API_TOKEN      = data.aws_ssm_parameter.graphcms_api_token.value
