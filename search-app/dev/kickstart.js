@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * 
  * WARN: This is a standalone file.
@@ -36,8 +37,10 @@
 
 const manifest = '{{manifest}}'
 
-const cssFiles = manifest.entrypoints.filter(ep => ep.endsWith('.css'))
-const jsFiles = manifest.entrypoints.filter(ep => ep.endsWith('.js'))
+const files = Object.values(manifest.files)
+
+const cssFiles = manifest.entrypoints.filter(ep => ep.endsWith('.css')).map(path => files.find(f => f.endsWith(path)))
+const jsFiles = manifest.entrypoints.filter(ep => ep.endsWith('.js')).map(path => files.find(f => f.endsWith(path)))
 cssFiles.map(path => addStyle(path))
 jsFiles.map(path => addScript(path))
 
