@@ -1,15 +1,15 @@
 import { useEffect } from 'react'
-// import {
-//     Pane
-// } from 'evergreen-ui'
-import { Split } from './Layout'
+import { Split, Stack } from './Layout'
 import * as api from '../api'
 import * as t from '../types'
 import { useFetch } from 'src/hooks'
 import SearchForm from './SearchForm'
 import EventGrid from './EventGrid'
+import SummaryBar from './SummaryBar'
+import PaginationBar from './PaginationBar'
 import { useRecoilState } from 'recoil'
 import { queryState } from 'src/state/search'
+import { majorScale } from 'evergreen-ui'
 
 
 export default function SearchScene() {
@@ -52,6 +52,17 @@ export default function SearchScene() {
         }
     }
 
+    const updateOrder = (orderBy: t.OrderBy, orderAs: t.OrderAs) => setQuery({
+        ...query,
+        orderBy,
+        orderAs
+    })
+
+    const updatePage = (newPage: number) => setQuery({
+        ...query,
+        page: newPage
+    })
+
     useEffect(() => {
         searchEvents()
     }, [query])
@@ -62,6 +73,7 @@ export default function SearchScene() {
     }, [])
 
     const events = searchEventsRequest.data?.events ?? []
+    const total = searchEventsRequest.data?.total ?? 0
     const companies = listCompaniesRequest.data?.companies ?? []
     const tags = listTagsRequest.data?.tags ?? []
 
@@ -73,7 +85,23 @@ export default function SearchScene() {
                 tags={tags}
                 onFiltersChange={setFilters}
             />
-            <EventGrid events={events} />
+            <Stack
+                paddingRight={majorScale(4)}
+            >
+                <SummaryBar
+                    total={total}
+                    orderBy={query.orderBy}
+                    orderAs={query.orderAs}
+                    onOrderChange={updateOrder}
+                />
+                <EventGrid events={events} />
+                <PaginationBar
+                    total={total}
+                    page={query.page}
+                    pageSize={query.pageSize}
+                    onPageChange={updatePage}
+                />
+            </Stack>
         </Split>
     )
 }

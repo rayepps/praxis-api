@@ -50,14 +50,12 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
         await graphcms.connectToLocationMapping(event)
     }
 
-    const newEvent = {
+    await graphcms.updateEvent(event.id, {
         ...event,
         city: location.city,
         state: location.state,
-        slug: slug(event, location)
-    }
-    await graphcms.updateEvent(event.id, {
-        ...newEvent,
+        slug: slug(event, location),
+        trainingPrice: event.training.price,
         hash: Hashable.hash(event, identify)
     })
 }
@@ -70,7 +68,8 @@ const identify = (event: t.Event): object => {
         trainingId: event.training?.id,
         trainingSlug: event.training?.slug,
         startDate: event.startDate,
-        endDate: event.endDate
+        endDate: event.endDate,
+        price: event.training.price
     }
 }
 

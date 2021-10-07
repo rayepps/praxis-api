@@ -6,8 +6,10 @@ import * as t from '../types'
 export const searchState = atom<t.SearchQuery>({
     key: 'px.state.search',
     default: {
-        page: 0,
-        pageSize: 25
+        page: 1,
+        pageSize: 25,
+        orderBy: 'date',
+        orderAs: 'asc'
     }
 })
 

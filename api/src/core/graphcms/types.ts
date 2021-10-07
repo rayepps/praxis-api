@@ -104,6 +104,7 @@ export interface Event extends BaseEntity {
     slug: string
     city: string
     state: USState
+    trainingPrice: number
     webflowId: string
     hash: Hash | null
 }

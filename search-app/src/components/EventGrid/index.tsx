@@ -11,7 +11,7 @@ export default function EventGrid({
   events: t.Event[]
 }) {
   return (
-    <Pane 
+    <Pane
       flex={1}
       display='grid'
       gridTemplateColumns='repeat(4, 1fr)'
@@ -20,7 +20,7 @@ export default function EventGrid({
       paddingTop={majorScale(4)}
       paddingBottom={majorScale(4)}
     >
-      {events.map(event => (
+      {events.filter(x => !!x.slug).map(event => (
         <EventCard key={event.slug} event={event} />
       ))}
     </Pane>

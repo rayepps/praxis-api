@@ -11,8 +11,8 @@ import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 interface Args {
   pageSize: number
   page: number
-  orderBy?: 'price' | 'date'
-  orderAs?: 'asc' | 'desc'
+  orderBy: 'price' | 'date'
+  orderAs: 'asc' | 'desc'
   type?: t.TrainingType
   tags?: string[]
   state?: string
@@ -54,9 +54,9 @@ export default _.compose(
   useLambda(),
   useJsonArgs<Args>(yup => ({
     pageSize: yup.number().integer().positive().required(),
-    page: yup.number().min(0).required(),
-    orderBy: yup.string(),
-    orderAs: yup.string(),
+    page: yup.number().integer().positive().required(),
+    orderBy: yup.string().required(),
+    orderAs: yup.string().required(),
     type: yup.string(),
     tags: yup.array().of(yup.string()),
     state: yup.string(),

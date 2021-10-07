@@ -93,6 +93,7 @@ export class GraphCMS {
           training {
             id
             slug
+            price
           }
           location {
             latitude
@@ -129,30 +130,33 @@ export class GraphCMS {
 
   async updateEvent(id: string, data: Partial<t.Event>): Promise<void> {
     const mutation = gql`
-      mutation {
+      mutation EnrichEvent($data: EventUpdateInput!) {
         updateEvent(
           where: {
             id: "${id}"
           }, 
-          data: {
-            city: "${data.city}"
-            state: ${data.state}
-            slug: "${data.slug}"
-            hash: {
-              raw: "${data.hash.raw}"
-              fields: [${data.hash.fields.map(f => `"${f}"`).join(',')}]
-            }
-          }
+          data: $data
         ) {
           id
         }
       }
     `
-    await this.client.request(mutation)
+    await this.client.request(mutation, {
+      data: {
+        city: data.city,
+        state: data.state,
+        slug: data.slug,
+        trainingPrice: data.trainingPrice,
+        hash: {
+          raw: data.hash.raw,
+          fields: data.hash.fields
+        }
+      }
+})
   }
 
-  async updateTraining(id: string, data: Pick<t.Training, 'gallery' | 'thumbnail' | 'hash' | 'displayPrice'>): Promise<void> {
-    const mutation = gql`
+  async updateTraining(id: string, data: Pick<t.Training, 'gallery' | 'thumbnail' | 'hash' | 'displayPrice'>): Promise < void> {
+  const mutation = gql`
       mutation enrichTraining($data: TrainingUpdateInput!) {
         updateTraining(
           where: {
@@ -165,30 +169,30 @@ export class GraphCMS {
       }
     `
     await this.client.request(mutation, {
-      data: {
-        gallery: {
-          connect: data.gallery.map(asset => ({
-            where: {
-              id: asset.id
-            }
-          }))
-        },
-        thumbnail: {
-          connect: {
-            id: data.thumbnail.id
+    data: {
+      gallery: {
+        connect: data.gallery.map(asset => ({
+          where: {
+            id: asset.id
           }
-        },
-        hash: {
-          raw: data.hash.raw,
-          fields: data.hash.fields
-        },
-        displayPrice: data.displayPrice
-      }
-    })
-  }
+        }))
+      },
+      thumbnail: {
+        connect: {
+          id: data.thumbnail.id
+        }
+      },
+      hash: {
+        raw: data.hash.raw,
+        fields: data.hash.fields
+      },
+      displayPrice: data.displayPrice
+    }
+  })
+}
 
-  async listCitiesInState(state: t.USState): Promise<string[]> {
-    const query = gql`
+  async listCitiesInState(state: t.USState): Promise < string[] > {
+  const query = gql`
       query ListLocationsInState {
         locationMappings(where:{
           state: ${state}
@@ -199,10 +203,10 @@ export class GraphCMS {
     `
     const response = await this.client.request<{ locationMappings: t.LocationMapping[] }>(query)
     return response.locationMappings.map(lm => lm.city)
-  }
+}
 
-  async findLocationMapping(state: t.USState, city: string): Promise<t.LocationMapping> {
-    const query = gql`
+  async findLocationMapping(state: t.USState, city: string): Promise < t.LocationMapping > {
+  const query = gql`
       query findLocationMapping {
         locationMapping(where: {
           slug: "${slugger(`${state}-${city}`)}"
@@ -215,10 +219,10 @@ export class GraphCMS {
     `
     const response = await this.client.request<{ locationMapping: t.LocationMapping }>(query)
     return response.locationMapping
-  }
+}
 
-  async createLocationMapping(event: t.Event): Promise<void> {
-    const mutation = gql`
+  async createLocationMapping(event: t.Event): Promise < void> {
+  const mutation = gql`
       mutation MakeLocationMapping($data: LocationMappingCreateInput!) {
         createLocationMapping(data: $data) {
           id
@@ -226,26 +230,26 @@ export class GraphCMS {
       }
     `
     await this.client.request<{ companies: t.Company[] }>(mutation, {
-      data: {
-        city: event.city,
-        state: event.state,
-        slug: slugger(`${event.state}-${event.city}`),
-        events: {
-          connect: {
-            id: event.id
-          }
+    data: {
+      city: event.city,
+      state: event.state,
+      slug: slugger(`${event.state}-${event.city}`),
+      events: {
+        connect: {
+          id: event.id
         }
       }
-    })
-  }
-
-  async connectToLocationMapping(event: t.Event): Promise<void> {
-    const locationMapping = await this.findLocationMapping(event.state, event.city)
-    if (!locationMapping) {
-      // Create a new one
-      await this.createLocationMapping(event)
-      return
     }
+  })
+}
+
+  async connectToLocationMapping(event: t.Event): Promise < void> {
+  const locationMapping = await this.findLocationMapping(event.state, event.city)
+    if(!locationMapping) {
+    // Create a new one
+    await this.createLocationMapping(event)
+    return
+  }
     // Connect to the existing one
     const mutation = gql`
       mutation UpdateLocationMapping($data: LocationMappingUpdateInput!) {
@@ -257,16 +261,16 @@ export class GraphCMS {
       }
     `
     await this.client.request<{ companies: t.Company[] }>(mutation, {
-      events: {
-        connect: {
-          id: event.id
-        }
+    events: {
+      connect: {
+        id: event.id
       }
-    })
-  }
+    }
+  })
+}
 
-  async disconnectFromLocationMapping(event: t.Event): Promise<void> {
-    const mutation = gql`
+  async disconnectFromLocationMapping(event: t.Event): Promise < void> {
+  const mutation = gql`
       mutation UpdateLocationMapping($data: LocationMappingUpdateInput!) {
         updateLocationMapping(where: {
           slug: ${slugger(`${event.state}-${event.city}`)}
@@ -276,16 +280,16 @@ export class GraphCMS {
       }
     `
     await this.client.request<{ companies: t.Company[] }>(mutation, {
-      events: {
-        disconnect: {
-          id: event.id
-        }
+    events: {
+      disconnect: {
+        id: event.id
       }
-    })
-  }
+    }
+  })
+}
 
-  async listCompanies(): Promise<t.Company[]> {
-    const query = gql`
+  async listCompanies(): Promise < t.Company[] > {
+  const query = gql`
       query listCompanies {
         companies {
           id
@@ -299,10 +303,10 @@ export class GraphCMS {
     `
     const response = await this.client.request<{ companies: t.Company[] }>(query)
     return response.companies
-  }
+}
 
-  async listTags(): Promise<t.Tag[]> {
-    const query = gql`
+  async listTags(): Promise < t.Tag[] > {
+  const query = gql`
       query listTags {
         tags {
           id
@@ -313,10 +317,10 @@ export class GraphCMS {
     `
     const response = await this.client.request<{ tags: t.Tag[] }>(query)
     return response.tags
-  }
+}
 
   async searchEvents(search: {
-    pageSize: number
+  pageSize: number
     page: number
     orderBy?: 'price' | 'date'
     orderAs?: 'asc' | 'desc'
@@ -326,15 +330,15 @@ export class GraphCMS {
     city?: string
     company?: string
     dates?: {
-      preset: 'this-month' | 'next-month' | 'custom'
+    preset: 'this-month' | 'next-month' | 'custom'
       startsAfter?: string
       endsBefore?: string
-    }
-  }): Promise<{
-    events: t.Event[]
+  }
+}): Promise < {
+  events: t.Event[]
     total: number
-  }> {
-    const query = gql`
+} > {
+  const query = gql`
       query searchEvents($first: Int, $skip: Int, $stage: Stage!, $where: EventWhereInput, $orderBy: EventOrderByInput) {
         page: eventsConnection(
           first: $first
@@ -389,99 +393,107 @@ export class GraphCMS {
         }
       }
     `
+
+    console.log('search')
+    console.log(JSON.stringify(search, null, 2))
+
     const makeVariables = (): object => {
-      const vars = {
-        first: search.pageSize,
-        skip: search.pageSize * search.page,
-        stage: 'PUBLISHED',
-        where: {
-          AND: []
-        },
-        orderBy: null // TODO
-      }
-
-      console.log('search')
-      console.log(JSON.stringify(search, null, 2))
-
-      if (search.tags) {
-        vars.where.AND.push({
-          training: {
-            tags_some: {
-              slug_in: search.tags
-            }
-          }
-        })
-      }
-
-      if (search.type) {
-        vars.where.AND.push({
-          training: {
-            type: search.type
-          }
-        })
-      }
-
-      if (search.state) {
-        vars.where.AND.push({
-          state: search.state
-        })
-      }
-
-      if (search.company) {
-        vars.where.AND.push({
-          training: {
-            company: {
-              key: search.company
-            }
-          }
-        })
-      }
-
-      if (search.dates.preset) {
-        const { preset } = search.dates
-        if (preset === 'custom') {
-          vars.where.AND.push({
-            startDate_gt: search.dates.startsAfter,
-            endDate_lt: search.dates.endsBefore
-          })
-        } else {
-          const today = new Date()
-          const range = preset === 'this-month'
-            ? {
-              startsAfter: today.toISOString(),
-              endsBefore: new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString()
-            } : {
-              startsAfter: new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString(),
-              endsBefore: new Date(today.getFullYear(), today.getMonth() + 2, 0).toISOString()
-            }
-          vars.where.AND.push({
-            startDate_gt: range.startsAfter,
-            endDate_lt: range.endsBefore
-          })
-        }
-      }
-
-      console.log('variables')
-      console.log(JSON.stringify(vars, null, 2))
-
-      return vars
+    const vars = {
+      first: search.pageSize,
+      skip: search.pageSize * (search.page - 1),
+      stage: 'PUBLISHED',
+      where: {
+        AND: []
+      },
+      orderBy: null // TODO
     }
+
+    if (search.orderBy && search.orderAs) {
+      const orderBy = search.orderBy === 'date'
+        ? 'startDate'
+        : 'trainingPrice'
+      vars.orderBy = `${orderBy}_${search.orderAs.toUpperCase()}`
+    }
+
+    if (search.tags) {
+      vars.where.AND.push({
+        training: {
+          tags_some: {
+            slug_in: search.tags
+          }
+        }
+      })
+    }
+
+    if (search.type) {
+      vars.where.AND.push({
+        training: {
+          type: search.type
+        }
+      })
+    }
+
+    if (search.state) {
+      vars.where.AND.push({
+        state: search.state
+      })
+    }
+
+    if (search.company) {
+      vars.where.AND.push({
+        training: {
+          company: {
+            key: search.company
+          }
+        }
+      })
+    }
+
+    if (search.dates.preset) {
+      const { preset } = search.dates
+      if (preset === 'custom') {
+        vars.where.AND.push({
+          startDate_gt: search.dates.startsAfter,
+          endDate_lt: search.dates.endsBefore
+        })
+      } else {
+        const today = new Date()
+        const range = preset === 'this-month'
+          ? {
+            startsAfter: today.toISOString(),
+            endsBefore: new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString()
+          } : {
+            startsAfter: new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString(),
+            endsBefore: new Date(today.getFullYear(), today.getMonth() + 2, 0).toISOString()
+          }
+        vars.where.AND.push({
+          startDate_gt: range.startsAfter,
+          endDate_lt: range.endsBefore
+        })
+      }
+    }
+
+    console.log('variables')
+    console.log(JSON.stringify(vars, null, 2))
+
+    return vars
+  }
     const response = await this.client.request<SearchEventsResponse>(query, makeVariables())
     return {
-      events: response.page.edges.map(e => e.node),
-      total: response.page.aggregate.count
-    }
+    events: response.page.edges.map(e => e.node),
+    total: response.page.aggregate.count
   }
+}
 
 }
 
-type SearchEventsResponse = {
-  page: {
-    edges: {
-      node: t.Event
-    }[]
+  type SearchEventsResponse = {
+    page: {
+      edges: {
+        node: t.Event
+      }[]
     aggregate: {
-      count: number
+        count: number
+      }
     }
   }
-}

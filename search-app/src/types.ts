@@ -3,14 +3,17 @@ export type Dict<T> = { [key: string]: T }
 
 export type TrainingType = 'tactical' | 'medical' | 'survival'
 
+export type OrderBy = 'date' | 'price'
+export type OrderAs = 'asc' | 'desc'
+
 export interface SearchPagination {
     pageSize: number
     page: number
 }
 
 export interface SearchOrder {
-    orderBy?: 'price' | 'date'
-    orderAs?: 'asc' | 'desc'
+    orderBy: OrderBy
+    orderAs: OrderAs
 }
 
 export interface SearchFilters {

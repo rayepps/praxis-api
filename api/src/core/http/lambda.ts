@@ -8,17 +8,18 @@ import {
 } from './types'
 import errors, { ERROR_KEY } from './errors'
 import _ from 'radash'
-import logger from '../../core/logger'
+import logger from '../logger'
+// import logger from '../../core/logger'
 
 
 export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambda.APIGatewayEvent, context: AWSLambda.Context) => {
 
   const rid = `nfg.rid.${uuid().substr(0, 7)}`
 
-  logger.debug(`[${rid}] aws lambda event: `)
-  logger.debug(event)
-  logger.debug(`[${rid}] aws lambda context: `)
-  logger.debug(context)
+  // logger.debug(`[${rid}] aws lambda event: `)
+  // logger.debug(event)
+  // logger.debug(`[${rid}] aws lambda context: `)
+  // logger.debug(context)
 
   const defaultResponse = makeResponse(rid)
   const props: ApiRequestProps<any, any> = {
@@ -29,17 +30,24 @@ export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambd
     meta: makeMeta(event, context)
   }
 
+  logger.debug({
+    hostname: props.meta.hostname,
+    query: props.meta.query,
+    method: props.meta.method,
+    path: props.meta.path,
+  })
+
   const [error, result] = await _.tryit<any>(func)(props)
 
-  logger.debug(`[${rid}] func error: `)
-  logger.debug(error)
-  logger.debug(`[${rid}] func result: `)
-  logger.debug(result)
+  // logger.debug(`[${rid}] func error: `)
+  // logger.debug(error)
+  // logger.debug(`[${rid}] func result: `)
+  // logger.debug(result)
 
   const response = getResponse(rid, error, result)
 
-  logger.debug(`[${rid}] calculated response: `)
-  logger.debug(response)
+  // logger.debug(`[${rid}] calculated response: `)
+  // logger.debug(response)
 
   // @link https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
   const lambdaResponse = {
@@ -58,8 +66,8 @@ export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambd
     statusCode: response.status
   }
 
-  logger.debug(`[${rid}] aws lambda response: `)
-  logger.debug(lambdaResponse)
+  // logger.debug(`[${rid}] aws lambda response: `)
+  // logger.debug(lambdaResponse)
 
   return lambdaResponse
 
