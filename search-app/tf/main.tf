@@ -114,6 +114,13 @@ resource "aws_s3_bucket_object" "out" {
 ## CLOUD FRONT
 ##
 
+resource "local_file" "distribution" {
+    content  = jsonencode({
+      distributionId: aws_cloudfront_distribution.website_cdn_root.id
+    })
+    filename = "distribution.json"
+}
+
 # Creates the CloudFront distribution to serve the static website
 resource "aws_cloudfront_distribution" "website_cdn_root" {
   enabled     = true

@@ -95,4 +95,10 @@ jobs:
         working-directory: ./search-app/tf
       - run: terraform apply -auto-approve -var-file prod.tfvars
         working-directory: ./search-app/tf
-    
+      - id: distribution
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+          path: 'search-app/tf/distribution.json'
+          prop_path: 'distributionId'
+      - run: |
+        aws cloudfront create-invalidation --distribution-id ${{steps.distribution.outputs.prop}}  --paths "/kickstart.min.js"    

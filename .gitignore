@@ -21,6 +21,7 @@ api/coverage
 
 # production
 **/build
+**/distribution.json
 
 # misc
 **/.DS_Store
