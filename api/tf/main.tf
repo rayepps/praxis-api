@@ -262,7 +262,7 @@ locals {
 }
 
 module "lambda" {
-  source = "./lambda"
+  source = "git::https://git@github.com/terraform-aws-modules/terraform-aws-lambda.git?ref=v2.21.0"
 
   for_each = { for func in local.manifest : func.key => func if func.deploy }
 
@@ -281,11 +281,11 @@ module "lambda" {
   lambda_role  = aws_iam_role.lambda_role.arn
   create_role  = false
 
-  existing_cloudwatch_log_group_name  = aws_cloudwatch_log_group.api.name
-  existing_cloudwatch_log_group_arn   = aws_cloudwatch_log_group.api.arn
-  cloudwatch_logs_tags                = local.tags
-
   runtime = "nodejs14.x"
+
+  layers = [
+    "arn:aws:lambda:us-east-1:054191080706:layer:coralogix-extension:1"
+  ]
 
   environment_variables = merge({ for var_name in each.value.environment : var_name => local.available_environment_variables[var_name] }, {
     PRAXIS_API_KEY        = data.aws_ssm_parameter.praxis_api_key.value
@@ -297,23 +297,13 @@ module "lambda" {
     PRAXIS_API_URL        = "https://${aws_apigatewayv2_stage.default.invoke_url}"
     TOKEN_SIG_SECRET      = data.aws_ssm_parameter.token_sig_secret.value
     DYNAMO_TABLE_NAME     = aws_dynamodb_table.main.name
+    CORALOGIX_PRIVATE_KEY = "cc2299fc-63d2-f191-e41b-b1b5f82e7e4a"
+    CORALOGIX_APP_NAME    = "api"
+    CORALOGIX_SUB_SYSTEM  = each.key
   })
 
   tags = local.tags
 
-  depends_on = [aws_cloudwatch_log_group.api]
-
-}
-
-
-##
-## LAMBDA LOG GROUP
-##
-
-resource "aws_cloudwatch_log_group" "api" {
-  name              = "/aws/lambda/${local.env_name}-${local.project_name}-api"
-  retention_in_days = 14
-  tags              = local.tags
 }
 
 
