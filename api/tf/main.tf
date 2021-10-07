@@ -88,6 +88,7 @@ data "aws_route53_zone" "main" {
 ## LAMBDA TRIGGER (CRON)
 ##
 
+// Event
 resource "aws_cloudwatch_event_rule" "enrich_events_every_hour" {
   name                = "enrich-events-every-hour"
   description         = "Fires the enrichment lambda every hour"
@@ -106,6 +107,27 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_enrich_events_lambda"
   function_name = module.lambda["system.enrichEvents"].lambda_function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.enrich_events_every_hour.arn
+}
+
+// Training
+resource "aws_cloudwatch_event_rule" "enrich_trainings_every_hour" {
+  name                = "enrich-trainings-every-hour"
+  description         = "Fires the enrichment lambda every hour"
+  schedule_expression = "rate(1 hour)"
+}
+
+resource "aws_cloudwatch_event_target" "enrich_trainings_every_hour" {
+  rule      = aws_cloudwatch_event_rule.enrich_trainings_every_hour.name
+  target_id = "lambda"
+  arn       = module.lambda["system.enrichTrainings"].lambda_function_arn
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_enrich_trainings_lambda" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda["system.enrichTrainings"].lambda_function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.enrich_trainings_every_hour.arn
 }
 
 

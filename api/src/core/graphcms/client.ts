@@ -519,6 +519,29 @@ export class GraphCMS {
     return response.events
   }
 
+
+  async listTrainingsNeedingEnrichment(currentEnrichmentVersion: number) {
+    const query = gql`
+      query listLameTrainings {
+        trainings(first: 10, where: {
+          OR: [{
+            enrichmentVersion_lt: ${currentEnrichmentVersion}, 
+            enrichmentStatus_not: error
+          }, {
+            enrichmentVersion: null
+            enrichmentStatus: null
+          }]
+        }) {
+          id
+          enrichmentStatus
+          enrichmentVersion
+        }
+      }
+    `
+    const response = await this.client.request<{ trainings: t.Training[] }>(query)
+    return response.trainings
+  }
+
 }
 
 type SearchEventsResponse = {

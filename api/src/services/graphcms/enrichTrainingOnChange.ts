@@ -12,7 +12,7 @@ import config from '../../config'
 
 
 interface Args {
-    operation: 'update' | 'create' | 'delete'
+    operation: 'update' | 'create' | 'enrich'
     data: {
         __typename: 'Training'
         id: string

@@ -16,7 +16,7 @@ import config from '../../config'
 
 
 interface Args {
-    operation: 'update' | 'create'
+    operation: 'update' | 'create' | 'enrich'
     data: {
         __typename: 'Event'
         id: string
