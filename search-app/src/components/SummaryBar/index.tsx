@@ -35,7 +35,7 @@ export default function SummaryBar({
     <Split
       paddingTop={majorScale(4)}
     >
-      <Pane flex={1}>
+      <Pane flex={1} display='flex' alignItems='center'>
         <Text fontWeight='bold' marginRight={minorScale(2)}>Results:</Text><Text>{total}</Text>
       </Pane>
       <Pane>
