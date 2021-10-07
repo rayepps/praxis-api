@@ -12,3 +12,6 @@ export {
     useApiKeyAuthentication,
     useTokenAuthentication,
 } from './auth'
+export {
+    useCatch
+} from './catch'

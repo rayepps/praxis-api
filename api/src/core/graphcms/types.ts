@@ -106,6 +106,9 @@ export interface Event extends BaseEntity {
     state: USState
     trainingPrice: number
     webflowId: string
+    enrichmentStatus: 'success' | 'error' | null
+    enrichmentVersion: number | null
+    name: string
     hash: Hash | null
 }
 

@@ -85,6 +85,31 @@ data "aws_route53_zone" "main" {
 
 
 ##
+## LAMBDA TRIGGER (CRON)
+##
+
+resource "aws_cloudwatch_event_rule" "enrich_events_every_hour" {
+  name                = "enrich-events-every-hour"
+  description         = "Fires the enrichment lambda every hour"
+  schedule_expression = "rate(1 hour)"
+}
+
+resource "aws_cloudwatch_event_target" "enrich_events_every_hour" {
+  rule      = aws_cloudwatch_event_rule.enrich_events_every_hour.name
+  target_id = "lambda"
+  arn       = module.lambda["system.enrichEvents"].lambda_function_arn
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_enrich_events_lambda" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda["system.enrichEvents"].lambda_function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.enrich_events_every_hour.arn
+}
+
+
+##
 ## API GATEWAY
 ##
 
@@ -215,7 +240,7 @@ locals {
 }
 
 module "lambda" {
-  source = "git::https://git@github.com/terraform-aws-modules/terraform-aws-lambda.git?ref=v1.48.0"
+  source = "./lambda"
 
   for_each = { for func in local.manifest : func.key => func if func.deploy }
 
@@ -234,6 +259,10 @@ module "lambda" {
   lambda_role  = aws_iam_role.lambda_role.arn
   create_role  = false
 
+  existing_cloudwatch_log_group_name  = aws_cloudwatch_log_group.api.name
+  existing_cloudwatch_log_group_arn   = aws_cloudwatch_log_group.api.arn
+  cloudwatch_logs_tags                = local.tags
+
   runtime = "nodejs14.x"
 
   environment_variables = merge({ for var_name in each.value.environment : var_name => local.available_environment_variables[var_name] }, {
@@ -244,12 +273,25 @@ module "lambda" {
     PRAXIS_FUNCTION       = each.value.function
     PRAXIS_VERSION        = each.value.version
     PRAXIS_API_URL        = "https://${aws_apigatewayv2_stage.default.invoke_url}"
-    TOKEN_SIG_SECRET           = data.aws_ssm_parameter.token_sig_secret.value
-    DYNAMO_TABLE_NAME          = aws_dynamodb_table.main.name
+    TOKEN_SIG_SECRET      = data.aws_ssm_parameter.token_sig_secret.value
+    DYNAMO_TABLE_NAME     = aws_dynamodb_table.main.name
   })
 
   tags = local.tags
 
+  depends_on = [aws_cloudwatch_log_group.api]
+
+}
+
+
+##
+## LAMBDA LOG GROUP
+##
+
+resource "aws_cloudwatch_log_group" "api" {
+  name              = "/aws/lambda/${local.env_name}-${local.project_name}-api"
+  retention_in_days = 14
+  tags              = local.tags
 }
 
 
@@ -273,7 +315,7 @@ resource "aws_apigatewayv2_integration" "main" {
   api_id                 = aws_apigatewayv2_api.api.id
   integration_type       = "AWS_PROXY"
   integration_method     = "POST"
-  integration_uri        = module.lambda[each.key].this_lambda_function_arn
+  integration_uri        = module.lambda[each.key].lambda_function_arn
   payload_format_version = "2.0"
   timeout_milliseconds   = 20000
 
@@ -295,7 +337,7 @@ resource "aws_lambda_permission" "apigw" {
   # The "/*/*" portion grants access from any method on any resource
   # within the API Gateway REST API.
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*" // TODO: Be more specific
-  function_name = module.lambda[each.key].this_lambda_function_name
+  function_name = module.lambda[each.key].lambda_function_name
 }
 
 

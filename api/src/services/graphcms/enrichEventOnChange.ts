@@ -4,6 +4,7 @@ import formatDate from 'date-fns/format'
 import Hashable from '../../core/graphcms/hashable'
 import { slugger } from '../../core/model'
 import {
+    useCatch,
     useLambda,
     useService,
     useJsonArgs,
@@ -50,13 +51,21 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
         await graphcms.connectToLocationMapping(event)
     }
 
-    await graphcms.updateEvent(event.id, {
-        ...event,
+    await graphcms.enrichEvent(event.id, {
         city: location.city,
         state: location.state,
         slug: slug(event, location),
         trainingPrice: event.training.price,
+        name: event.training.name,
         hash: Hashable.hash(event, identify)
+    })
+}
+
+async function onEventChangeError({ args, services }: t.ApiRequestProps<Args, Services>) {
+    const { graphcms } = services
+    const { id: eventId } = args.data
+    await graphcms.updateEvent(eventId, {
+        enrichmentStatus: 'error'
     })
 }
 
@@ -66,6 +75,7 @@ const identify = (event: t.Event): object => {
         latitude: event.location?.latitude,
         longitude: event.location?.longitude,
         trainingId: event.training?.id,
+        trainingName: event.training?.name,
         trainingSlug: event.training?.slug,
         startDate: event.startDate,
         endDate: event.endDate,
@@ -95,5 +105,6 @@ export default _.compose(
         graphcms: makeGraphCMS(),
         geo: makeGeoClient()
     }),
+    useCatch(onEventChangeError),
     onEventChange
 )

@@ -41,4 +41,7 @@ service "system" {
   endpoint "listTags" {
     version = "0.0.1"
   }
+  endpoint "enrichEvents" {
+    version = "0.0.1"
+  } 
 }
