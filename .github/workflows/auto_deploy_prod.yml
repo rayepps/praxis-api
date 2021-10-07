@@ -100,5 +100,5 @@ jobs:
         with: 
           path: 'search-app/tf/distribution.json'
           prop_path: 'distributionId'
-      - run: |
-        aws cloudfront create-invalidation --distribution-id ${{steps.distribution.outputs.prop}}  --paths "/kickstart.min.js"    
+      - run: aws cloudfront create-invalidation --distribution-id ${{steps.distribution.outputs.prop}}  --paths "/kickstart.min.js"
+ 
