@@ -26,3 +26,8 @@ export const Center = styled(Pane)`
   align-items: center;
   justify-content: center;
 ` as typeof Pane
+
+export const Axis = styled(Pane)<{ $stackOrSplit: 'split' | 'stack' }>`
+  display: flex;
+  flex-direction: ${({ $stackOrSplit }) => $stackOrSplit === 'split' ? 'row' : 'column'};
+`

@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { Split, Stack } from './Layout'
+import { useEffect, useRef } from 'react'
+import { Stack, Axis } from './Layout'
 import * as api from '../api'
 import * as t from '../types'
 import { useFetch } from 'src/hooks'
@@ -10,11 +10,14 @@ import PaginationBar from './PaginationBar'
 import { useRecoilState } from 'recoil'
 import { queryState } from 'src/state/search'
 import { majorScale } from 'evergreen-ui'
+import { useCurrentBreakpointName } from 'react-socks'
 
 
 export default function SearchScene() {
 
+    const topOfListRef = useRef<HTMLDivElement>(null)
     const [query, setQuery] = useRecoilState(queryState)
+    const breakpoint = useCurrentBreakpointName()
 
     const searchEventsRequest = useFetch(api.searchEvents)
     const listCompaniesRequest = useFetch(api.listCompanies)
@@ -58,10 +61,13 @@ export default function SearchScene() {
         orderAs
     })
 
-    const updatePage = (newPage: number) => setQuery({
-        ...query,
-        page: newPage
-    })
+    const updatePage = (newPage: number) => {
+        setQuery({
+            ...query,
+            page: newPage
+        })
+        topOfListRef.current?.scrollIntoView()
+    }
 
     useEffect(() => {
         searchEvents()
@@ -77,8 +83,12 @@ export default function SearchScene() {
     const companies = listCompaniesRequest.data?.companies ?? []
     const tags = listTagsRequest.data?.tags ?? []
 
+    const orientation = breakpoint === 'medium' || breakpoint.includes('large')
+        ? 'split'
+        : 'stack'
+
     return (
-        <Split>
+        <Axis $stackOrSplit={orientation}>
             <SearchForm
                 filters={query}
                 companies={companies}
@@ -86,7 +96,9 @@ export default function SearchScene() {
                 onFiltersChange={setFilters}
             />
             <Stack
-                paddingRight={majorScale(4)}
+                ref={topOfListRef}
+                paddingX={majorScale(4)}
+                flex={1}
             >
                 <SummaryBar
                     total={total}
@@ -102,6 +114,6 @@ export default function SearchScene() {
                     onPageChange={updatePage}
                 />
             </Stack>
-        </Split>
+        </Axis>
     )
 }
