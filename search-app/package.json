@@ -1,11 +1,11 @@
 {
   "name": "praxis-search-app",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "scripts": {
     "dev": ". ./env.sh && PORT=7705 SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "dev-local-api": "SKIP_PREFLIGHT_CHECK=true PORT=7705 react-scripts start",
-    "build": "PUBLIC_URL=https://uat-app.praxisco.link SKIP_PREFLIGHT_CHECK=true CI= react-scripts build && yarn build-kickstart",
+    "build": "PUBLIC_URL=https://app.praxisco.link SKIP_PREFLIGHT_CHECK=true CI= react-scripts build && yarn build-kickstart",
     "build-kickstart": "node ./dev/build-kickstart && rollup -c",
     "archive": "zip -r archive.zip . -x node_modules/\\* -x src/\\* -x \\*.zip",
     "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test",
