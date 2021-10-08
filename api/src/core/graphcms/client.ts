@@ -319,9 +319,11 @@ export class GraphCMS {
       }
     `
     await this.client.request<{ companies: t.Company[] }>(mutation, {
-      events: {
-        connect: {
-          id: event.id
+      data: {
+        events: {
+          connect: {
+            id: event.id
+          }
         }
       }
     })
