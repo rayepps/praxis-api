@@ -91,8 +91,8 @@ data "aws_route53_zone" "main" {
 // Enrich Event
 resource "aws_cloudwatch_event_rule" "enrich_events_cron" {
   name                = "enrich-events-cron"
-  description         = "Fires the enrich events lambda every 10 minutes"
-  schedule_expression = "rate(10 minutes)"
+  description         = "Fires the enrich events lambda every 1 hour"
+  schedule_expression = "rate(1 hour)"
 }
 
 resource "aws_cloudwatch_event_target" "enrich_events_cron" {
@@ -112,8 +112,8 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_enrich_events_lambda"
 // Enrich Training
 resource "aws_cloudwatch_event_rule" "enrich_trainings_cron" {
   name                = "enrich-trainings-cron"
-  description         = "Fires the enrich training lambda every 10 minutes"
-  schedule_expression = "rate(10 minutes)"
+  description         = "Fires the enrich training lambda every 1 hour"
+  schedule_expression = "rate(1 hour)"
 }
 
 resource "aws_cloudwatch_event_target" "enrich_trainings_cron" {
