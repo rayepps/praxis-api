@@ -20,7 +20,7 @@ export class Webflow {
   }
 
   async updateEvent(webflowId: string, event: t.Event): Promise<void> {
-    await this.webflow.updateItem({
+    await this.webflow.patchItem({
       collectionId: config.webflowEventCollectionId,
       itemId: webflowId,
       fields: mappers.Event.toWebflowEvent(event)
@@ -36,7 +36,7 @@ export class Webflow {
   }
 
   async updateTraining(webflowId: string, training: t.Training): Promise<void> {
-    await this.webflow.updateItem({
+    await this.webflow.patchItem({
       collectionId: config.webflowTrainingCollectionId,
       itemId: webflowId,
       fields: mappers.Training.toWebflowTraining(training)
@@ -44,7 +44,7 @@ export class Webflow {
   }
 
   async unpublishTraining(webflowId: string): Promise<void> {
-    await this.webflow.updateItem({
+    await this.webflow.patchItem({
       collectionId: config.webflowTrainingCollectionId,
       itemId: webflowId,
       fields: {
@@ -54,7 +54,7 @@ export class Webflow {
   }
 
   async unpublishEvent(webflowId: string): Promise<void> {
-    await this.webflow.updateItem({
+    await this.webflow.patchItem({
       collectionId: config.webflowEventCollectionId,
       itemId: webflowId,
       fields: {
