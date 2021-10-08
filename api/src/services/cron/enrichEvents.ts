@@ -43,7 +43,7 @@ async function enrichEvents({ services }: t.ApiRequestProps<Args, Services>): Pr
         }
       }),
       headers: {
-        'Authorization': `Key: ${config.graphcmsWebhookKey}`
+        'X-Api-Key': `Key: ${config.graphcmsWebhookKey}`
       }
     })
     if (err) {
