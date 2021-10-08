@@ -40,11 +40,13 @@ export class GraphCMS {
           name
           link
           price
+          displayPrice
           company {
             id
             name
             thumbnail {
               id
+              url
             }
           }
           gallery {
@@ -56,6 +58,7 @@ export class GraphCMS {
             slug
           }
           hash
+          webflowId
         }
       }
     `
@@ -80,6 +83,37 @@ export class GraphCMS {
     return response.training.updatedBy
   }
 
+  async findEventsInThePast(): Promise<t.Event[]> {
+    const query = gql`
+      query FindPastEvents($where: EventWhereInput!) {
+        events(where: $where) {
+          id
+          startDate
+          endDate
+        }
+      }
+    `
+    const response = await this.client.request<{ events: t.Event[] }>(query, {
+      where: {
+        startDate_lt: new Date().toISOString()
+      }
+    })
+    return response.events
+  }
+
+  async unpublishEvent(event: t.Event): Promise<void> {
+    const mutation = gql`
+      mutation UnpublishEvent {
+        unpublishEvent(where: {
+          id: "${event.id}"
+        }) {
+          id
+        }
+      }
+    `
+    await this.client.request(mutation)
+  }
+
   async findEvent(id: string): Promise<t.Event> {
     const query = gql`
       query findEvent {
@@ -95,6 +129,17 @@ export class GraphCMS {
             id
             slug
             price
+            name
+            thumbnail {
+              url
+            }
+            company {
+              name
+              slug
+              thumbnail {
+                url
+              }
+            }
           }
           location {
             latitude
@@ -166,7 +211,7 @@ export class GraphCMS {
     })
   }
 
-  async updateTraining(id: string, data: Pick<t.Training, 'gallery' | 'thumbnail' | 'hash' | 'displayPrice'>): Promise<void> {
+  async updateTraining(id: string, patch: Partial<t.Training>): Promise<void> {
     const mutation = gql`
       mutation enrichTraining($data: TrainingUpdateInput!) {
         updateTraining(
@@ -179,26 +224,25 @@ export class GraphCMS {
         }
       }
     `
-    await this.client.request(mutation, {
-      data: {
-        gallery: {
-          connect: data.gallery.map(asset => ({
-            where: {
-              id: asset.id
-            }
-          }))
-        },
-        thumbnail: {
-          connect: {
-            id: data.thumbnail.id
+    const data: any = patch
+    if (patch.gallery) {
+      data.gallery = {
+        connect: data.gallery.map(asset => ({
+          where: {
+            id: asset.id
           }
-        },
-        hash: {
-          raw: data.hash.raw,
-          fields: data.hash.fields
-        },
-        displayPrice: data.displayPrice
+        }))
       }
+    }
+    if (patch.thumbnail) {
+      data.thumbnail = {
+        connect: {
+          id: data.thumbnail.id
+        }
+      }
+    }
+    await this.client.request(mutation, {
+      data
     })
   }
 
@@ -246,9 +290,9 @@ export class GraphCMS {
         state: event.state,
         slug: slugger(`${event.state}-${event.city}`),
         events: {
-          connect: {
+          connect: [{
             id: event.id
-          }
+          }]
         }
       }
     })

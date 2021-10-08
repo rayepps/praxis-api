@@ -25,7 +25,7 @@ async function enrichTrainings({ services }: t.ApiRequestProps<Args, Services>):
   const trainings = await graphcms.listTrainingsNeedingEnrichment(ENRICHMENT_VERSION)
   for (const training of trainings) {
     await sleep(200)
-    await axios({
+    await _.try(axios)({
       url: 'https://praxisco.link/graphcms/enrichTrainingOnChange',
       method: 'POST',
       data: JSON.stringify({

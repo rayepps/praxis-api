@@ -25,7 +25,7 @@ async function enrichEvents({ services }: t.ApiRequestProps<Args, Services>): Pr
   const events = await graphcms.listEventsNeedingEnrichment(ENRICHMENT_VERSION)
   for (const event of events) {
     await sleep(200)
-    await axios({
+    await _.try(axios)({
       url: 'https://praxisco.link/graphcms/enrichEventOnChange',
       method: 'POST',
       data: JSON.stringify({

@@ -83,6 +83,8 @@ export interface Training extends BaseEntity {
     webflowId: string
     hash: Hash | null
     displayPrice: string | null
+    webflowSyncedAt: string
+    webflowSyncStatus: 'success' | 'error'
 }
 
 export interface Instructor extends BaseEntity {
@@ -108,6 +110,8 @@ export interface Event extends BaseEntity {
     webflowId: string
     enrichmentStatus: 'success' | 'error' | null
     enrichmentVersion: number | null
+    webflowSyncedAt: string
+    webflowSyncStatus: 'success' | 'error'
     name: string
     hash: Hash | null
 }

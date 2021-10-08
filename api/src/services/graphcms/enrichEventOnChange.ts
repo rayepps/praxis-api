@@ -44,12 +44,6 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
     const previousLocation = event.state ? slugger(`${event.state}-${event.city}`) : null
     const newLocation = slugger(`${location.state}-${location.city}`)
     const locationHasChange = previousLocation !== newLocation
-    if (locationHasChange) {
-        if (previousLocation) {
-            await graphcms.disconnectFromLocationMapping(event)
-        }
-        await graphcms.connectToLocationMapping(event)
-    }
 
     await graphcms.enrichEvent(event.id, {
         city: location.city,
@@ -59,6 +53,17 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
         name: event.training.name,
         hash: Hashable.hash(event, identify)
     })
+
+    if (locationHasChange) {
+        if (previousLocation) {
+            await graphcms.disconnectFromLocationMapping(event)
+        }
+        await graphcms.connectToLocationMapping({
+            ...event,
+            city: location.city,
+            state: location.state
+        })
+    }
 }
 
 async function onEventChangeError({ args, services }: t.ApiRequestProps<Args, Services>) {

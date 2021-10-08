@@ -1,3 +1,4 @@
+import _ from 'radash'
 import * as uuid from 'uuid'
 import * as t from '../types'
 
@@ -6,10 +7,17 @@ interface HashableObject {
   hash: t.Hash
 }
 
-type Identifier <T> = (obj: T) => object
+type Identifier<T> = (obj: T) => object
 
 const hash = (obj: object) => {
-  return uuid.v5(JSON.stringify(obj), uuid.v5.DNS)
+  return uuid.v5(
+    JSON.stringify(
+      _.mapValues(obj, (value: any) => {
+        if (value === null) return 'h.__null__'
+        if (value === undefined) return 'h.__undefined__'
+        return value
+      })
+    ), uuid.v5.DNS)
 }
 
 export default class Hashable {

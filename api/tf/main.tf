@@ -88,46 +88,67 @@ data "aws_route53_zone" "main" {
 ## LAMBDA TRIGGER (CRON)
 ##
 
-// Event
-resource "aws_cloudwatch_event_rule" "enrich_events_every_hour" {
-  name                = "enrich-events-every-hour"
-  description         = "Fires the enrichment lambda every hour"
-  schedule_expression = "rate(1 hour)"
+// Enrich Event
+resource "aws_cloudwatch_event_rule" "enrich_events_cron" {
+  name                = "enrich-events-cron"
+  description         = "Fires the enrich events lambda every 10 minutes"
+  schedule_expression = "rate(10 minutes)"
 }
 
-resource "aws_cloudwatch_event_target" "enrich_events_every_hour" {
-  rule      = aws_cloudwatch_event_rule.enrich_events_every_hour.name
+resource "aws_cloudwatch_event_target" "enrich_events_cron" {
+  rule      = aws_cloudwatch_event_rule.enrich_events_cron.name
   target_id = "lambda"
-  arn       = module.lambda["system.enrichEvents"].lambda_function_arn
+  arn       = module.lambda["cron.enrichEvents"].lambda_function_arn
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_enrich_events_lambda" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = module.lambda["system.enrichEvents"].lambda_function_name
+  function_name = module.lambda["cron.enrichEvents"].lambda_function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.enrich_events_every_hour.arn
+  source_arn    = aws_cloudwatch_event_rule.enrich_events_cron.arn
 }
 
-// Training
-resource "aws_cloudwatch_event_rule" "enrich_trainings_every_hour" {
-  name                = "enrich-trainings-every-hour"
-  description         = "Fires the enrichment lambda every hour"
-  schedule_expression = "rate(1 hour)"
+// Enrich Training
+resource "aws_cloudwatch_event_rule" "enrich_trainings_cron" {
+  name                = "enrich-trainings-cron"
+  description         = "Fires the enrich training lambda every 10 minutes"
+  schedule_expression = "rate(10 minutes)"
 }
 
-resource "aws_cloudwatch_event_target" "enrich_trainings_every_hour" {
-  rule      = aws_cloudwatch_event_rule.enrich_trainings_every_hour.name
+resource "aws_cloudwatch_event_target" "enrich_trainings_cron" {
+  rule      = aws_cloudwatch_event_rule.enrich_trainings_cron.name
   target_id = "lambda"
-  arn       = module.lambda["system.enrichTrainings"].lambda_function_arn
+  arn       = module.lambda["cron.enrichTrainings"].lambda_function_arn
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_enrich_trainings_lambda" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = module.lambda["system.enrichTrainings"].lambda_function_name
+  function_name = module.lambda["cron.enrichTrainings"].lambda_function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.enrich_trainings_every_hour.arn
+  source_arn    = aws_cloudwatch_event_rule.enrich_trainings_cron.arn
+}
+
+// Cleanup Events
+resource "aws_cloudwatch_event_rule" "cleanup_past_events_cron" {
+  name                = "cleanup-past-events-cron"
+  description         = "Fires the cleanup past events lambda every 1 day"
+  schedule_expression = "rate(1 day)"
+}
+
+resource "aws_cloudwatch_event_target" "cleanup_past_events_cron" {
+  rule      = aws_cloudwatch_event_rule.cleanup_past_events_cron.name
+  target_id = "lambda"
+  arn       = module.lambda["cron.cleanupPastEvents"].lambda_function_arn
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_cleanup_past_events_lambda" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda["cron.cleanupPastEvents"].lambda_function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.cleanup_past_events_cron.arn
 }
 
 
@@ -300,6 +321,8 @@ module "lambda" {
     CORALOGIX_PRIVATE_KEY = "cc2299fc-63d2-f191-e41b-b1b5f82e7e4a"
     CORALOGIX_APP_NAME    = "api"
     CORALOGIX_SUB_SYSTEM  = each.key
+    CORALOGIX_LOG_URL     = "https://api.coralogix.us/api/v1/logs"
+    LOG_LEVEL             = "debug"
   })
 
   tags = local.tags

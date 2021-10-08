@@ -1,6 +1,6 @@
 {
   "name": "praxis-api",
-  "version": "0.0.2",
+  "version": "0.0.12",
   "main": "index.js",
   "license": "MIT",
   "scripts": {

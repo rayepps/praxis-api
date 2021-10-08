@@ -32,7 +32,9 @@ const config = {
     graphcmsApiUrl: get('GRAPHCMS_API_URL'),
     googleGeocodingApiKey: get('GOOGLE_GEOCODING_API_KEY'),
     webflowApiToken: get('WEBFLOW_API_TOKEN'),
-    webflowSiteId: get('WEBFLOW_SITE_ID')
+    webflowSiteId: get('WEBFLOW_SITE_ID'),
+    webflowEventCollectionId: "615fb8591ac0c4546cd02004",
+    webflowTrainingCollectionId: "615fb4961ac0c43840d00bc6"
 }
 
 export type Config = typeof config
