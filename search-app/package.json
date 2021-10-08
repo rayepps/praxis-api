@@ -1,6 +1,6 @@
 {
   "name": "praxis-search-app",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "scripts": {
     "dev": ". ./env.sh && PORT=7705 SKIP_PREFLIGHT_CHECK=true react-scripts start",
@@ -26,6 +26,7 @@
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.12.2",
     "react-icons": "^4.2.0",
+    "react-loading-skeleton": "^2.2.0",
     "react-modern-calendar-datepicker": "^3.1.6",
     "react-scripts": "^4.0.3",
     "react-socks": "^2.2.0",

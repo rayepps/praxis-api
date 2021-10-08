@@ -5,11 +5,14 @@ import {
 } from 'evergreen-ui'
 import EventCard from '../EventCard'
 import { useCurrentWidth } from 'react-socks'
+import Skeleton from 'react-loading-skeleton'
 
 export default function EventGrid({
-  events
+  events,
+  loading = false
 }: {
   events: t.Event[]
+  loading?: boolean
 }) {
   const width = useCurrentWidth()
   const columns = Math.round(width / 500)
@@ -23,8 +26,30 @@ export default function EventGrid({
       paddingTop={majorScale(4)}
       paddingBottom={majorScale(4)}
     >
-      {events.filter(x => !!x.slug).map(event => (
+      {!loading && events.filter(x => !!x.slug).map(event => (
         <EventCard key={event.slug} event={event} />
+      ))}
+      {loading && [0, 1, 2, 3, 4].map(() => (
+        <Pane>
+          <Pane marginBottom={8}>
+            <Skeleton
+              width='100%'
+              height={170}
+            />
+          </Pane>
+          <Pane marginBottom={8}>
+            <Skeleton
+              width='40%'
+              height={24}
+            />
+          </Pane>
+          <Pane>
+            <Skeleton
+              width='67%'
+              height={24}
+            />
+          </Pane>
+        </Pane>
       ))}
     </Pane>
   )

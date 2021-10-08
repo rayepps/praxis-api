@@ -106,7 +106,10 @@ export default function SearchScene() {
                     orderAs={query.orderAs}
                     onOrderChange={updateOrder}
                 />
-                <EventGrid events={events} />
+                <EventGrid 
+                    loading={searchEventsRequest.loading}
+                    events={events} 
+                />
                 <PaginationBar
                     total={total}
                     page={query.page}
