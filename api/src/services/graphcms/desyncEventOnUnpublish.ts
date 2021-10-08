@@ -10,6 +10,7 @@ import {
 import makeWebflow, { Webflow } from '../../core/webflow'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
+import logger from '../../core/logger'
 
 
 interface Args {
@@ -39,9 +40,10 @@ async function desyncEventOnUnpublish({ args, services }: t.ApiRequestProps<Args
   await webflow.unpublishEvent(event.webflowId)
 }
 
-async function onEventSyncError({ args, services }: t.ApiRequestProps<Args, Services>) {
+async function onEventSyncError({ error, args, services }: t.ApiRequestProps<Args, Services>) {
   const { graphcms } = services
   const { id: eventId } = args.data
+  logger.debug('Handling error, updating sync status', { error })
   await graphcms.updateEvent(eventId, {
     webflowSyncStatus: 'error'
   })

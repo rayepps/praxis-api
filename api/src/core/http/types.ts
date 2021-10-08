@@ -114,6 +114,7 @@ export interface ApiRequestProps <ArgType = any, ServiceType = any> {
     services: ServiceType
     meta: HttpApiRequestMeta
     response: HttpResponseDescription
+    error?: Error
 }
 
 export type ComposedApiFunc <ArgType = any, ServiceType = any> = (props: ApiRequestProps<ArgType, ServiceType>) => Promise<HttpResponseDescription | any>

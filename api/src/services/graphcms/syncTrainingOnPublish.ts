@@ -10,6 +10,7 @@ import {
 import makeWebflow, { Webflow } from '../../core/webflow'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
+import logger from '../../core/logger'
 
 
 interface Args {
@@ -32,12 +33,17 @@ async function syncTrainingOnPublish({ args, services }: t.ApiRequestProps<Args,
 
   const training = await graphcms.findTraining(trainingId)
 
+  logger.debug('found training', { training })
+
   if (training.webflowId) {
+    logger.debug('updating training in webflow')
     await webflow.updateTraining(training.webflowId, training)
   } else {
+    logger.debug('creating new training in webflow')
     training.webflowId = await webflow.addTraining(training)
   }
 
+  logger.debug('updating training with webflow sync in gcms')
   await graphcms.updateEvent(training.id, {
     webflowId: training.webflowId,
     webflowSyncStatus: 'success',
@@ -46,9 +52,10 @@ async function syncTrainingOnPublish({ args, services }: t.ApiRequestProps<Args,
   
 }
 
-async function onEventSyncError({ args, services }: t.ApiRequestProps<Args, Services>) {
+async function onEventSyncError({ error, args, services }: t.ApiRequestProps<Args, Services>) {
   const { graphcms } = services
   const { id: trainingId } = args.data
+  logger.debug('Handling error. Updating sync status', { error })
   await graphcms.updateEvent(trainingId, {
     webflowSyncStatus: 'error'
   })

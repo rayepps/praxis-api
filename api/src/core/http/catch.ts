@@ -8,7 +8,7 @@ import {
 export async function withTryCatch(func: ComposedApiFunc, errorHandler: ComposedApiFunc, props: ApiRequestProps) {
     const [err, response] = await _.try(func)(props)
     if (err) {
-      await _.try(errorHandler)(props)
+      await _.try(errorHandler)({ ...props, error: err })
       throw err
     }
     return response
