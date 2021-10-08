@@ -33,8 +33,8 @@ async function enrichTrainings({ services }: t.ApiRequestProps<Args, Services>):
   })
   for (const training of trainings) {
     await sleep(200)
-    await _.try(axios)({
-      url: 'https://praxisco.link/graphcms/enrichTrainingOnChange',
+    const [err] = await _.try(axios)({
+      url: 'https://api.praxisco.link/graphcms/enrichTrainingOnChange',
       method: 'POST',
       data: JSON.stringify({
         operation: 'enrich',
@@ -46,6 +46,9 @@ async function enrichTrainings({ services }: t.ApiRequestProps<Args, Services>):
         'Authorization': `Key: ${config.graphcmsWebhookKey}`
       }
     })
+    if (err) {
+      console.debug(`Error calling graphcms.enrichTrainingOnChange function`, { error: err })
+    }
   }
   return
 }

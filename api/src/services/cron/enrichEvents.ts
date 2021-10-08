@@ -33,8 +33,8 @@ async function enrichEvents({ services }: t.ApiRequestProps<Args, Services>): Pr
   })
   for (const event of events) {
     await sleep(200)
-    await _.try(axios)({
-      url: 'https://praxisco.link/graphcms/enrichEventOnChange',
+    const [err] = await _.try(axios)({
+      url: 'https://api.praxisco.link/graphcms/enrichEventOnChange',
       method: 'POST',
       data: JSON.stringify({
         operation: 'enrich',
@@ -46,6 +46,9 @@ async function enrichEvents({ services }: t.ApiRequestProps<Args, Services>): Pr
         'Authorization': `Key: ${config.graphcmsWebhookKey}`
       }
     })
+    if (err) {
+      console.debug(`Error calling graphcms.enrichEventOnChange function`, { error: err })
+    }
   }
   return
 }
