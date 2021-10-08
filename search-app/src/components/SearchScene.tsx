@@ -102,6 +102,8 @@ export default function SearchScene() {
             >
                 <SummaryBar
                     total={total}
+                    pageNumber={query.page}
+                    pageSize={query.pageSize}
                     orderBy={query.orderBy}
                     orderAs={query.orderAs}
                     onOrderChange={updateOrder}

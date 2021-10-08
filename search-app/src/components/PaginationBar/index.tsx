@@ -16,7 +16,7 @@ export default function PaginationBar({
   pageSize: number
   onPageChange: (newPage: number) => void
 }) {
-  const totalPages = Math.round(total / pageSize)
+  const totalPages = Math.ceil(total / pageSize)
   const onNext = () => {
     onPageChange(page + 1)
   }

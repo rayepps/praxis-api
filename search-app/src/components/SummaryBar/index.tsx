@@ -11,11 +11,15 @@ import {
 
 export default function SummaryBar({
   total,
+  pageNumber,
+  pageSize,
   orderBy,
   orderAs,
   onOrderChange
 }: {
   total: number
+  pageNumber: number
+  pageSize: number
   orderBy: t.OrderBy
   orderAs: t.OrderAs
   onOrderChange: (orderBy: t.OrderBy, orderAs: t.OrderAs) => void
@@ -31,12 +35,14 @@ export default function SummaryBar({
     { label: 'Price - Lowest Last', value: 'price-desc' },
   ]
   const value = `${orderBy}-${orderAs}`
+  const start = (pageNumber - 1) * pageSize
   return (
     <Split
       paddingTop={majorScale(4)}
     >
       <Pane flex={1} display='flex' alignItems='center'>
-        <Text fontWeight='bold' marginRight={minorScale(2)}>Results:</Text><Text>{total}</Text>
+        <Text fontWeight='bold' marginRight={minorScale(2)}>Results:</Text>
+        <Text>{start}-{Math.min(start + pageSize, total)} of {total}</Text>
       </Pane>
       <Pane>
         <Text fontWeight='bold' marginRight={minorScale(2)}>Sort:</Text>
