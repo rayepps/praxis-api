@@ -19,7 +19,7 @@ export async function withWebhookSignature(func: ComposedApiFunc, secret: string
   if (!signature) {
     throw errors.unauthorized({
       details: 'This function requires a webhook signature',
-      key: 'nfg.err.core.auth.amorphisal'
+      key: 'px.err.core.auth.amorphisal'
     })
   }
 
@@ -42,7 +42,7 @@ export async function withWebhookSignature(func: ComposedApiFunc, secret: string
   if (!isValid) {
     throw errors.unauthorized({
       details: 'Invalid webhook signature',
-      key: 'nfg.err.core.graphcms.nicities'
+      key: 'px.err.core.graphcms.nicities'
     })
   }
 

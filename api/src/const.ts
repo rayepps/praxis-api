@@ -1,6 +1,6 @@
 
 
-export const GRAPHCMS_API_AUTHOR_NAME = 'nfg.api'
+export const GRAPHCMS_API_AUTHOR_NAME = 'px.api'
 export const ENRICHMENT_VERSION = 2
 
 export default {

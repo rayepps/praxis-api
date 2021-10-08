@@ -16,7 +16,7 @@ export async function withApiKey(func: ComposedApiFunc, keyFunc: string | PropsG
     if (!header) {
         throw errors.unauthorized({
             details: 'This function requires an api key',
-            key: 'nfg.err.core.auth.canes-venarias'
+            key: 'px.err.core.auth.canes-venarias'
         })
     }
 
@@ -25,7 +25,7 @@ export async function withApiKey(func: ComposedApiFunc, keyFunc: string | PropsG
     if (!key || !providedKey || providedKey !== key) {
         throw errors.unauthorized({
             details: 'Invalid api key',
-            key: 'nfg.err.core.auth.balefeign'
+            key: 'px.err.core.auth.balefeign'
         })
     }
 

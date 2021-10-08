@@ -16,22 +16,22 @@ interface BaseEntity {
 }
 
 export interface WebflowTraining extends BaseEntity {
-    gcmsId: string
-    thumbnailUrl: string
-    companyName: string
-    companyThumbnailUrl: string
-    companyGcmsId: string
-    displayPrice: string
+    gcmsid: string
+    thumbnailurl: string
+    companyname: string
+    companythumbnailurl: string
+    companygcmsid: string
+    displayprice: string
 }
 
 export interface WebflowEvent extends BaseEntity {
-    gcmsId: string
+    gcmsid: string
     city: string
     state: string
     longitude: number
     latitude: number
-    startDate: string
-    endDate: string
-    companyName: string
-    displayPrice: string
+    startdate: string
+    enddate: string
+    companyname: string
+    displayprice: string
 }

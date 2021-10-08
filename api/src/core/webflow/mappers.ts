@@ -4,17 +4,17 @@ import * as t from '../types'
 export class Event {
   static toWebflowEvent(event: t.Event): Omit<t.WebflowEvent, '_id'> {
     return {
-      gcmsId: event.id,
+      gcmsid: event.id,
       name: event.name,
       slug: event.slug,
       city: event.city,
       state: event.state,
       longitude: event.location.longitude,
       latitude: event.location.latitude,
-      startDate: event.startDate,
-      endDate: event.endDate,
-      companyName: event.training.company.name,
-      displayPrice: event.training.displayPrice,
+      startdate: event.startDate,
+      enddate: event.endDate,
+      companyname: event.training.company.name,
+      displayprice: event.training.displayPrice,
     }
   }
 }
@@ -22,14 +22,14 @@ export class Event {
 export class Training {
   static toWebflowTraining(training: t.Training): Omit<t.WebflowTraining, '_id'> {
     return {
-      gcmsId: training.id,
+      gcmsid: training.id,
       name: training.name,
       slug: training.slug,
-      thumbnailUrl: training.thumbnail.url,
-      companyName: training.company.name,
-      companyThumbnailUrl: training.company.thumbnail.url,
-      companyGcmsId: training.company.id,
-      displayPrice: training.displayPrice
+      thumbnailurl: training.thumbnail.url,
+      companyname: training.company.name,
+      companythumbnailurl: training.company.thumbnail.url,
+      companygcmsid: training.company.id,
+      displayprice: training.displayPrice
     }
   }
 }

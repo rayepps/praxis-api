@@ -14,7 +14,7 @@ import logger from '../logger'
 
 export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambda.APIGatewayEvent, context: AWSLambda.Context) => {
 
-  const rid = `nfg.rid.${uuid().substr(0, 7)}`
+  const rid = `px.rid.${uuid().substr(0, 7)}`
 
   runtime.setRid(rid)
 

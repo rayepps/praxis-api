@@ -1,6 +1,6 @@
 {
   "name": "praxis-api",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -14,7 +14,8 @@
     "precheck": "CI=true yarn test && CI=true yarn build && yarn transpile",
     "make-manifest": "ts-node src/ci/manifest.ts",
     "importer": "source ./env.sh && ts-node src/dev/importer.ts",
-    "seed": "source ./env.sh && ts-node src/dev/seed.ts"
+    "seed": "source ./env.sh && ts-node src/dev/seed.ts",
+    "demo": "source ./env.sh && ts-node ./src/dev/demo.ts"
   },
   "devDependencies": {
     "@graphcms/management": "^1.1.2",

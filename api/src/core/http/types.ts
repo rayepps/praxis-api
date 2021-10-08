@@ -4,7 +4,7 @@ import { Token, OneTimeUseToken } from './auth/token'
 export interface ApiError {
 
     /**
-     * Always nfg.api for identification in middleware
+     * Always px.api for identification in middleware
      */
     name: string
 
@@ -34,11 +34,11 @@ export interface ApiError {
 
     /**
      * Hyper specific -- never duplicated -- key that uniquely identifies 
-     * every error thrown in the code base. Formatted nfg.err.{module}.{module}.{phrase}
-     * Ex. auth failed line 304 of get user => nfg.err.user.get-user.emorphis
-     * Ex. auth failed line 33 of get user => nfg.err.user.get-user.bourish
-     * Ex. user not found line 10 of get user => nfg.err.user.get-user.sallest
-     * Ex. room locked line 217 of inviteCode => nfg.err.join.invite-code.allour
+     * every error thrown in the code base. Formatted px.err.{module}.{module}.{phrase}
+     * Ex. auth failed line 304 of get user => px.err.user.get-user.emorphis
+     * Ex. auth failed line 33 of get user => px.err.user.get-user.bourish
+     * Ex. user not found line 10 of get user => px.err.user.get-user.sallest
+     * Ex. room locked line 217 of inviteCode => px.err.join.invite-code.allour
      * Keep the phrase unique and random.
      * Keep the phrase weird so its easy to ensure uniqueness.
      * Keep the phrase short and easy to share so end users can easily report it.

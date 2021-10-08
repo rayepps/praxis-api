@@ -14,7 +14,7 @@ import logger from '../../logger'
 
 interface JWTAuthOptions {
     type?: 'id' | 'access'
-    iss?: 'nfg.api'
+    iss?: 'px.api'
     permission?: Permission
     scope?: string
     [key: string]: string | number | any
