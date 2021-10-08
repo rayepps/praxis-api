@@ -312,7 +312,7 @@ export class GraphCMS {
     const mutation = gql`
       mutation UpdateLocationMapping($data: LocationMappingUpdateInput!) {
         updateLocationMapping(where: {
-          slug: ${slugger(`${event.state}-${event.city}`)}
+          slug: "${slugger(`${event.state}-${event.city}`)}"
         }, data: $data) {
           id
         }
@@ -329,9 +329,9 @@ export class GraphCMS {
 
   async disconnectFromLocationMapping(event: t.Event): Promise<void> {
     const mutation = gql`
-      mutation UpdateLocationMapping($data: LocationMappingUpdateInput!) {
+      mutation RemoveLocationMapping($data: LocationMappingUpdateInput!) {
         updateLocationMapping(where: {
-          slug: ${slugger(`${event.state}-${event.city}`)}
+          slug: "${slugger(`${event.state}-${event.city}`)}"
         }, data: $data) {
           id
         }
