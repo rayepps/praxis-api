@@ -60,6 +60,7 @@ service "cron" {
   environment = [
     "GRAPHCMS_API_TOKEN",
     "GRAPHCMS_API_URL",
+    "GRAPHCMS_WEBHOOK_KEY",
     "WEBFLOW_API_TOKEN"
   ]
   endpoint "cleanupPastEvents" {
