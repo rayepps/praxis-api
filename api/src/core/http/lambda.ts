@@ -36,9 +36,9 @@ export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambd
   const [error, result] = await _.tryit<any>(func)(props)
 
   if (error) {
-    console.error('Function threw error', { error })
+    logger.error('Function threw error', { error })
   } else {
-    console.debug('Function completed successfully')
+    logger.debug('Function completed successfully')
   }
 
   const response = getResponse(rid, error, result)
@@ -101,7 +101,6 @@ const getResponse = (rid: string, error: Error | ApiError, result: any) => {
   // If its our custom error then respond with the
   // data indicated by our error object
   if (error && error.name === ERROR_KEY) {
-    console.error(error)
     const err = { ...error, rid } as ApiError
     return {
       cookies: [] as string[],
@@ -116,7 +115,6 @@ const getResponse = (rid: string, error: Error | ApiError, result: any) => {
   // If its some generic error then wrap it in our
   // error object as an unknown error
   if (error) {
-    console.error(error)
     const err = errors.unknown({
       key: 'l.err.api.core.express.fairtex',
       rid

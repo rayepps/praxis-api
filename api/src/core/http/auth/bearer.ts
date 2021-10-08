@@ -9,6 +9,7 @@ import {
 import { Permission } from './permission'
 import { Token } from './token'
 import config from '../../../config'
+import logger from '../../logger'
 
 
 interface JWTAuthOptions {
@@ -96,7 +97,7 @@ export async function requireAuthorizedToken(func: ComposedApiFunc, options: JWT
     const { err, decoded } = await verifyToken(bearerToken)
 
     if (err) {
-        console.error('Inavlid token', { err }, 'r.log.core.auth.beiyn')
+        logger.error('Inavlid token', { error: err })
         throw errors.forbidden({
             details: 'Cannot call this function without a valid authentication token',
             key: 'l.err.core.auth.canis-major'
