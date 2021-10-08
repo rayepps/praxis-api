@@ -8,6 +8,7 @@ import {
 import config from '../../config'
 import { ENRICHMENT_VERSION } from '../../const'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
+import logger from '../../core/logger'
 
 
 interface Args {}
@@ -23,6 +24,13 @@ const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
 async function enrichTrainings({ services }: t.ApiRequestProps<Args, Services>): Promise<Response> {
   const { graphcms } = services
   const trainings = await graphcms.listTrainingsNeedingEnrichment(ENRICHMENT_VERSION)
+  logger.debug(`Found ${trainings.length} trainings that need enrichment`, {
+    trainings: trainings.map(t => ({ 
+      id: t.id, 
+      enrichmentVersion: t.enrichmentVersion, 
+      enrichmentStatus: t.enrichmentStatus 
+    }))
+  })
   for (const training of trainings) {
     await sleep(200)
     await _.try(axios)({

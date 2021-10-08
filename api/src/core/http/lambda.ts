@@ -6,14 +6,17 @@ import {
   ApiError,
   HttpApiRequestMeta
 } from './types'
-import config from '../../config'
 import errors, { ERROR_KEY } from './errors'
 import _ from 'radash'
+import runtime from '../runtime'
+import logger from '../logger'
 
 
 export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambda.APIGatewayEvent, context: AWSLambda.Context) => {
 
   const rid = `nfg.rid.${uuid().substr(0, 7)}`
+
+  runtime.setRid(rid)
 
   const defaultResponse = makeResponse(rid)
   const props: ApiRequestProps<any, any> = {
@@ -24,12 +27,7 @@ export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambd
     meta: makeMeta(event, context)
   }
 
-  console.debug({
-    rid,
-    source: 'praxis.api',
-    function: config.function,
-    service: config.service,
-    message: 'Function invoked',
+  logger.debug('Function invoked', {
     hostname: props.meta.hostname,
     query: props.meta.query,
     body: props.meta.body
@@ -38,22 +36,9 @@ export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambd
   const [error, result] = await _.tryit<any>(func)(props)
 
   if (error) {
-    console.debug({
-      rid,
-      source: 'praxis.api',
-      function: config.function,
-      service: config.service,
-      message: 'Function threw error',
-      error
-    })
+    console.error('Function threw error', { error })
   } else {
-    console.debug({
-      rid,
-      source: 'praxis.api',
-      function: config.function,
-      service: config.service,
-      message: 'Function completed successfully'
-    })
+    console.debug('Function completed successfully')
   }
 
   const response = getResponse(rid, error, result)

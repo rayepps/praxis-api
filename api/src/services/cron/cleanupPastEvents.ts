@@ -6,6 +6,7 @@ import {
   useJsonArgs
 } from '../../core/http'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
+import logger from '../../core/logger'
 
 
 interface Args {}
@@ -18,6 +19,10 @@ async function cleanupPastEvents({ services }: t.ApiRequestProps<Args, Services>
   const { graphcms } = services
 
   const events = await graphcms.findEventsInThePast()
+
+  logger.debug(`Found ${events.length} events in the past`, {
+    events: events.map(e => ({ id: e.id, startDate: e.startDate }))
+  })
 
   for (const event of events) {
     await graphcms.unpublishEvent(event)

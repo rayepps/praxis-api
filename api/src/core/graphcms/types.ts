@@ -82,6 +82,8 @@ export interface Training extends BaseEntity {
     slug: string
     webflowId: string
     hash: Hash | null
+    enrichmentStatus: 'success' | 'error' | null
+    enrichmentVersion: number | null
     displayPrice: string | null
     webflowSyncedAt: string
     webflowSyncStatus: 'success' | 'error'

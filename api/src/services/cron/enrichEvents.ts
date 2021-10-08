@@ -8,6 +8,7 @@ import {
 import config from '../../config'
 import { ENRICHMENT_VERSION } from '../../const'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
+import logger from '../../core/logger'
 
 
 interface Args {}
@@ -23,6 +24,13 @@ const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
 async function enrichEvents({ services }: t.ApiRequestProps<Args, Services>): Promise<Response> {
   const { graphcms } = services
   const events = await graphcms.listEventsNeedingEnrichment(ENRICHMENT_VERSION)
+  logger.debug(`Found ${events.length} events that need enrichment`, {
+    events: events.map(e => ({ 
+      id: e.id, 
+      enrichmentVersion: e.enrichmentVersion, 
+      enrichmentStatus: e.enrichmentStatus 
+    }))
+  })
   for (const event of events) {
     await sleep(200)
     await _.try(axios)({
