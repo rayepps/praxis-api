@@ -52,7 +52,7 @@ async function syncTrainingOnPublish({ args, services }: t.ApiRequestProps<Args,
   
 }
 
-async function onEventSyncError({ error, args, services }: t.ApiRequestProps<Args, Services>) {
+async function onError({ error, args, services }: t.ApiRequestProps<Args, Services>) {
   const { graphcms } = services
   const { id: trainingId } = args.data
   logger.debug('Handling error. Updating sync status', { error })
@@ -72,6 +72,6 @@ export default _.compose(
     webflow: makeWebflow(),
     graphcms: makeGraphCMS()
   }),
-  useCatch(onEventSyncError),
+  useCatch(onError),
   syncTrainingOnPublish
 )

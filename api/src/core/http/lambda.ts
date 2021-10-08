@@ -36,9 +36,9 @@ export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambd
   const [error, result] = await _.tryit<any>(func)(props)
 
   if (error) {
-    logger.error('Function threw error', { error })
+    logger.error('Function complete: error', { error })
   } else {
-    logger.debug('Function completed successfully')
+    logger.debug('Function complete: success')
   }
 
   const response = getResponse(rid, error, result)
