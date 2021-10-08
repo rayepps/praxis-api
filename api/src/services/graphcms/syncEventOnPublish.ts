@@ -26,7 +26,7 @@ interface Services {
   graphcms: GraphCMS
 }
 
-async function syncWebflowEventOnPublish({ args, services }: t.ApiRequestProps<Args, Services>) {
+async function syncEventOnPublish({ args, services }: t.ApiRequestProps<Args, Services>) {
   const { graphcms, webflow } = services
   const { id: eventId } = args.data
 
@@ -66,5 +66,5 @@ export default _.compose(
     graphcms: makeGraphCMS()
   }),
   useCatch(onEventSyncError),
-  syncWebflowEventOnPublish
+  syncEventOnPublish
 )

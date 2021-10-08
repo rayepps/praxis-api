@@ -15,7 +15,7 @@ import config from '../../config'
 interface Args {
   operation: 'update' | 'create' | 'enrich'
   data: {
-    __typename: 'Training'
+    __typename: 'Event'
     id: string
     stage: 'DRAFT'
   }
@@ -26,30 +26,23 @@ interface Services {
   graphcms: GraphCMS
 }
 
-async function syncWebflowTrainingOnPublish({ args, services }: t.ApiRequestProps<Args, Services>) {
+async function desyncEventOnUnpublish({ args, services }: t.ApiRequestProps<Args, Services>) {
   const { graphcms, webflow } = services
-  const { id: trainingId } = args.data
+  const { id: eventId } = args.data
 
-  const training = await graphcms.findTraining(trainingId)
+  const event = await graphcms.findEvent(eventId)
 
-  if (training.webflowId) {
-    await webflow.updateTraining(training.webflowId, training)
-  } else {
-    training.webflowId = await webflow.addTraining(training)
+  if (!event.webflowId) {
+    return
   }
-
-  await graphcms.updateEvent(training.id, {
-    webflowId: training.webflowId,
-    webflowSyncStatus: 'success',
-    webflowSyncedAt: new Date().toISOString()
-  })
   
+  await webflow.unpublishEvent(event.webflowId)
 }
 
 async function onEventSyncError({ args, services }: t.ApiRequestProps<Args, Services>) {
   const { graphcms } = services
-  const { id: trainingId } = args.data
-  await graphcms.updateEvent(trainingId, {
+  const { id: eventId } = args.data
+  await graphcms.updateEvent(eventId, {
     webflowSyncStatus: 'error'
   })
 }
@@ -66,5 +59,5 @@ export default _.compose(
     graphcms: makeGraphCMS()
   }),
   useCatch(onEventSyncError),
-  syncWebflowTrainingOnPublish
+  desyncEventOnUnpublish
 )

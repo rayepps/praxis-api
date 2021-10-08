@@ -43,4 +43,24 @@ export class Webflow {
     })
   }
 
+  async unpublishTraining(webflowId: string): Promise<void> {
+    await this.webflow.updateItem({
+      collectionId: config.webflowTrainingCollectionId,
+      itemId: webflowId,
+      fields: {
+        '_draft': true
+      }
+    })
+  }
+
+  async unpublishEvent(webflowId: string): Promise<void> {
+    await this.webflow.updateItem({
+      collectionId: config.webflowEventCollectionId,
+      itemId: webflowId,
+      fields: {
+        '_draft': true
+      }
+    })
+  }
+
 }
