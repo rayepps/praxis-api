@@ -14,7 +14,11 @@ export class Webflow {
   async addEvent(event: t.Event): Promise<string> {
     const { _id } = await this.webflow.createItem({
       collectionId: config.webflowEventCollectionId,
-      fields: mappers.Event.toWebflowEvent(event)
+      fields: {
+        ...mappers.Event.toWebflowEvent(event),
+        '_archived': false,
+        '_draft': false
+      }
     })
     return _id
   }
@@ -30,7 +34,11 @@ export class Webflow {
   async addTraining(training: t.Training): Promise<string> {
     const { _id } = await this.webflow.createItem({
       collectionId: config.webflowTrainingCollectionId,
-      fields: mappers.Training.toWebflowTraining(training)
+      fields: {
+        ...mappers.Training.toWebflowTraining(training),
+        '_archived': false,
+        '_draft': false
+      }
     })
     return _id
   }

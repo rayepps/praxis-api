@@ -2,9 +2,8 @@ import * as t from '../types'
 
 
 export class Event {
-  static toWebflowEvent(event: t.Event): t.WebflowEvent {
+  static toWebflowEvent(event: t.Event): Omit<t.WebflowEvent, '_id'> {
     return {
-      _id: event.webflowId,
       gcmsId: event.id,
       name: event.name,
       slug: event.slug,
@@ -21,9 +20,8 @@ export class Event {
 }
 
 export class Training {
-  static toWebflowTraining(training: t.Training): t.WebflowTraining {
+  static toWebflowTraining(training: t.Training): Omit<t.WebflowTraining, '_id'> {
     return {
-      _id: training.webflowId,
       gcmsId: training.id,
       name: training.name,
       slug: training.slug,
