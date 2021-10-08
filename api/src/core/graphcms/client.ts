@@ -57,6 +57,9 @@ export class GraphCMS {
             name
             slug
           }
+          thumbnail {
+            url
+          }
           hash
           webflowId
         }
