@@ -16,10 +16,16 @@ service "graphcms" {
   endpoint "cleanupEventOnDelete" {
     version = "0.0.1"
   }
-  endpoint "syncWebflowEventOnPublish" {
+  endpoint "syncEventOnPublish" {
     version = "0.0.1"
   }
-  endpoint "syncWebflowTrainingOnPublish" {
+  endpoint "syncTrainingOnPublish" {
+    version = "0.0.1"
+  }
+  endpoint "desyncEventOnUnpublish" {
+    version = "0.0.1"
+  }
+  endpoint "desyncTrainingOnUnpublish" {
     version = "0.0.1"
   }
 }
