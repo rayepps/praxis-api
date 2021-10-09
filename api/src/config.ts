@@ -18,7 +18,6 @@ const env = get('PRAXIS_ENV')
 const config = {
     env,
     region: getRegion(env),
-    logLevel: get('LOG_LEVEL'),
     version: get('PRAXIS_VERSION'),
     apiKey: get('PRAXIS_API_KEY'),
     service: get('PRAXIS_SERVICE'),
@@ -34,7 +33,8 @@ const config = {
     webflowApiToken: get('WEBFLOW_API_TOKEN'),
     webflowSiteId: get('WEBFLOW_SITE_ID'),
     webflowEventCollectionId: "615fb8591ac0c4546cd02004",
-    webflowTrainingCollectionId: "615fb4961ac0c43840d00bc6"
+    webflowTrainingCollectionId: "615fb4961ac0c43840d00bc6",
+    segmentKey: get('SEGMENT_KEY')
 }
 
 export type Config = typeof config

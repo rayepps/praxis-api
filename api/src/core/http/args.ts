@@ -47,13 +47,13 @@ export const useJsonArgs = <TArgs = any>(shapeMaker: (yup: Yup) => KeyOfType<TAr
     return _.partial(withShapeValidation, func, model, getJson)
 }
 
-export const useQueryArgs = (shapeMaker: (yup: Yup) => Dict<any>) => (func: ComposedApiFunc) => {
+export const useQueryArgs = <TArgs = any>(shapeMaker: (yup: Yup) => KeyOfType<TArgs, any>) => (func: ComposedApiFunc) => {
     const getJson = (props: ApiRequestProps) => props.meta.query
     const model = yup.object(shapeMaker(yup))
     return _.partial(withShapeValidation, func, model, getJson)
 }
 
-export const useHeaderArgs = (shapeMaker: (yup: Yup) => Dict<any>) => (func: ComposedApiFunc) => {
+export const useHeaderArgs = <TArgs = any>(shapeMaker: (yup: Yup) => KeyOfType<TArgs, any>) => (func: ComposedApiFunc) => {
     const getJson = (props: ApiRequestProps) => props.meta.headers
     const model = yup.object(shapeMaker(yup))
     return _.partial(withShapeValidation, func, model, getJson)

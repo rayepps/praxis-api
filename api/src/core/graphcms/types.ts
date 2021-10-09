@@ -60,18 +60,20 @@ export interface Company extends BaseEntity {
     name: string
     key: string
     description: string
-    link: string
     thumbnail: Asset
     slug: string
     instructors: Instructor[]
     trainings: Training[]
     webflowId: string
+    directLink: string
+    externalLink: string
 }
 
 export interface Training extends BaseEntity {
     name: string
     company: Company
-    link: string
+    directLink: string
+    externalLink: string
     tags: Tag[]
     price: number
     type: TrainingType
@@ -104,7 +106,8 @@ export interface Event extends BaseEntity {
     endDate: string
     training: Training
     location: Location
-    link: string
+    directLink: string
+    externalLink: string
     slug: string
     city: string
     state: USState

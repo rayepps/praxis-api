@@ -13,6 +13,7 @@ import {
 import makeGeoClient, { GeoClient } from '../../core/geo'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
+import api from '../../core/api'
 
 
 interface Args {
@@ -39,6 +40,10 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
         return
     }
 
+    const externalLink = await api.fetch<t.LinkRef>('linking.createLink', {
+        url: event.directLink
+    })
+
     const location = await geo.lookupCoordinates(event.location.latitude, event.location.longitude)
 
     const previousLocation = event.state ? slugger(`${event.state}-${event.city}`) : null
@@ -51,6 +56,7 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
         slug: slug(event, location),
         trainingPrice: event.training.price,
         name: event.training.name,
+        externalLink: externalLink.link,
         hash: Hashable.hash(event, identify)
     })
 
@@ -84,7 +90,8 @@ const identify = (event: t.Event): object => {
         trainingSlug: event.training?.slug,
         startDate: event.startDate,
         endDate: event.endDate,
-        price: event.training.price
+        price: event.training.price,
+        directLink: event.directLink
     }
 }
 

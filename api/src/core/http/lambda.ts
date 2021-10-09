@@ -64,6 +64,8 @@ export const createLambdaHandler = async (func: ComposedApiFunc, event: AWSLambd
 
 }
 
+export const useLambda = () => (func: ComposedApiFunc) => _.partial(createLambdaHandler, func)
+
 const makeMeta = (event: AWSLambda.APIGatewayEvent, context: AWSLambda.Context): HttpApiRequestMeta => {
   const headers = _.lowerize(event.headers ?? {})
   return {
@@ -80,9 +82,6 @@ const makeMeta = (event: AWSLambda.APIGatewayEvent, context: AWSLambda.Context):
     secure: event.requestContext?.protocol === 'https'
   }
 }
-
-export const useLambda = () => (func: ComposedApiFunc) => _.partial(createLambdaHandler, func)
-
 
 const makeResponse = (rid: string): HttpResponseDescription => ({
   _rid: rid,

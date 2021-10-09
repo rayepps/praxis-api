@@ -43,6 +43,8 @@ async function enrichTrainings({ services }: t.ApiRequestProps<Args, Services>):
         }
       }),
       headers: {
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json',
         'X-Api-Key': `Key ${config.graphcmsWebhookKey}`
       }
     })

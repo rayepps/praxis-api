@@ -34,4 +34,9 @@ export interface WebflowEvent extends BaseEntity {
     enddate: string
     companyname: string
     displayprice: string
+    link: string
+    companyslug: string
+    trainingslug: string
+    traininglink: string
+    companylink: string
 }

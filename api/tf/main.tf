@@ -322,7 +322,6 @@ module "lambda" {
     CORALOGIX_APP_NAME    = "api"
     CORALOGIX_SUB_SYSTEM  = each.key
     CORALOGIX_LOG_URL     = "https://api.coralogix.us/api/v1/logs"
-    LOG_LEVEL             = "debug"
   })
 
   tags = local.tags

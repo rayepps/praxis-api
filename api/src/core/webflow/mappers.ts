@@ -15,6 +15,11 @@ export class Event {
       enddate: event.endDate,
       companyname: event.training.company.name,
       displayprice: event.training.displayPrice,
+      companylink: '',
+      companyslug: '',
+      traininglink: '',
+      trainingslug: '',
+      link: ''
     }
   }
 }

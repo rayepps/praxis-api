@@ -43,6 +43,8 @@ async function enrichEvents({ services }: t.ApiRequestProps<Args, Services>): Pr
         }
       }),
       headers: {
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json',
         'X-Api-Key': `Key ${config.graphcmsWebhookKey}`
       }
     })
