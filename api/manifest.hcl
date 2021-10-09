@@ -7,6 +7,9 @@ service "graphcms" {
     "GOOGLE_GEOCODING_API_KEY",
     "WEBFLOW_API_TOKEN"
   ]
+  endpoint "enrichCompanyOnChange" {
+    version = "0.0.1"
+  }
   endpoint "enrichEventOnChange" {
     version = "0.0.1"
   }
@@ -70,6 +73,12 @@ service "cron" {
     version = "0.0.1"
   }
   endpoint "enrichTrainings" {
+    version = "0.0.1"
+  }
+}
+
+service "linking" {
+  endpoint "createLink" {
     version = "0.0.1"
   }
 }

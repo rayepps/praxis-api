@@ -13,7 +13,7 @@ import {
 import makeGeoClient, { GeoClient } from '../../core/geo'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
-import api from '../../core/api'
+import makeApi, { PraxisApi } from '../../core/api'
 
 
 interface Args {
@@ -28,10 +28,11 @@ interface Args {
 interface Services {
     graphcms: GraphCMS
     geo: GeoClient
+    api: PraxisApi
 }
 
 async function onEventChange({ args, services }: t.ApiRequestProps<Args, Services>) {
-    const { graphcms, geo } = services
+    const { graphcms, geo, api } = services
     const { id: eventId } = args.data
 
     const event = await graphcms.findEvent(eventId)
@@ -115,7 +116,8 @@ export default _.compose(
     })),
     useService<Services>({
         graphcms: makeGraphCMS(),
-        geo: makeGeoClient()
+        geo: makeGeoClient(),
+        api: makeApi()
     }),
     useCatch(onEventChangeError),
     onEventChange

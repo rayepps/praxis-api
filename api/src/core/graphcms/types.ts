@@ -67,6 +67,9 @@ export interface Company extends BaseEntity {
     webflowId: string
     directLink: string
     externalLink: string
+    hash: Hash
+    enrichmentStatus: 'success' | 'error' | null
+    enrichmentVersion: number | null
 }
 
 export interface Training extends BaseEntity {

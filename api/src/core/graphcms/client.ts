@@ -287,7 +287,7 @@ export class GraphCMS {
         }
       }
     `
-    await this.client.request<{ companies: t.Company[] }>(mutation, {
+    await this.client.request(mutation, {
       data: {
         city: event.city,
         state: event.state,
@@ -318,7 +318,7 @@ export class GraphCMS {
         }
       }
     `
-    await this.client.request<{ companies: t.Company[] }>(mutation, {
+    await this.client.request(mutation, {
       data: {
         events: {
           connect: {
@@ -339,7 +339,7 @@ export class GraphCMS {
         }
       }
     `
-    await this.client.request<{ companies: t.Company[] }>(mutation, {
+    await this.client.request(mutation, {
       events: {
         disconnect: {
           id: event.id
@@ -363,6 +363,69 @@ export class GraphCMS {
     `
     const response = await this.client.request<{ companies: t.Company[] }>(query)
     return response.companies
+  }
+
+  async findCompany(id: string): Promise<t.Company> {
+    const query = gql`
+      query FindCompanyById {
+        company(where: {
+          id: "${id}"
+        }) {
+          id
+          slug
+          name
+          directLink
+          thumbnail {
+            id
+            url
+          }
+          hash
+          webflowId
+        }
+      }
+    `
+    const response = await this.client.request<{ company: t.Company }>(query)
+    return response.company
+  }
+
+  async enrichCompany(id: string, data: Partial<t.Company>): Promise<void> {
+    const mutation = gql`
+      mutation EnrichCompany($data: CompanyUpdateInput!) {
+        updateCompany(
+          where: {
+            id: "${id}"
+          }, 
+          data: $data
+        ) {
+          id
+        }
+      }
+    `
+    await this.client.request(mutation, {
+      data: {
+        ...data,
+        enrichmentStatus: 'success',
+        enrichmentVersion: ENRICHMENT_VERSION,
+      }
+    })
+  }
+
+  async updateCompany(id: string, data: Partial<t.Company>): Promise<void> {
+    const mutation = gql`
+      mutation UpdateCompany($data: CompanyUpdateInput!) {
+        updateCompany(
+          where: {
+            id: "${id}"
+          }, 
+          data: $data
+        ) {
+          id
+        }
+      }
+    `
+    await this.client.request(mutation, {
+      data
+    })
   }
 
   async listTags(): Promise<t.Tag[]> {

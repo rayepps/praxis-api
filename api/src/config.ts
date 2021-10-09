@@ -14,6 +14,7 @@ const getRegion = (env: string) => {
 }
 
 const env = get('PRAXIS_ENV')
+const baseUrl = get('PRAXIS_API_URL')
 
 const config = {
     env,
@@ -22,7 +23,7 @@ const config = {
     apiKey: get('PRAXIS_API_KEY'),
     service: get('PRAXIS_SERVICE'),
     function: get('PRAXIS_FUNCTION'),
-    baseUrl: get('PRAXIS_API_URL'),
+    baseUrl: baseUrl.endsWith('/') ? baseUrl.replace(/\/$/, '') : baseUrl,
     developer: get('LOCAL_DEVELOPER'),
     tokenSignatureSecret: get('TOKEN_SIG_SECRET'),
     graphcmsWebhookSignatureSecret: get('GRAPHCMS_WEBHOOK_SIGNATURE_SECRET'),

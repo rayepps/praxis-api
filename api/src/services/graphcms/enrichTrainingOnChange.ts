@@ -9,6 +9,7 @@ import {
 import Hashable from '../../core/graphcms/hashable'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
+import makeApi, { PraxisApi } from '../../core/api'
 
 
 interface Args {
@@ -22,10 +23,11 @@ interface Args {
 
 interface Services {
     graphcms: GraphCMS
+    api: PraxisApi
 }
 
 async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args, Services>) {
-    const { graphcms } = services
+    const { graphcms, api } = services
     const { id: trainingId } = args.data
 
     const training = await graphcms.findTraining(trainingId)
@@ -33,6 +35,10 @@ async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args
     if (!Hashable.hasChanged(training, identify)) {
         return
     }
+
+    const externalLink = await api.fetch<t.LinkRef>('linking.createLink', {
+        url: training.directLink
+    })
 
     // If no gallery images were added. We should set the
     // gallery and the thumbnail to the company's images
@@ -46,6 +52,7 @@ async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args
         thumbnail: {
             id: gallery[0].id
         } as t.Asset,
+        externalLink: externalLink.link,
         displayPrice: formatPrice(training.price),
         hash: Hashable.hash(training, identify)
     })
@@ -54,7 +61,8 @@ async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args
 const identify = (training: t.Training): object => {
     return {
         id: training.id,
-        price: training.price
+        price: training.price,
+        directLink: training.directLink
     }
 }
 
@@ -80,7 +88,8 @@ export default _.compose(
         data: yup.mixed()
     })),
     useService<Services>({
-        graphcms: makeGraphCMS()
+        graphcms: makeGraphCMS(),
+        api: makeApi()
     }),
     enrichTrainingOnChange
 )

@@ -19,6 +19,8 @@ export const fetch = async <K = any>(func: ApiFunction, data: any): Promise<K> =
     method: 'POST',
     data: JSON.stringify(data),
     headers: {
+      'Accept': 'application/json', 
+      'Content-Type': 'application/json',
       'X-Api-Key': `Key ${config.apiKey}`
     }
   })
@@ -26,6 +28,12 @@ export const fetch = async <K = any>(func: ApiFunction, data: any): Promise<K> =
   return result.data?.result
 }
 
-export default {
-  fetch
+export type PraxisApi = {
+  fetch: typeof fetch
 }
+
+export const makeApi = (): PraxisApi => ({
+  fetch
+})
+
+export default makeApi
