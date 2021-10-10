@@ -38,7 +38,8 @@ export class GraphCMS {
           slug
           type
           name
-          link
+          directLink
+          externalLink
           price
           displayPrice
           company {
@@ -375,6 +376,7 @@ export class GraphCMS {
           slug
           name
           directLink
+          externalLink
           thumbnail {
             id
             url
@@ -477,7 +479,8 @@ export class GraphCMS {
               endDate
               city
               state
-              link
+              directLink
+              externalLink
               slug
               location {
                 latitude
