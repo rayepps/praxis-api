@@ -4,10 +4,12 @@ import {
     useLambda,
     useService,
     useJsonArgs,
-    useApiKeyAuthentication
+    useApiKeyAuthentication,
+    useCatch
 } from '../../core/http'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
+import runtime from '../../core/runtime'
 
 
 interface Args {
@@ -29,6 +31,12 @@ async function onEventDelete({ args, services }: t.ApiRequestProps<Args, Service
     await graphcms.disconnectFromLocationMapping(event as t.Event)
 }
 
+async function onError({ args, services }: t.ApiRequestProps<Args, Services>) {
+    const { graphcms } = services
+    const { id: eventId } = args.data
+    await graphcms.trackError('event', eventId, 'cleanupEventOnDelete', runtime.rid())
+}
+
 export default _.compose(
     useLambda(),
     useApiKeyAuthentication(config.graphcmsWebhookKey),
@@ -39,5 +47,6 @@ export default _.compose(
     useService<Services>({
         graphcms: makeGraphCMS()
     }),
+    useCatch(onError),
     onEventDelete
 )

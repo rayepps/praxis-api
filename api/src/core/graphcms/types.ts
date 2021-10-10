@@ -9,6 +9,27 @@
 //  should never be exposed to the user -- namely in the mappers.
 //
 
+
+export type TrainingType = 'tactical' | 'medical' | 'survival'
+
+
+//
+//  UTILITY Types
+//
+
+export interface Hash {
+    raw: string
+    fields: string[]
+}
+
+//
+//  INTERNAL GraphCMS Types
+//
+
+/**
+ * All GraphCMS collection items get these fields
+ * generated and managed by GraphCMS
+ */
 interface BaseEntity {
     __typename: string
     id: string
@@ -19,13 +40,6 @@ interface BaseEntity {
     publishedAt: string
     publishedBy: Author
     stage: 'DRAFT' | 'PUBLISHED'
-}
-
-export type TrainingType = 'tactical' | 'medical' | 'survival'
-
-export interface Hash {
-    raw: string
-    fields: string[]
 }
 
 export interface Author {
@@ -46,17 +60,48 @@ export interface Asset extends BaseEntity {
     height: number
 }
 
+//
+//  PROTOCOLS of sorts
+//
+
 export interface Tag extends BaseEntity {
     name: string
     slug: string
 }
+
+export interface Enrichable {
+    enrichedAt: string
+    enrichmentVersion: number | null
+}
+
+export interface Syncable {
+    webflowId: string
+    syncedAt: string
+    desyncedAt: string
+}
+
+export interface Hashable {
+    hash: Hash | null
+}
+
+//
+//  MODELS
+//
 
 export interface LocationMetadata extends BaseEntity {
     state: USState
     cities: Record<string, number>
 }
 
-export interface Company extends BaseEntity {
+export interface ErrorTracker extends BaseEntity {
+    source: string
+    requestId: string
+    company: Company | null
+    event: Event | null
+    training: Training | null
+}
+
+export interface Company extends BaseEntity, Enrichable, Hashable {
     name: string
     key: string
     description: string
@@ -64,15 +109,11 @@ export interface Company extends BaseEntity {
     slug: string
     instructors: Instructor[]
     trainings: Training[]
-    webflowId: string
     directLink: string
     externalLink: string
-    hash: Hash
-    enrichmentStatus: 'success' | 'error' | null
-    enrichmentVersion: number | null
 }
 
-export interface Training extends BaseEntity {
+export interface Training extends BaseEntity, Enrichable, Syncable, Hashable {
     name: string
     company: Company
     directLink: string
@@ -85,13 +126,7 @@ export interface Training extends BaseEntity {
     thumbnail: Asset
     events: Event[]
     slug: string
-    webflowId: string
-    hash: Hash | null
-    enrichmentStatus: 'success' | 'error' | null
-    enrichmentVersion: number | null
     displayPrice: string | null
-    webflowSyncedAt: string
-    webflowSyncStatus: 'success' | 'error'
 }
 
 export interface Instructor extends BaseEntity {
@@ -101,10 +136,9 @@ export interface Instructor extends BaseEntity {
     bio: string
     events: [Event]
     slug: string
-    webflowId: string
 }
 
-export interface Event extends BaseEntity {
+export interface Event extends BaseEntity, Syncable, Enrichable, Hashable {
     startDate: string
     endDate: string
     training: Training
@@ -115,13 +149,7 @@ export interface Event extends BaseEntity {
     city: string
     state: USState
     trainingPrice: number
-    webflowId: string
-    enrichmentStatus: 'success' | 'error' | null
-    enrichmentVersion: number | null
-    webflowSyncedAt: string
-    webflowSyncStatus: 'success' | 'error'
     name: string
-    hash: Hash | null
 }
 
 export interface LocationMapping extends BaseEntity {

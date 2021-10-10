@@ -8,6 +8,7 @@ import {
     useJsonArgs,
     useApiKeyAuthentication
 } from '../../core/http'
+import runtime from '../../core/runtime'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
 import makeApi, { PraxisApi } from '../../core/api'
@@ -50,9 +51,7 @@ async function onCompanyChange({ args, services }: t.ApiRequestProps<Args, Servi
 async function onError({ args, services }: t.ApiRequestProps<Args, Services>) {
     const { graphcms } = services
     const { id: companyId } = args.data
-    await graphcms.updateCompany(companyId, {
-        enrichmentStatus: 'error'
-    })
+    await graphcms.trackError('company', companyId, 'enrichCompanyOnChange', runtime.rid())
 }
 
 const identify = (company: t.Company): object => {

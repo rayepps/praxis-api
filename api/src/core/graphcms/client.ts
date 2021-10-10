@@ -20,6 +20,8 @@ import { ENRICHMENT_VERSION } from '../../const'
 //   )
 // }
 
+type ItemType = 'company' | 'event' | 'training'
+
 export class GraphCMS {
 
   constructor(
@@ -209,8 +211,8 @@ export class GraphCMS {
     await this.client.request(mutation, {
       data: {
         ...data,
-        enrichmentStatus: 'success',
         enrichmentVersion: ENRICHMENT_VERSION,
+        enrichedAt: new Date().toISOString()
       }
     })
   }
@@ -297,6 +299,27 @@ export class GraphCMS {
           connect: [{
             id: event.id
           }]
+        }
+      }
+    })
+  }
+
+  async trackError(itemType: ItemType, itemId: string, source: string, requestId: string): Promise<void> {
+    const mutation = gql`
+      mutation MakeErrorTrackingRecord($data: ErrorTrackingCreateInput!) {
+        createErrorTracking(data: $data) {
+          id
+        }
+      }
+    `
+    await this.client.request(mutation, {
+      data: {
+        source,
+        requestId,
+        [itemType]: {
+          connect: {
+            id: itemId
+          }
         }
       }
     })
@@ -406,8 +429,8 @@ export class GraphCMS {
     await this.client.request(mutation, {
       data: {
         ...data,
-        enrichmentStatus: 'success',
         enrichmentVersion: ENRICHMENT_VERSION,
+        enrichedAt: new Date().toISOString()
       }
     })
   }
@@ -617,15 +640,13 @@ export class GraphCMS {
       query listLameEvents {
         events(first: 10, where: {
           OR: [{
-            enrichmentVersion_lt: ${currentEnrichmentVersion}, 
-            enrichmentStatus_not: error
+            enrichmentVersion_lt: ${currentEnrichmentVersion}
           }, {
             enrichmentVersion: null
-            enrichmentStatus: null
           }]
         }) {
           id
-          enrichmentStatus
+          enrichedAt
           enrichmentVersion
         }
       }
@@ -640,15 +661,13 @@ export class GraphCMS {
       query listLameTrainings {
         trainings(first: 10, where: {
           OR: [{
-            enrichmentVersion_lt: ${currentEnrichmentVersion}, 
-            enrichmentStatus_not: error
+            enrichmentVersion_lt: ${currentEnrichmentVersion}
           }, {
             enrichmentVersion: null
-            enrichmentStatus: null
           }]
         }) {
           id
-          enrichmentStatus
+          enrichedAt
           enrichmentVersion
         }
       }

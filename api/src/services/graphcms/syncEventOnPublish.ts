@@ -11,6 +11,7 @@ import makeWebflow, { Webflow } from '../../core/webflow'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
 import logger from '../../core/logger'
+import runtime from '../../core/runtime'
 
 
 interface Args {
@@ -41,19 +42,16 @@ async function syncEventOnPublish({ args, services }: t.ApiRequestProps<Args, Se
 
   await graphcms.updateEvent(event.id, {
     webflowId: event.webflowId,
-    webflowSyncStatus: 'success',
-    webflowSyncedAt: new Date().toISOString()
+    syncedAt: new Date().toISOString()
   })
   
 }
 
-async function onEventSyncError({ error, args, services }: t.ApiRequestProps<Args, Services>) {
+async function onError({ error, args, services }: t.ApiRequestProps<Args, Services>) {
   const { graphcms } = services
   const { id: eventId } = args.data
   logger.debug('Handling error, updating sync status', { error })
-  await graphcms.updateEvent(eventId, {
-    webflowSyncStatus: 'error'
-  })
+  await graphcms.trackError('event', eventId, 'syncEventOnPublish', runtime.rid())
 }
 
 export default _.compose(
@@ -67,6 +65,6 @@ export default _.compose(
     webflow: makeWebflow(),
     graphcms: makeGraphCMS()
   }),
-  useCatch(onEventSyncError),
+  useCatch(onError),
   syncEventOnPublish
 )

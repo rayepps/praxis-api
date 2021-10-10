@@ -14,6 +14,7 @@ import makeGeoClient, { GeoClient } from '../../core/geo'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
 import makeApi, { PraxisApi } from '../../core/api'
+import runtime from '../../core/runtime'
 
 
 interface Args {
@@ -73,12 +74,10 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
     }
 }
 
-async function onEventChangeError({ args, services }: t.ApiRequestProps<Args, Services>) {
+async function onError({ args, services }: t.ApiRequestProps<Args, Services>) {
     const { graphcms } = services
     const { id: eventId } = args.data
-    await graphcms.updateEvent(eventId, {
-        enrichmentStatus: 'error'
-    })
+    await graphcms.trackError('event', eventId, 'enrichEventOnChange', runtime.rid())
 }
 
 const identify = (event: t.Event): object => {
@@ -119,6 +118,6 @@ export default _.compose(
         geo: makeGeoClient(),
         api: makeApi()
     }),
-    useCatch(onEventChangeError),
+    useCatch(onError),
     onEventChange
 )

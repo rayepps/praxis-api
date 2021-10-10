@@ -11,6 +11,7 @@ import makeWebflow, { Webflow } from '../../core/webflow'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
 import logger from '../../core/logger'
+import runtime from '../../core/runtime'
 
 
 interface Args {
@@ -46,8 +47,7 @@ async function syncTrainingOnPublish({ args, services }: t.ApiRequestProps<Args,
   logger.debug('updating training with webflow sync in gcms')
   await graphcms.updateEvent(training.id, {
     webflowId: training.webflowId,
-    webflowSyncStatus: 'success',
-    webflowSyncedAt: new Date().toISOString()
+    syncedAt: new Date().toISOString()
   })
   
 }
@@ -56,9 +56,7 @@ async function onError({ error, args, services }: t.ApiRequestProps<Args, Servic
   const { graphcms } = services
   const { id: trainingId } = args.data
   logger.debug('Handling error. Updating sync status', { error })
-  await graphcms.updateEvent(trainingId, {
-    webflowSyncStatus: 'error'
-  })
+  await graphcms.trackError('training', trainingId, 'syncTrainingOnPublish', runtime.rid())
 }
 
 export default _.compose(

@@ -4,12 +4,14 @@ import {
     useLambda,
     useService,
     useJsonArgs,
-    useApiKeyAuthentication
+    useApiKeyAuthentication,
+    useCatch
 } from '../../core/http'
 import Hashable from '../../core/graphcms/hashable'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
 import makeApi, { PraxisApi } from '../../core/api'
+import runtime from '../../core/runtime'
 
 
 interface Args {
@@ -80,6 +82,12 @@ const formatPrice = (price: number): string => {
     return `$${withoutEmptyDecimals}`
 }
 
+async function onError({ args, services }: t.ApiRequestProps<Args, Services>) {
+    const { graphcms } = services
+    const { id: trainingId } = args.data
+    await graphcms.trackError('training', trainingId, 'enrichTrainingOnChange', runtime.rid())
+}
+
 export default _.compose(
     useLambda(),
     useApiKeyAuthentication(config.graphcmsWebhookKey),
@@ -91,5 +99,6 @@ export default _.compose(
         graphcms: makeGraphCMS(),
         api: makeApi()
     }),
+    useCatch(onError),
     enrichTrainingOnChange
 )
