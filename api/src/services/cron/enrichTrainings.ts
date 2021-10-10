@@ -27,8 +27,8 @@ async function enrichTrainings({ services }: t.ApiRequestProps<Args, Services>):
   logger.debug(`Found ${trainings.length} trainings that need enrichment`, {
     trainings: trainings.map(t => ({ 
       id: t.id, 
-      enrichmentVersion: t.enrichmentVersion, 
-      enrichmentStatus: t.enrichmentStatus 
+      currentEnrichmentVersion: ENRICHMENT_VERSION,
+      enrichmentVersion: t.enrichmentVersion
     }))
   })
   for (const training of trainings) {

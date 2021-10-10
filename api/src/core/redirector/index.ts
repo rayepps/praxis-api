@@ -37,6 +37,7 @@ const createRedirectLink = async ({
 }): Promise<CreateLinkResponse> => {
   const path = nanoid()
   const [err, response] = await _.try<AxiosResponse>(axios)({
+    url: 'https://api.short.io/links',
     method: 'POST',
     headers: {
       'Accept': 'application/json', 

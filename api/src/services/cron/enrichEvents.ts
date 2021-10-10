@@ -27,8 +27,8 @@ async function enrichEvents({ services }: t.ApiRequestProps<Args, Services>): Pr
   logger.debug(`Found ${events.length} events that need enrichment`, {
     events: events.map(e => ({ 
       id: e.id, 
-      enrichmentVersion: e.enrichmentVersion, 
-      enrichmentStatus: e.enrichmentStatus 
+      currentEnrichmentVersion: ENRICHMENT_VERSION,
+      enrichmentVersion: e.enrichmentVersion
     }))
   })
   for (const event of events) {
