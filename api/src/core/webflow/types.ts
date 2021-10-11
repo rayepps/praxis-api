@@ -9,6 +9,25 @@
 //  should never be exposed to the user -- namely in the mappers.
 //
 
+export type WebhookTriggerType = 'form_submission'
+    | 'site_publish'
+    | 'ecomm_new_order'
+    | 'ecomm_order_changed'
+    | 'ecomm_inventory_changed'
+    | 'collection_item_created'
+    | 'collection_item_changed'
+    | 'collection_item_deleted'
+
+export interface Webhook { 
+    _id: string
+    triggerType: WebhookTriggerType
+    triggerId: string
+    site: string
+    filter: any
+    lastUsed: string
+    createdOn: string
+}
+
 interface BaseEntity {
     _id: string
     name: string

@@ -315,7 +315,7 @@ module "lambda" {
     PRAXIS_SERVICE        = each.value.service
     PRAXIS_FUNCTION       = each.value.function
     PRAXIS_VERSION        = each.value.version
-    PRAXIS_API_URL        = "https://${aws_apigatewayv2_stage.default.invoke_url}"
+    PRAXIS_API_URL        = aws_apigatewayv2_stage.default.invoke_url
     TOKEN_SIG_SECRET      = data.aws_ssm_parameter.token_sig_secret.value
     DYNAMO_TABLE_NAME     = aws_dynamodb_table.main.name
     CORALOGIX_PRIVATE_KEY = "cc2299fc-63d2-f191-e41b-b1b5f82e7e4a"
