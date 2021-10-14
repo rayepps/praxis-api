@@ -130,6 +130,27 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_enrich_trainings_lamb
   source_arn    = aws_cloudwatch_event_rule.enrich_trainings_cron.arn
 }
 
+// Enrich Companies
+resource "aws_cloudwatch_event_rule" "enrich_companies_cron" {
+  name                = "enrich-companies-cron"
+  description         = "Fires the enrich companies lambda every 1 hour"
+  schedule_expression = "rate(10 minutes)"
+}
+
+resource "aws_cloudwatch_event_target" "enrich_companies_cron" {
+  rule      = aws_cloudwatch_event_rule.enrich_companies_cron.name
+  target_id = "lambda"
+  arn       = module.lambda["cron.enrichCompanies"].lambda_function_arn
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_enrich_companies_lambda" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda["cron.enrichCompanies"].lambda_function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.enrich_companies_cron.arn
+}
+
 // Cleanup Events
 resource "aws_cloudwatch_event_rule" "cleanup_past_events_cron" {
   name                = "cleanup-past-events-cron"

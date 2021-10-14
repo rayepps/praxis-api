@@ -51,7 +51,7 @@ async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args
         ? training.gallery
         : [training.company.thumbnail]
 
-    await graphcms.updateTraining(training.id, {
+    await graphcms.enrichTraining(training.id, {
         gallery,
         thumbnail: {
             id: gallery[0].id

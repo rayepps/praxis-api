@@ -219,7 +219,7 @@ export class GraphCMS {
     })
   }
 
-  async updateTraining(id: string, patch: Partial<t.Training>): Promise<void> {
+  async enrichTraining(id: string, patch: Partial<t.Training>): Promise<void> {
     const mutation = gql`
       mutation enrichTraining($data: TrainingUpdateInput!) {
         updateTraining(
@@ -235,7 +235,7 @@ export class GraphCMS {
     const data: any = patch
     if (patch.gallery) {
       data.gallery = {
-        connect: data.gallery.map(asset => ({
+        connect: patch.gallery.map(asset => ({
           where: {
             id: asset.id
           }
@@ -245,12 +245,16 @@ export class GraphCMS {
     if (patch.thumbnail) {
       data.thumbnail = {
         connect: {
-          id: data.thumbnail.id
+          id: patch.thumbnail.id
         }
       }
     }
     await this.client.request(mutation, {
-      data
+      data: {
+        ...data,
+        enrichmentVersion: ENRICHMENT_VERSION,
+        enrichedAt: new Date().toISOString()
+      }
     })
   }
 
@@ -676,6 +680,26 @@ export class GraphCMS {
     `
     const response = await this.client.request<{ trainings: t.Training[] }>(query)
     return response.trainings
+  }
+  
+  async listCompaniesNeedingEnrichment(currentEnrichmentVersion: number) {
+    const query = gql`
+      query listLameCompanies {
+        companies(first: 10, where: {
+          OR: [{
+            enrichmentVersion_lt: ${currentEnrichmentVersion}
+          }, {
+            enrichmentVersion: null
+          }]
+        }) {
+          id
+          enrichedAt
+          enrichmentVersion
+        }
+      }
+    `
+    const response = await this.client.request<{ companies: t.Company[] }>(query)
+    return response.companies
   }
 
 }
