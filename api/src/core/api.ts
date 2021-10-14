@@ -5,7 +5,6 @@
 import _ from 'radash'
 import axios, { AxiosResponse } from 'axios'
 import config from '../config'
-import logger from './logger'
 
 // Keeping this minimal. Only adding
 // function identifiers as needed
@@ -15,10 +14,6 @@ export type ApiFunction = 'graphcms.enrichEventOnChange'
 
 export const fetch = async <K = any>(func: ApiFunction, data: any): Promise<K> => {
   const [service, functionName] = func.split('.')
-  logger.log('api pre-fetch', {
-    'config.baseUrl': config.baseUrl,
-    service, functionName
-  })
   const [err, result] = await _.try<AxiosResponse>(axios)({
     url: `${config.baseUrl}/${service}/${functionName}`,
     method: 'POST',
@@ -30,9 +25,7 @@ export const fetch = async <K = any>(func: ApiFunction, data: any): Promise<K> =
     }
   })
   if (err) throw err
-  logger.log('api post-fetch: result', result)
-  logger.log('api post-fetch: result.data', result.data)
-  return result.data?.result
+  return result.data?.payload
 }
 
 export type PraxisApi = {
