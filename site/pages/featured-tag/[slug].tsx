@@ -38,7 +38,9 @@ const FeaturedTagPage: NextPage<Props> = ({
         <title>Praxis | {featuredTag.tag.name} Trainings</title>
         <meta
           name="description"
-          content="The best tactical, survival, and medical trainings from over a hundred companies across the US. Organized and searchable. Start training today."
+          content={
+            `The best ${featuredTag.tag.name} trainings from over a hundred companies across the US. Organized and searchable. Start training today.`
+          }
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
