@@ -34,6 +34,8 @@ async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args
 
     const training = await graphcms.findTraining(trainingId)
 
+    console.log(training)
+
     if (!Hashable.hasChanged(training, identify)) {
         return
     }
