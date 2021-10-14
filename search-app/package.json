@@ -1,6 +1,7 @@
 {
   "name": "praxis-search-app",
   "version": "0.0.5",
+  "license": "UNLICENSED",
   "private": true,
   "scripts": {
     "dev": ". ./env.sh && PORT=7705 SKIP_PREFLIGHT_CHECK=true react-scripts start",

@@ -2,7 +2,7 @@
   "name": "praxis-api",
   "version": "0.0.30",
   "main": "index.js",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "scripts": {
     "test": "jest --coverage",
     "build": "ts-node ./src/dev/build.ts",
