@@ -39,7 +39,8 @@ async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args
     }
 
     const externalLink = await api.fetch<t.LinkRef>('linking.createLink', {
-        url: training.directLink
+        url: training.directLink,
+        title: `Training: ${training.name} (${trainingId})`
     })
 
     // If no gallery images were added. We should set the

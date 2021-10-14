@@ -43,7 +43,8 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
     }
 
     const externalLink = await api.fetch<t.LinkRef>('linking.createLink', {
-        url: event.directLink
+        url: event.directLink,
+        title: `Event: ${event.training.name} (${eventId})`
     })
 
     const location = await geo.lookupCoordinates(event.location.latitude, event.location.longitude)

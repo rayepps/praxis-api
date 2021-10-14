@@ -39,7 +39,8 @@ async function onCompanyChange({ args, services }: t.ApiRequestProps<Args, Servi
     }
 
     const externalLink = await api.fetch<t.LinkRef>('linking.createLink', {
-        url: company.directLink
+        url: company.directLink,
+        title: `Company: ${company.name} (${companyId})`
     })
 
     await graphcms.enrichCompany(company.id, {
