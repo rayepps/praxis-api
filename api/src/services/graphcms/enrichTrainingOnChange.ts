@@ -12,7 +12,6 @@ import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
 import makeApi, { PraxisApi } from '../../core/api'
 import runtime from '../../core/runtime'
-import logger from '../../core/logger'
 import { ENRICHMENT_VERSION } from '../../const'
 
 
@@ -35,8 +34,6 @@ async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args
     const { id: trainingId } = args.data
 
     const training = await graphcms.findTraining(trainingId)
-
-    logger.debug('training from graphcms', training)
 
     if (!Hashable.hasChanged(training, identify)) {
         return
