@@ -51,8 +51,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.x
-          cache: 'yarn'
-          cache-dependency-path: api/yarn.lock
+          # cache: 'yarn'
+          # cache-dependency-path: api/yarn.lock
       - run: yarn
         working-directory: ./api
       - run: yarn build
@@ -80,8 +80,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.x
-          cache: 'yarn'
-          cache-dependency-path: site/yarn.lock
+          # cache: 'yarn'
+          # cache-dependency-path: site/yarn.lock
       - run: yarn
         working-directory: ./site
       - run: yarn tf-next
