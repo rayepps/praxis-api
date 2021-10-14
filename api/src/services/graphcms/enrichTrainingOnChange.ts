@@ -13,6 +13,7 @@ import config from '../../config'
 import makeApi, { PraxisApi } from '../../core/api'
 import runtime from '../../core/runtime'
 import logger from '../../core/logger'
+import { ENRICHMENT_VERSION } from '../../const'
 
 
 interface Args {
@@ -68,7 +69,8 @@ const identify = (training: t.Training): object => {
     return {
         id: training.id,
         price: training.price,
-        directLink: training.directLink
+        directLink: training.directLink,
+        enrichmentVersion: ENRICHMENT_VERSION
     }
 }
 

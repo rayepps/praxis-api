@@ -38,7 +38,7 @@ async function createLink({ args, services }: t.ApiRequestProps<Args, Services>)
     code,
     url,
     domain: URI(url).domain(),
-    link,
+    link: `https://${link}`, // short.io does not include protocol
     title
   }
 

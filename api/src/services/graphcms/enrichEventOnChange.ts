@@ -15,6 +15,7 @@ import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
 import makeApi, { PraxisApi } from '../../core/api'
 import runtime from '../../core/runtime'
+import { ENRICHMENT_VERSION } from '../../const'
 
 
 interface Args {
@@ -92,7 +93,8 @@ const identify = (event: t.Event): object => {
         startDate: event.startDate,
         endDate: event.endDate,
         price: event.training.price,
-        directLink: event.directLink
+        directLink: event.directLink,
+        enrichmentVersion: ENRICHMENT_VERSION
     }
 }
 

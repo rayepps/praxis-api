@@ -12,6 +12,7 @@ import runtime from '../../core/runtime'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
 import makeApi, { PraxisApi } from '../../core/api'
+import { ENRICHMENT_VERSION } from '../../const'
 
 
 interface Args {
@@ -58,7 +59,8 @@ async function onError({ args, services }: t.ApiRequestProps<Args, Services>) {
 const identify = (company: t.Company): object => {
     return {
         id: company.id,
-        directLink: company.directLink
+        directLink: company.directLink,
+        enrichmentVersion: ENRICHMENT_VERSION
     }
 }
 
