@@ -30,6 +30,8 @@ export const fetch = async <K = any>(func: ApiFunction, data: any): Promise<K> =
     }
   })
   if (err) throw err
+  logger.log('api post-fetch: result', result)
+  logger.log('api post-fetch: result.data', result.data)
   return result.data?.result
 }
 
