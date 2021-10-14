@@ -103,7 +103,6 @@ export interface ErrorTracker extends BaseEntity {
 
 export interface Company extends BaseEntity, Enrichable, Hashable {
     name: string
-    key: string
     description: string
     thumbnail: Asset
     slug: string
