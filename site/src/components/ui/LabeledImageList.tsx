@@ -5,6 +5,7 @@ import {
 } from 'evergreen-ui'
 import Link from 'next/link'
 import theme from 'src/theme'
+import { Center } from 'src/components/Layout'
 import { useBreakpoint } from 'src/hooks'
 
 
@@ -50,16 +51,21 @@ export default function LabeledImageList({
             justifyContent='center'
             alignItems='center'
           >
-            <Text
-              display='block'
-              padding={majorScale(4)}
+            <Center
               backgroundColor={theme.colors.green.alpha(0.5).rgb().string()}
-              color={theme.colors.white.hex()}
-              borderRadius='20px'
-              fontSize={30}
+              borderRadius='50%'
+              height={100}
+              width={100}
             >
-              {item.label}
-            </Text>
+              <Text
+                display='block'
+                color={theme.colors.white.hex()}
+                size={400}
+                fontWeight='bolder'
+              >
+                {item.label}
+              </Text>
+            </Center>
           </Pane>
         </Link>
       ))}

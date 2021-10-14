@@ -39,9 +39,9 @@ export const useBreakpoint = () => {
     return false
   }
 
-  const select = <T> (choices: Partial<BreakpointMap<T>>, defaultValue: T): T => {
+  const select = <T> (choices: Partial<BreakpointMap<T>>, defaultValue?: T): T => {
     const value = choices[currentBreakpoint]
-    return value ?? defaultValue
+    return value ?? defaultValue ?? undefined as any as T
   }
 
   const use = <T> (value: T, {

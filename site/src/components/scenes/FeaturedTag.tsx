@@ -19,6 +19,7 @@ export default function FeaturedTagScene({
       <Hero
         text={featuredTag.tag.name}
         backgroundImage={featuredTag.thumbnail.url}
+        align='top'
       />
       <Pane padding={majorScale(4)}>
         <TrainingList
