@@ -13,6 +13,7 @@ import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../config'
 import makeApi, { PraxisApi } from '../../core/api'
 import { ENRICHMENT_VERSION } from '../../const'
+import logger from '../../core/logger'
 
 
 interface Args {
@@ -36,6 +37,7 @@ async function onCompanyChange({ args, services }: t.ApiRequestProps<Args, Servi
     const company = await graphcms.findCompany(companyId)
 
     if (!Hashable.hasChanged(company, identify)) {
+        logger.debug('Skipping company because hash is still valid', { hash: company.hash })
         return
     }
 

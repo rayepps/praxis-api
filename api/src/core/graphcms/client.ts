@@ -64,7 +64,6 @@ export class GraphCMS {
             url
           }
           hash
-          webflowId
         }
       }
     `
@@ -411,7 +410,6 @@ export class GraphCMS {
             url
           }
           hash
-          webflowId
         }
       }
     `
