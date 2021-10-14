@@ -131,6 +131,8 @@ export class GraphCMS {
           endDate
           city
           state
+          directLink
+          externalLink
           training {
             id
             slug
