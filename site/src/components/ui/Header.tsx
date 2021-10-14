@@ -11,7 +11,7 @@ import theme from 'src/theme'
 
 export default function Header() {
   return (
-    <Split 
+    <Split
       padding={majorScale(2)}
       borderBottom={`1px solid ${theme.colors.lightGrey.hex()}`}
       alignItems='center'
@@ -19,7 +19,7 @@ export default function Header() {
       <Pane flex={1}>
         <Link href="/">
           <a>
-            <Wordmark 
+            <Wordmark
               height={30}
             />
           </a>
@@ -27,23 +27,27 @@ export default function Header() {
       </Pane>
       <Pane>
         <Link
-          href="/search" 
+          href="/search"
           passHref
         >
-          <EvergreenLink 
+          <EvergreenLink
             marginRight={majorScale(4)}
-            color={theme.colors.black.hex()}
+            style={{
+              color: theme.colors.black.hex()
+            }}
           >
             Trainings
           </EvergreenLink>
         </Link>
         <Link
-          href="/about" 
+          href="/about"
           passHref
         >
           <EvergreenLink
             marginRight={majorScale(4)}
-            color={theme.colors.black.hex()}
+            style={{
+              color: theme.colors.black.hex()
+            }}
           >
             About
           </EvergreenLink>
@@ -52,7 +56,9 @@ export default function Header() {
           href="https://shop.praxisco.us"
           padding={minorScale(2)}
           backgroundColor={theme.colors.black.hex()}
-          color={theme.colors.white.hex()}
+          style={{
+            color: theme.colors.white.hex()
+          }}
         >
           shop
         </EvergreenLink>

@@ -9,6 +9,7 @@ import Link from 'next/link'
 import theme from 'src/theme'
 import * as t from '../../types'
 import styled from 'styled-components'
+import { useBreakpoint } from 'src/hooks'
 
 
 const StyledItem = styled(Pane)`
@@ -33,7 +34,12 @@ export default function TrainingList({
   orientation: 'vertical' | 'horizontal'
   oneRow?: boolean
 }) {
-  const columns = 4
+  const breakpoint = useBreakpoint()
+  const columns = breakpoint.select({
+    'xsmall': 1,
+    'small': 2,
+    'medium': 4
+  }, 4)
   const items = oneRow
     ? trainings.slice(0, columns)
     : trainings
@@ -89,7 +95,7 @@ export default function TrainingList({
             </Pane>
             <Pane marginTop={majorScale(1)}>
               <Heading>{training.name}</Heading>
-              <Text>{training.company.name}</Text>
+              <Text>{training.company?.name}</Text>
             </Pane>
           </StyledItem>
         </Link>

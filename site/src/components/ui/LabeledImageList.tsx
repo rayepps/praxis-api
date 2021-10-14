@@ -5,6 +5,7 @@ import {
 } from 'evergreen-ui'
 import Link from 'next/link'
 import theme from 'src/theme'
+import { useBreakpoint } from 'src/hooks'
 
 
 interface LabeledImage {
@@ -18,7 +19,16 @@ export default function LabeledImageList({
 }: {
   items: LabeledImage[]
 }) {
-  const columns = 2
+  const breakpoint = useBreakpoint()
+  const columns = breakpoint.select({
+    'xsmall': 1
+  }, 2)
+  const height = breakpoint.select({
+    'xsmall': 300,
+    'small': 300,
+    'medium': 350,
+    'large': 450
+  }, 500)
   return (
     <Pane
       display='grid'
@@ -34,7 +44,7 @@ export default function LabeledImageList({
             backgroundImage={`url(${item.imageUrl})`}
             backgroundSize='cover'
             backgroundPosition='center center'
-            height={500}
+            height={height}
             borderRadius={4}
             display='flex'
             justifyContent='center'

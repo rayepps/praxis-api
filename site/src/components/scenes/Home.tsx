@@ -15,7 +15,7 @@ import StatsBlocks from '../ui/StatsBlocks'
 import LabeledImageList from '../ui/LabeledImageList'
 import * as t from '../../types'
 import theme from 'src/theme'
-
+import { useBreakpoint } from 'src/hooks'
 
 export default function HomeScene({
   popularTrainings,
@@ -25,15 +25,28 @@ export default function HomeScene({
   featuredTags: t.FeatureTag[]
 }) {
 
+  const breakpoint = useBreakpoint()
+
   return (
     <>
       {/* HERO */}
-      <Split minHeight='80vh' borderBottom={`1px solid ${theme.colors.lightGrey.hex()}`}>
+      <Split 
+        minHeight='80vh' 
+        borderBottom={`1px solid ${theme.colors.lightGrey.hex()}`}
+        paddingY={majorScale(4)}
+      >
         <Stack
           flex={1}
           paddingX={majorScale(4)}
           justifyContent='center'
         >
+          {breakpoint.showAt('small', 'down') && (
+            <Center flex={1}>
+              <PraxisStar
+                height={200}
+              />
+            </Center>
+          )}
           <Pane>
             <Heading
               size={900}
@@ -50,23 +63,32 @@ export default function HomeScene({
             <Link href="/search">
               <EvergreenLink
                 backgroundColor={theme.colors.black.hex()}
-                color={theme.colors.white.hex()}
+                style={{
+                  color: theme.colors.white.hex()
+                }}
                 padding={minorScale(2)}
                 marginRight={majorScale(2)}
               >
                 Start Training
               </EvergreenLink>
             </Link>
-            <EvergreenLink href="https://shop.praxisco.us">
+            <EvergreenLink
+              href="https://shop.praxisco.us"
+              style={{
+                color: theme.colors.black.hex()
+              }}
+            >
               True Believer?
             </EvergreenLink>
           </Pane>
         </Stack>
-        <Center flex={1}>
-          <PraxisStar
-            height={500}
-          />
-        </Center>
+        {breakpoint.showAt('medium', 'up') && (
+          <Center flex={1}>
+            <PraxisStar
+              height={500}
+            />
+          </Center>
+        )}
       </Split>
 
       {/* POPULAR TRAINNGS */}
@@ -76,15 +98,41 @@ export default function HomeScene({
             <Heading size={700}>Popular Trainings</Heading>
             <Paragraph maxWidth={400}>These are some of our most popular trainings from some our best companies. You can gaurntee they won't be easy, but they will be worth it.</Paragraph>
           </Pane>
-          <Pane>
-            <EvergreenLink href="/search">View All Trainings</EvergreenLink>
-          </Pane>
+          {breakpoint.showAt('medium', 'up') && (
+            <Pane>
+              <EvergreenLink
+                href="/search"
+                style={{
+                  color: theme.colors.black.hex()
+                }}
+              >
+                View All Trainings
+              </EvergreenLink>
+            </Pane>
+          )}
         </Split>
         <TrainingList
           orientation='horizontal'
           trainings={popularTrainings}
-          oneRow
+          oneRow={breakpoint.use(true, {
+            at: 'medium',
+            and: 'up',
+            else: false
+          })}
         />
+        {breakpoint.showAt('small', 'down') && (
+          <EvergreenLink
+            href="/search"
+            backgroundColor={theme.colors.black.hex()}
+            textAlign='center'
+            padding={majorScale(1)}
+            style={{
+              color: theme.colors.white.hex()
+            }}
+          >
+            View All Trainings
+          </EvergreenLink>
+        )}
       </Stack>
 
       {/* STATS */}
@@ -106,7 +154,7 @@ export default function HomeScene({
         <Pane>
           <Heading size={700}>Advanced &amp; Unique</Heading>
           <Paragraph maxWidth={400}>
-            These are some of our most popular trainings from some our best companies. You can gaurntee they won't be easy, but they will be worth it.
+            These are hunter safety, ccw, and gun safety courses. Although those are important, you can find them anywhere. Praxis is about training for survival.
           </Paragraph>
         </Pane>
         <LabeledImageList

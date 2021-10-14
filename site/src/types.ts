@@ -69,7 +69,6 @@ export interface FeaturedTag {
 export interface Company {
     id: string
     name: string
-    key: string
     description: string
     directLink: string
     externalLink: string
@@ -77,7 +76,6 @@ export interface Company {
     slug: string
     instructors: Instructor[]
     trainings: Training[]
-    webflowId: string
 }
 
 export interface Training {

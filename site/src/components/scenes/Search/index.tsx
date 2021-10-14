@@ -53,10 +53,8 @@ export default function SearchScene() {
   return (
     <Recoil.RecoilRoot>
       <StyledApp>
-        <BreakpointProvider>
-          <UrlStateSync />
-          <SearchSceneContent />
-        </BreakpointProvider>
+        <UrlStateSync />
+        <SearchSceneContent />
       </StyledApp>
     </Recoil.RecoilRoot>
   )

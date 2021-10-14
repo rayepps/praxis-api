@@ -383,7 +383,6 @@ export class GraphCMS {
         companies {
           id
           name
-          key
           thumbnail {
             url
           }
@@ -531,7 +530,6 @@ export class GraphCMS {
                   id
                   slug
                   name
-                  key
                   thumbnail {
                     id
                     url
@@ -596,7 +594,7 @@ export class GraphCMS {
         vars.where.AND.push({
           training: {
             company: {
-              key: search.company
+              slug: search.company
             }
           }
         })

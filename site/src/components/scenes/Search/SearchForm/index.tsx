@@ -175,7 +175,7 @@ export default function SearchForm({
         <Split>
           <SelectMenu
             title="Company"
-            options={companies.map(c => ({ label: c.name, value: c.key }))}
+            options={companies.map(c => ({ label: c.name, value: c.slug }))}
             selected={filters.company}
             filterPlaceholder="Choose company"
             onSelect={(item) => updateCompany(item.value as string)}
@@ -184,7 +184,7 @@ export default function SearchForm({
               flex={1}
               marginRight={majorScale(1)}
             >
-              {filters.company ? companies.find(c => c.key === filters.company)?.name : 'Select company'}
+              {filters.company ? companies.find(c => c.slug === filters.company)?.name : 'Select company'}
             </Button>
           </SelectMenu>
           <IconButton
