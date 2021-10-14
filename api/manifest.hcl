@@ -75,6 +75,9 @@ service "cron" {
   endpoint "enrichTrainings" {
     version = "0.0.1"
   }
+  endpoint "enrichCompanies" {
+    version = "0.0.1"
+  }
 }
 
 service "linking" {
