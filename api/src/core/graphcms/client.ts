@@ -254,6 +254,27 @@ export class GraphCMS {
     })
   }
 
+  async trackError(itemType: ItemType, itemId: string, source: string, requestId: string): Promise<void> {
+    const mutation = gql`
+      mutation MakeErrorTrackingRecord($data: ErrorTrackingCreateInput!) {
+        createErrorTracking(data: $data) {
+          id
+        }
+      }
+    `
+    await this.client.request(mutation, {
+      data: {
+        source,
+        requestId,
+        [itemType]: {
+          connect: {
+            id: itemId
+          }
+        }
+      }
+    })
+  }
+
   async listCitiesInState(state: t.USState): Promise<string[]> {
     const query = gql`
       query ListLocationsInState {
@@ -272,7 +293,7 @@ export class GraphCMS {
     const query = gql`
       query findLocationMapping {
         locationMapping(where: {
-          slug: "${slugger(`${state}-${city}`)}"
+          slug: "${slugger(state, city)}"
         }) {
           city
           state
@@ -296,32 +317,11 @@ export class GraphCMS {
       data: {
         city: event.city,
         state: event.state,
-        slug: slugger(`${event.state}-${event.city}`),
+        slug: slugger(event.state, event.city),
         events: {
           connect: [{
             id: event.id
           }]
-        }
-      }
-    })
-  }
-
-  async trackError(itemType: ItemType, itemId: string, source: string, requestId: string): Promise<void> {
-    const mutation = gql`
-      mutation MakeErrorTrackingRecord($data: ErrorTrackingCreateInput!) {
-        createErrorTracking(data: $data) {
-          id
-        }
-      }
-    `
-    await this.client.request(mutation, {
-      data: {
-        source,
-        requestId,
-        [itemType]: {
-          connect: {
-            id: itemId
-          }
         }
       }
     })
@@ -338,7 +338,7 @@ export class GraphCMS {
     const mutation = gql`
       mutation UpdateLocationMapping($data: LocationMappingUpdateInput!) {
         updateLocationMapping(where: {
-          slug: "${slugger(`${event.state}-${event.city}`)}"
+          slug: "${slugger(event.state, event.city)}"
         }, data: $data) {
           id
         }
@@ -347,9 +347,9 @@ export class GraphCMS {
     await this.client.request(mutation, {
       data: {
         events: {
-          connect: {
+          connect: [{
             id: event.id
-          }
+          }]
         }
       }
     })
@@ -359,7 +359,7 @@ export class GraphCMS {
     const mutation = gql`
       mutation RemoveLocationMapping($data: LocationMappingUpdateInput!) {
         updateLocationMapping(where: {
-          slug: "${slugger(`${event.state}-${event.city}`)}"
+          slug: "${slugger(event.state, event.city)}"
         }, data: $data) {
           id
         }

@@ -50,14 +50,14 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
 
     const location = await geo.lookupCoordinates(event.location.latitude, event.location.longitude)
 
-    const previousLocation = event.state ? slugger(`${event.state}-${event.city}`) : null
-    const newLocation = slugger(`${location.state}-${location.city}`)
+    const previousLocation = slugger(event.state, event.city)
+    const newLocation = slugger(location.state, location.city)
     const locationHasChange = previousLocation !== newLocation
 
     await graphcms.enrichEvent(event.id, {
         city: location.city,
         state: location.state,
-        slug: slug(event, location),
+        slug: makeEventSlug(event, location),
         trainingPrice: event.training.price,
         name: event.training.name,
         externalLink: externalLink.link,
@@ -88,6 +88,7 @@ const identify = (event: t.Event): object => {
         latitude: event.location?.latitude,
         longitude: event.location?.longitude,
         trainingId: event.training?.id,
+        companyName: event.training?.company?.name,
         trainingName: event.training?.name,
         trainingSlug: event.training?.slug,
         startDate: event.startDate,
@@ -98,15 +99,18 @@ const identify = (event: t.Event): object => {
     }
 }
 
-const slug = (event: t.Event, location: {
+const makeEventSlug = (event: t.Event, location: {
     city: string
     state: string
 }) => {
-    const city = location.city.toLowerCase()
-    const state = location.state.toLowerCase()
-    const start = formatDate(new Date(event.startDate), 'dd-mm-yyyy')
-    const end = formatDate(new Date(event.startDate), 'dd-mm-yyyy')
-    return `${event.training.slug}-${city}-${state}-${start}-${end}`
+    return slugger(
+        event.training.company.slug,
+        event.training.slug,
+        location.city,
+        location.state,
+        formatDate(new Date(event.startDate), 'dd-mm-yyyy'),
+        formatDate(new Date(event.startDate), 'dd-mm-yyyy')
+    )
 }
 
 export default _.compose(

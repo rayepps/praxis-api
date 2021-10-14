@@ -25,6 +25,7 @@ export const fetch = async <K = any>(func: ApiFunction, data: any): Promise<K> =
     }
   })
   if (err) throw err
+  if (result.status > 399) throw new Error('Request to api failed')
   return result.data?.payload
 }
 
