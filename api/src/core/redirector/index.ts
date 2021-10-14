@@ -47,7 +47,7 @@ const createRedirectLink = async ({
     data: JSON.stringify({
       allowDuplicates: false, 
       domain: 'link.praxisco.us',
-      originalUrl: url,
+      originalURL: url,
       path,
       title
     })
