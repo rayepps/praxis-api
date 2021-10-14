@@ -1,0 +1,43 @@
+{
+  "name": "site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "tf-next": "tf-next build"
+  },
+  "dependencies": {
+    "color": "^4.0.1",
+    "date-fns": "^2.25.0",
+    "evergreen-ui": "^6.5.1",
+    "flat": "^5.0.2",
+    "graphql": "^15.6.1",
+    "graphql-request": "^3.6.0",
+    "next": "11.1.2",
+    "radash": "^1.1.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-icons": "^4.3.1",
+    "react-loading-skeleton": "^2.2.0",
+    "react-modern-calendar-datepicker": "^3.1.6",
+    "react-socks": "^2.2.0",
+    "recoil": "^0.4.1",
+    "styled-components": "^5.3.1",
+    "tf-next": "^0.7.0",
+    "url-parse": "^1.5.3"
+  },
+  "devDependencies": {
+    "@types/color": "^3.0.2",
+    "@types/flat": "^5.0.2",
+    "@types/react": "17.0.27",
+    "@types/styled-components": "^5.1.15",
+    "@types/url-parse": "^1.4.4",
+    "babel-plugin-styled-components": "^1.13.2",
+    "eslint": "8.0.0",
+    "eslint-config-next": "11.1.2",
+    "typescript": "4.4.3"
+  }
+}

@@ -19,6 +19,10 @@
 		{
 			"path": "./search-app",
 			"name": "Search App"
+		},
+		{
+			"path": "site",
+			"name": "Site"
 		}
 	],
 	"settings": {}
