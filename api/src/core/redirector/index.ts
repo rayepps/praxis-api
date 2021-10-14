@@ -41,7 +41,8 @@ const createRedirectLink = async ({
     method: 'POST',
     headers: {
       'Accept': 'application/json', 
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'sk_zONn5ZMHN0GO5hpP'
     },
     data: JSON.stringify({
       allowDuplicates: false, 
