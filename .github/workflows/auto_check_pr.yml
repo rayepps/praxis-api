@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs: 
       api: ${{ steps.matches.outputs.api }}
-      app: ${{ steps.matches.outputs.app }}
+      site: ${{ steps.matches.outputs.site }}
       auth: ${{ steps.matches.outputs.auth }}
       account_infrastructure: ${{ steps.matches.outputs.account_infrastructure }}
       env_infrastructure: ${{ steps.matches.outputs.env_infrastructure }}
@@ -28,7 +28,7 @@ jobs:
             const changes = JSON.parse(process.env.FILES_CHANGED);
             const matches = (path) => changes.some(c => c.startsWith(path));
             console.log('::set-output name=api::' + matches('api/'));
-            console.log('::set-output name=app::' + matches('search-app/'));
+            console.log('::set-output name=site::' + matches('site/'));
             console.log('::set-output name=env_infrastructure::' + matches('env-infrastructure/'));
             console.log('::set-output name=account_infrastructure::' + matches('account-infrastructure/'));
   check_api_changes:
@@ -57,30 +57,30 @@ jobs:
         working-directory: ./api
       - run: yarn build
         working-directory: ./api
-  check_app_changes:
-    name: Check Search App
+  check_site_changes:
+    name: Check Next Site
     needs: projects_changed
     runs-on: ubuntu-latest
-    if: ${{ needs.projects_changed.outputs.app == 'true' }}
+    if: ${{ needs.projects_changed.outputs.site == 'true' }}
     steps:
       - uses: rayepps/require-semver-bump@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-regex-pattern: >
             "version": "(.+?)"
-          version-file-path: 'search-app/package.json'
+          version-file-path: 'site/package.json'
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: 14.x
           cache: 'yarn'
-          cache-dependency-path: search-app/yarn.lock
+          cache-dependency-path: site/yarn.lock
       - run: yarn
-        working-directory: ./search-app
+        working-directory: ./site
       - run: yarn lint
-        working-directory: ./search-app
+        working-directory: ./site
       - run: yarn build
-        working-directory: ./search-app
+        working-directory: ./site
   check_account_infrastructure_changes:
     name: Check Account Infrastructure
     needs: projects_changed

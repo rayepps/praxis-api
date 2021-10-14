@@ -49,10 +49,10 @@ jobs:
         working-directory: ./api/tf
       - run: terraform destroy -auto-approve -var-file eng.tfvars -var engineer="${{ needs.data.outputs.engineer }}"
         working-directory: ./api/tf
-  destroy_app:
-    name: Destroy Engineer Search App
+  site:
+    name: Deploy Site
     runs-on: ubuntu-latest
-    needs: data
+    needs: env_infrastructure
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
@@ -62,17 +62,17 @@ jobs:
         with:
           node-version: 14.x
           cache: 'yarn'
-          cache-dependency-path: search-app/yarn.lock
+          cache-dependency-path: site/yarn.lock
       - run: yarn
-        working-directory: ./search-app
-      - run: yarn build
-        working-directory: ./search-app
+        working-directory: ./site
+      - run: yarn tf-next
+        working-directory: ./site
       - run: terraform init
-        working-directory: ./search-app/tf
+        working-directory: ./site/tf
       - run: terraform workspace select eng-${{ needs.data.outputs.engineer }}
-        working-directory: ./search-app/tf
-      - run: terraform destroy -auto-approve -var-file eng.tfvars -var engineer="${{ needs.data.outputs.engineer }}"
-        working-directory: ./search-app/tf
+        working-directory: ./site/tf
+      - run: terraform apply -auto-approve -var-file eng.tfvars -var engineer="${{ needs.data.outputs.engineer }}"
+        working-directory: ./site/tf
   destroy_env_infrastructure:
     name: Deploy Engineer Env Infrastructure
     runs-on: ubuntu-latest
