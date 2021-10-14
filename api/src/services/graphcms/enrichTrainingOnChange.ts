@@ -39,6 +39,10 @@ async function enrichTrainingOnChange({ args, services }: t.ApiRequestProps<Args
         return
     }
 
+    if (!training.company) {
+        throw new Error(`Training is not connected to a company: ${training.id}`)
+    }
+
     const externalLink = await api.fetch<t.LinkRef>('linking.createLink', {
         url: training.directLink,
         title: `Training: ${training.name} (${trainingId})`

@@ -43,6 +43,14 @@ async function onEventChange({ args, services }: t.ApiRequestProps<Args, Service
         return
     }
 
+    if (!event.training) {
+        throw new Error(`Event is not connected to a training: ${event.id}`)
+    }
+
+    if (!event.training.company) {
+        throw new Error(`Training is not connected to a company: ${event.training.id}`)
+    }
+
     const externalLink = await api.fetch<t.LinkRef>('linking.createLink', {
         url: event.directLink,
         title: `Event: ${event.training.name} (${eventId})`
