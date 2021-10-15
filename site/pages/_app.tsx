@@ -1,10 +1,17 @@
 import Head from 'next/head'
+import Router from 'next/router'
 import type { AppProps } from 'next/app'
 import { BreakpointProvider } from 'react-socks'
+import NProgress from 'nprogress'
 
 import '../src/styles/reset.css'
 import '../src/styles/index.css'
+import 'nprogress/nprogress.css'
 
+//Binding events
+Router.events.on('routeChangeStart', () => NProgress.start())
+Router.events.on('routeChangeComplete', () => NProgress.done())
+Router.events.on('routeChangeError', () => NProgress.done())
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
