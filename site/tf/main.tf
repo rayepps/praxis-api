@@ -87,7 +87,7 @@ module "tf_next" {
   cloudfront_aliases             = [local.domain]
   cloudfront_acm_certificate_arn = local.is_prod ? data.aws_acm_certificate.root_domain.arn : data.aws_acm_certificate.wildcard_domain.arn
 
-  deployment_name = "${local.project_name}-site-${local.env_name}-next-frontend-${local.version}"
+  deployment_name = "${local.project_name}-site-${local.env_name}-next-frontend-${replace(local.version, ".", "-")}"
   next_tf_dir = "../.next-tf"
   use_awscli_for_static_upload = true
 
