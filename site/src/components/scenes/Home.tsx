@@ -161,7 +161,7 @@ export default function HomeScene({
           items={featuredTags.map(ft => ({
             imageUrl: ft.thumbnail.url,
             label: ft.tag.name,
-            link: `/featured-tag/${ft.tag.slug}`
+            link: `/tag/${ft.tag.slug}`
           }))}
         />
       </Stack>
