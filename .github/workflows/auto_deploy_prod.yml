@@ -84,12 +84,10 @@ jobs:
           # cache-dependency-path: site/yarn.lock
       - run: yarn
         working-directory: ./site
-      - run: yarn tf-next
-        working-directory: ./site
       - uses: amondnet/vercel-action@v20
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
           vercel-args: '--prod' #Optional
-          vercel-org-id: ${{ secrets.ORG_ID}}  #Required
-          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required 
+          vercel-org-id: gLP7jNVJekz0cSwxCdmolDUq  #Required
+          vercel-project-id: prj_s9Uvbv67NDHRLN00Y2Kv9st0pEG9 #Required 
           working-directory: ./site

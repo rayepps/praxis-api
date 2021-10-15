@@ -17,10 +17,6 @@
 			"name": "Env Infrastructure"
 		},
 		{
-			"path": "./search-app",
-			"name": "Search App"
-		},
-		{
 			"path": "site",
 			"name": "Site"
 		}

@@ -3,6 +3,7 @@
 # Build Outputs
 api/praxis-api.zip
 **/archive.zip
+.vercel
 
 # dependencies
 **/node_modules
