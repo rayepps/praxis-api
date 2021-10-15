@@ -1,9 +1,0 @@
-{
-    ".css": "text/css",
-    ".html": "text/html",
-    ".png": "image/png",
-    ".ico": "image/x-icon",
-    ".svg": "image/svg+xml",
-    ".js": "application/javascript",
-    ".json": "application/json"
-}
