@@ -30,13 +30,14 @@ export default function TrainingScene({
           </Pane>
         </Split>
         <Pane>
-          <Link href={training.externalLink ?? training.directLink ?? '/'}>
-            <EvergreenLink
-              style={{
-                color: theme.colors.black.hex()
-              }}
-            >view at {training.company.name}</EvergreenLink>
-          </Link>
+          <EvergreenLink
+            href={training.externalLink ?? training.directLink ?? '/'}
+            style={{
+              color: theme.colors.black.hex()
+            }}
+          >
+            Sign up at {training.company.name}
+          </EvergreenLink>
         </Pane>
       </Split>
       <Split padding={majorScale(4)}>
@@ -75,15 +76,16 @@ export default function TrainingScene({
             <div dangerouslySetInnerHTML={{ __html: training.description.html }} />
           </Pane>
           <Center>
-            <Link href={training.externalLink ?? training.directLink ?? '/'}>
-              <EvergreenLink
-                backgroundColor={theme.colors.black.hex()}
-                padding={majorScale(2)}
-                style={{
-                  color: theme.colors.white.hex()
-                }}
-              >Sign Up at {training.company.name}</EvergreenLink>
-            </Link>
+            <EvergreenLink
+              href={training.externalLink ?? training.directLink ?? '/'}
+              backgroundColor={theme.colors.black.hex()}
+              padding={majorScale(2)}
+              style={{
+                color: theme.colors.white.hex()
+              }}
+            >
+              Sign Up at {training.company.name}
+            </EvergreenLink>
           </Center>
         </Pane>
       )}
