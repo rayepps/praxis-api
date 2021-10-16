@@ -153,8 +153,8 @@ export default function HomeScene({
       <Stack padding={majorScale(4)}>
         <Pane>
           <Heading size={700}>Advanced &amp; Unique</Heading>
-          <Paragraph maxWidth={400}>
-            These are not hunter safety, ccw, and firearm safety courses. Although those are important, you can find them anywhere. Praxis is about training for survival..
+          <Paragraph maxWidth={600}>
+            These are not hunter safety, concealed carry permit, or firearm safety courses. You can find those anywhere. Praxis is about traiing for that moment when your mental, emotional, and physical abilities are the difference between failure and survival.
           </Paragraph>
         </Pane>
         <LabeledImageList

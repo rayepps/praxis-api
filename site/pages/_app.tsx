@@ -4,9 +4,9 @@ import type { AppProps } from 'next/app'
 import { BreakpointProvider } from 'react-socks'
 import NProgress from 'nprogress'
 
-import '../src/styles/reset.css'
-import '../src/styles/index.css'
-import 'nprogress/nprogress.css'
+import 'src/styles/reset.css'
+import 'src/styles/index.css'
+import 'src/styles/nprogress.css'
 
 //Binding events
 Router.events.on('routeChangeStart', () => NProgress.start())
