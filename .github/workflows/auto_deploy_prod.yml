@@ -90,4 +90,3 @@ jobs:
           vercel-args: '--prod' #Optional
           vercel-org-id: gLP7jNVJekz0cSwxCdmolDUq  #Required
           vercel-project-id: prj_s9Uvbv67NDHRLN00Y2Kv9st0pEG9 #Required 
-          working-directory: ./site
