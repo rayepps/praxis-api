@@ -7,6 +7,7 @@ import EventCard from '../EventCard'
 import { useCurrentWidth } from 'react-socks'
 import Skeleton from 'react-loading-skeleton'
 
+
 export default function EventGrid({
   events,
   loading = false

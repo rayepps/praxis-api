@@ -15,7 +15,7 @@ import StatsBlocks from '../ui/StatsBlocks'
 import LabeledImageList from '../ui/LabeledImageList'
 import * as t from '../../types'
 import theme from 'src/theme'
-import { useBreakpoint } from 'src/hooks'
+import Breakpoint from 'src/components/ui/Breakpoint'
 
 export default function HomeScene({
   popularTrainings,
@@ -25,13 +25,11 @@ export default function HomeScene({
   featuredTags: t.FeatureTag[]
 }) {
 
-  const breakpoint = useBreakpoint()
-
   return (
     <>
       {/* HERO */}
-      <Split 
-        minHeight='80vh' 
+      <Split
+        minHeight='80vh'
         borderBottom={`1px solid ${theme.colors.lightGrey.hex()}`}
         paddingY={majorScale(4)}
       >
@@ -40,13 +38,13 @@ export default function HomeScene({
           paddingX={majorScale(4)}
           justifyContent='center'
         >
-          {breakpoint.showAt('small', 'down') && (
+          <Breakpoint small down>
             <Center flex={1}>
               <PraxisStar
                 height={200}
               />
             </Center>
-          )}
+          </Breakpoint>
           <Pane>
             <Heading
               size={900}
@@ -82,13 +80,13 @@ export default function HomeScene({
             </EvergreenLink>
           </Pane>
         </Stack>
-        {breakpoint.showAt('medium', 'up') && (
+        <Breakpoint medium up>
           <Center flex={1}>
             <PraxisStar
               height={500}
             />
           </Center>
-        )}
+        </Breakpoint>
       </Split>
 
       {/* POPULAR TRAINNGS */}
@@ -98,7 +96,7 @@ export default function HomeScene({
             <Heading size={700}>Popular Trainings</Heading>
             <Paragraph maxWidth={400}>These are some of our most popular trainings from some our best companies. You can gaurntee they won't be easy, but they will be worth it.</Paragraph>
           </Pane>
-          {breakpoint.showAt('medium', 'up') && (
+          <Breakpoint medium up>
             <Pane>
               <EvergreenLink
                 href="/search"
@@ -109,18 +107,13 @@ export default function HomeScene({
                 View All Trainings
               </EvergreenLink>
             </Pane>
-          )}
+          </Breakpoint>
         </Split>
         <TrainingList
           orientation='horizontal'
           trainings={popularTrainings}
-          oneRow={breakpoint.use(true, {
-            at: 'medium',
-            and: 'up',
-            else: false
-          })}
         />
-        {breakpoint.showAt('small', 'down') && (
+        <Breakpoint small down>
           <EvergreenLink
             href="/search"
             backgroundColor={theme.colors.black.hex()}
@@ -132,7 +125,7 @@ export default function HomeScene({
           >
             View All Trainings
           </EvergreenLink>
-        )}
+        </Breakpoint>
       </Stack>
 
       {/* STATS */}

@@ -7,6 +7,7 @@ import NProgress from 'nprogress'
 import 'src/styles/reset.css'
 import 'src/styles/index.css'
 import 'src/styles/nprogress.css'
+import 'src/components/ui/Breakpoint/breakpoint.css'
 
 //Binding events
 Router.events.on('routeChangeStart', () => NProgress.start())

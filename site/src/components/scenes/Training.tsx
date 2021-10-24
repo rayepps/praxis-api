@@ -9,7 +9,7 @@ import {
 import Link from 'next/link'
 import { Split, Center } from '../Layout'
 import * as t from 'src/types'
-import { useBreakpoint } from 'src/hooks'
+import Breakpoint from 'src/components/ui/Breakpoint'
 import theme from 'src/theme'
 
 
@@ -18,7 +18,6 @@ export default function TrainingScene({
 }: {
   training: t.Training
 }) {
-  const breakpoint = useBreakpoint()
   return (
     <>
       <Split padding={majorScale(4)}>
@@ -57,37 +56,41 @@ export default function TrainingScene({
             />
           ))}
         </Pane>
-        {training.description?.html && breakpoint.showAt('medium', 'up') && (
-          <Pane
-            flex={1}
-            marginLeft={majorScale(4)}
-            maxWidth={600}
-          >
-            <div dangerouslySetInnerHTML={{ __html: training.description.html }} />
-          </Pane>
+        {training.description?.html && (
+          <Breakpoint medium up>
+            <Pane
+              flex={1}
+              marginLeft={majorScale(4)}
+              maxWidth={600}
+            >
+              <div dangerouslySetInnerHTML={{ __html: training.description.html }} />
+            </Pane>
+          </Breakpoint>
         )}
       </Split>
-      {training.description?.html && breakpoint.showAt('small', 'down') && (
-        <Pane marginBottom={majorScale(4)}>
-          <Pane
-            padding={majorScale(4)}
-            maxWidth={600}
-          >
-            <div dangerouslySetInnerHTML={{ __html: training.description.html }} />
-          </Pane>
-          <Center>
-            <EvergreenLink
-              href={training.externalLink ?? training.directLink ?? '/'}
-              backgroundColor={theme.colors.black.hex()}
-              padding={majorScale(2)}
-              style={{
-                color: theme.colors.white.hex()
-              }}
+      {training.description?.html && (
+        <Breakpoint small down>
+          <Pane marginBottom={majorScale(4)}>
+            <Pane
+              padding={majorScale(4)}
+              maxWidth={600}
             >
-              Sign Up at {training.company.name}
-            </EvergreenLink>
-          </Center>
-        </Pane>
+              <div dangerouslySetInnerHTML={{ __html: training.description.html }} />
+            </Pane>
+            <Center>
+              <EvergreenLink
+                href={training.externalLink ?? training.directLink ?? '/'}
+                backgroundColor={theme.colors.black.hex()}
+                padding={majorScale(2)}
+                style={{
+                  color: theme.colors.white.hex()
+                }}
+              >
+                Sign Up at {training.company.name}
+              </EvergreenLink>
+            </Center>
+          </Pane>
+        </Breakpoint>
       )}
     </>
   )

@@ -5,10 +5,10 @@ import {
   Link as EvergreenLink,
   minorScale
 } from 'evergreen-ui'
+import Breakpoint from 'src/components/ui/Breakpoint'
 import Link from 'next/link'
 import theme from 'src/theme'
 import { Center } from 'src/components/Layout'
-import { useBreakpoint } from 'src/hooks'
 import styled from 'styled-components'
 
 
@@ -29,25 +29,8 @@ export default function LabeledImageList({
 }: {
   items: LabeledImage[]
 }) {
-  const breakpoint = useBreakpoint()
-  const columns = breakpoint.select({
-    'xsmall': 1
-  }, 2)
-  const height = breakpoint.select({
-    'xsmall': 300,
-    'small': 300,
-    'medium': 350,
-    'large': 450
-  }, 500)
-  return (
-    <Pane
-      display='grid'
-      gridTemplateColumns={`repeat(${columns}, 1fr)`}
-      columnGap={majorScale(4)}
-      rowGap={majorScale(4)}
-      paddingTop={majorScale(4)}
-      paddingBottom={majorScale(4)}
-    >
+  const content = ({ height }: { height: number }) => (
+    <>
       {items.map((item) => (
         <Link key={item.link} href={item.link} passHref>
           <EvergreenLink>
@@ -94,6 +77,38 @@ export default function LabeledImageList({
           </EvergreenLink>
         </Link>
       ))}
-    </Pane>
+    </>
+  )
+  return (
+    <>
+      <Breakpoint small down>
+        <Pane
+          display='grid'
+          gridTemplateColumns={`repeat(1, 1fr)`}
+          columnGap={majorScale(4)}
+          rowGap={majorScale(4)}
+          paddingTop={majorScale(4)}
+          paddingBottom={majorScale(4)}
+        >
+          {content({
+            height: 300
+          })}
+        </Pane>
+      </Breakpoint>
+      <Breakpoint medium up>
+        <Pane
+          display='grid'
+          gridTemplateColumns={`repeat(2, 1fr)`}
+          columnGap={majorScale(4)}
+          rowGap={majorScale(4)}
+          paddingTop={majorScale(4)}
+          paddingBottom={majorScale(4)}
+        >
+          {content({
+            height: 400
+          })}
+        </Pane>
+      </Breakpoint>
+    </>
   )
 }

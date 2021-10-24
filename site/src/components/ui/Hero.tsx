@@ -5,7 +5,8 @@ import {
 } from 'evergreen-ui'
 import { Center } from 'src/components/Layout'
 import theme from 'src/theme'
-import { useBreakpoint } from 'src/hooks'
+import Breakpoint from 'src/components/ui/Breakpoint'
+
 
 export default function Hero({
   text,
@@ -16,28 +17,71 @@ export default function Hero({
   backgroundImage: string
   align?: 'top' | 'bottom' | 'center'
 }) {
-  const breakpoint = useBreakpoint()
-  const height = breakpoint.select({
-    xsmall: '30vh',
-    small: '40vh',
-    medium: '66vh',
-    large: '75vh',
-    xlarge: '85vh'
-  })
-  return (
-    <Center
-      backgroundImage={`url(${backgroundImage})`}
-      backgroundSize='cover'
-      backgroundPosition={align}
-      backgroundRepeat='no-repeat'
-      minHeight={height}
+  const content = (
+    <Pane
+      padding={majorScale(2)}
+      backgroundColor={theme.colors.white.alpha(0.5).rgb().string()}
     >
-      <Pane
-        padding={majorScale(2)}
-        backgroundColor={theme.colors.white.alpha(0.5).rgb().string()}
-      >
-        <Heading size={900}>{text} Trainings</Heading>
-      </Pane>
-    </Center>
+      <Heading size={900}>{text} Trainings</Heading>
+    </Pane>
+  )
+  return (
+    <>
+      <Breakpoint xsmall>
+        <Center
+          backgroundImage={`url(${backgroundImage})`}
+          backgroundSize='cover'
+          backgroundPosition={align}
+          backgroundRepeat='no-repeat'
+          minHeight='30vh'
+        >
+          {content}
+        </Center>
+      </Breakpoint>
+      <Breakpoint small>
+        <Center
+          backgroundImage={`url(${backgroundImage})`}
+          backgroundSize='cover'
+          backgroundPosition={align}
+          backgroundRepeat='no-repeat'
+          minHeight='40vh'
+        >
+          {content}
+        </Center>
+      </Breakpoint>
+      <Breakpoint medium>
+        <Center
+          backgroundImage={`url(${backgroundImage})`}
+          backgroundSize='cover'
+          backgroundPosition={align}
+          backgroundRepeat='no-repeat'
+          minHeight='66vh'
+        >
+          {content}
+        </Center>
+      </Breakpoint>
+      <Breakpoint medium>
+        <Center
+          backgroundImage={`url(${backgroundImage})`}
+          backgroundSize='cover'
+          backgroundPosition={align}
+          backgroundRepeat='no-repeat'
+          minHeight='75vh'
+        >
+          {content}
+        </Center>
+      </Breakpoint>
+      <Breakpoint large up>
+        <Center
+          backgroundImage={`url(${backgroundImage})`}
+          backgroundSize='cover'
+          backgroundPosition={align}
+          backgroundRepeat='no-repeat'
+          minHeight='85vh'
+        >
+          {content}
+        </Center>
+      </Breakpoint>
+    </>
   )
 }

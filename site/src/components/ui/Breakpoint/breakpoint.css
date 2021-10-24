@@ -1,0 +1,60 @@
+
+/* 
+  xsmall:   0
+  small:    576px
+  medium:   768px
+  large:    992px
+  xlarge:   1200px
+  xxlarge:  1400px
+*/
+
+/* 
+  xsmall:   px-bp-hide-at-xsmall
+  small:    px-bp-hide-at-small
+  medium:   px-bp-hide-at-medium
+  large:    px-bp-hide-at-large
+  xlarge:   px-bp-hide-at-xlarge
+  xxlarge:  px-bp-hide-at-xxlarge
+*/
+
+/* XSMALL screens */
+@media (max-width: 575.98px) {
+  .px-bp-hide-at-xsmall {
+    display: none !important;
+  }
+}
+
+/* SMALL screens */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .px-bp-hide-at-small {
+    display: none !important;
+  }
+}
+
+/* MEDIUM screens */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .px-bp-hide-at-medium {
+    display: none !important;
+  }
+}
+
+/* LARGE screens */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .px-bp-hide-at-large {
+    display: none !important;
+  }
+}
+
+/* XLARGE screens */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  .px-bp-hide-at-xlarge {
+    display: none !important;
+  }
+}
+
+/* XLARGE screens */
+@media (min-width: 1400px) {
+  .px-bp-hide-at-xxlarge {
+    display: none !important;
+  }
+}
