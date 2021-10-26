@@ -2,15 +2,14 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Footer from '../src/components/ui/Footer'
 import Header from '../src/components/ui/Header'
-import SearchScene from '../src/components/scenes/Search'
-import Script from 'next/script'
+import PrivacyPolicyScene from '../src/components/scenes/PrivacyPolicy'
 
 
-const SearchPage: NextPage = () => {
+const PrivacyPolicyPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Praxis | Search Trainings</title>
+        <title>Praxis | Privacy Policy</title>
         <meta
           name="description" 
           content="The best tactical, survival, and medical trainings from over a hundred companies across the US. Organized and searchable. Start training today." 
@@ -18,11 +17,10 @@ const SearchPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <SearchScene />
+      <PrivacyPolicyScene />
       <Footer />
-      <Script strategy="lazyOnload" type="text/javascript"  src="https://apiv2.popupsmart.com/api/Bundle/373333" async />
     </>
   )
 }
 
-export default SearchPage
+export default PrivacyPolicyPage
