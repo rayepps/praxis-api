@@ -41,6 +41,9 @@ service "events" {
   endpoint "search" {
     version = "0.0.1"
   }
+  endpoint "findById" {
+    version = "0.0.1"
+  }
 }
 
 service "system" {
