@@ -143,6 +143,9 @@ export class GraphCMS {
             thumbnail {
               url
             }
+            gallery {
+              url
+            }
             company {
               name
               slug
