@@ -390,6 +390,7 @@ export class GraphCMS {
         companies {
           id
           name
+          slug
           thumbnail {
             url
           }
