@@ -136,6 +136,7 @@ export class GraphCMS {
             id
             slug
             price
+            displayPrice
             name
             description {
               html
