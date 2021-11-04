@@ -1,10 +1,9 @@
 import { useEffect, useRef } from 'react'
 import parseUrl from 'url-parse'
-import Recoil from 'recoil'
+import Recoil, { useSetRecoilState } from 'recoil'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
-import { BreakpointProvider } from 'react-socks'
-import { searchState } from '../../../state/search'
+import { currentEventState, searchState } from '../../../state/search'
 import ComplexQueryString from '../../../util/ComplexQueryString'
 import * as api from '../../../api'
 import { Stack, Axis } from '../../Layout'
@@ -18,6 +17,7 @@ import SearchForm from './SearchForm'
 import EventGrid from './EventGrid'
 import SummaryBar from './SummaryBar'
 import PaginationBar from './PaginationBar'
+import EventDetailModal from './EventDetailModal'
 
 import 'react-modern-calendar-datepicker/lib/DatePicker.css'
 
@@ -119,7 +119,7 @@ export function SearchSceneContent() {
 
   useEffect(() => {
     searchEvents()
-  }, [query])
+  }, [query.hash])
 
   useEffect(() => {
     listCompanies()
@@ -136,37 +136,40 @@ export function SearchSceneContent() {
     : 'stack'
 
   return (
-    <Axis $stackOrSplit={orientation}>
-      <SearchForm
-        filters={query}
-        companies={companies}
-        tags={tags}
-        onFiltersChange={setFilters}
-      />
-      <Stack
-        ref={topOfListRef}
-        paddingX={majorScale(4)}
-        flex={1}
-      >
-        <SummaryBar
-          total={total}
-          pageNumber={query.page}
-          pageSize={query.pageSize}
-          orderBy={query.orderBy}
-          orderAs={query.orderAs}
-          onOrderChange={updateOrder}
+    <>
+      <EventDetailModal />
+      <Axis $stackOrSplit={orientation}>
+        <SearchForm
+          filters={query}
+          companies={companies}
+          tags={tags}
+          onFiltersChange={setFilters}
         />
-        <EventGrid
-          loading={searchEventsRequest.loading}
-          events={events}
-        />
-        <PaginationBar
-          total={total}
-          page={query.page}
-          pageSize={query.pageSize}
-          onPageChange={updatePage}
-        />
-      </Stack>
-    </Axis>
+        <Stack
+          ref={topOfListRef}
+          paddingX={majorScale(4)}
+          flex={1}
+        >
+          <SummaryBar
+            total={total}
+            pageNumber={query.page}
+            pageSize={query.pageSize}
+            orderBy={query.orderBy}
+            orderAs={query.orderAs}
+            onOrderChange={updateOrder}
+          />
+          <EventGrid
+            loading={searchEventsRequest.loading}
+            events={events}
+          />
+          <PaginationBar
+            total={total}
+            page={query.page}
+            pageSize={query.pageSize}
+            onPageChange={updatePage}
+          />
+        </Stack>
+      </Axis>
+    </>
   )
 }

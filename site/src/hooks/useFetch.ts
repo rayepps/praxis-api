@@ -32,7 +32,8 @@ export const useFetch = <T, K> (fetchFunc: (arg: K) => Promise<ApiResponse<T>>):
                 ...state,
                 error,
                 loading: false,
-                complete: true
+                complete: true,
+                started: true
             })
         } else {
             setState({
@@ -40,7 +41,8 @@ export const useFetch = <T, K> (fetchFunc: (arg: K) => Promise<ApiResponse<T>>):
                 error: null,
                 data,
                 loading: false,
-                complete: true
+                complete: true,
+                started: true
             })
         }
         return { error, data }

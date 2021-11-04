@@ -29,7 +29,15 @@ export interface SearchFilters {
     }
 }
 
-export type SearchQuery = SearchPagination & SearchOrder & SearchFilters
+export interface SearchCurrentEvent {
+    eventId?: string
+}
+
+export interface Hashable {
+    hash?: string
+}
+
+export type SearchQuery = SearchPagination & SearchOrder & SearchFilters & SearchCurrentEvent & Hashable
 
 export interface Author {
     id: string

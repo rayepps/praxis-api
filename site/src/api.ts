@@ -61,6 +61,17 @@ export async function searchEvents(query: t.SearchQuery): Promise<ApiResponse<{
   return { error, data: json?.payload }
 }
 
+export async function findEvent(eventId: string): Promise<ApiResponse<{
+  event: t.Event
+}>> {
+  const [error, json] = await fetcher('/events/findById', {
+    body: JSON.stringify({
+      eventId
+    })
+  })
+  return { error, data: json?.payload }
+}
+
 export async function listCompanies(): Promise<ApiResponse<{
   companies: t.Company[]
 }>> {
