@@ -7,7 +7,8 @@ import {
   Paragraph,
   minorScale,
   Button,
-  majorScale
+  majorScale,
+  Image
 } from 'evergreen-ui'
 import formatDate from 'date-fns/format'
 import * as t from 'src/types'
@@ -39,16 +40,25 @@ export default function EventDetailScene({
   return (
     <Pane>
       <Split alignItems='start' marginBottom={majorScale(2)}>
-        <Pane flex={1}>
-          <Heading size={800}>{training.name}</Heading>
+        <Split flex={1} alignItems='center' marginRight={majorScale(2)}>
+          <Image 
+            src={training.company?.thumbnail?.url} 
+            height={50}
+            width='auto'  
+            borderRadius={4}
+            marginRight={majorScale(2)}
+          />
           <Pane>
-            <Text fontWeight='bold' color={theme.colors.green.hex()}>{event.city}, {event.state}</Text>
-            <Text marginX={minorScale(2)} color={theme.colors.yellow.hex()}>|</Text>
-            <Text fontWeight='bold' color={theme.colors.green.hex()}>{training.displayPrice}</Text>
-            <Text marginX={minorScale(2)} color={theme.colors.yellow.hex()}>|</Text>
-            <Text fontWeight='bold' color={theme.colors.green.hex()}>{format(start)}</Text>
+            <Heading size={800}>{training.name}</Heading>
+            <Pane>
+              <Text fontWeight='bold' color={theme.colors.green.hex()}>{event.city}, {event.state}</Text>
+              <Text marginX={minorScale(2)} color={theme.colors.yellow.hex()}>|</Text>
+              <Text fontWeight='bold' color={theme.colors.green.hex()}>{training.displayPrice}</Text>
+              <Text marginX={minorScale(2)} color={theme.colors.yellow.hex()}>|</Text>
+              <Text fontWeight='bold' color={theme.colors.green.hex()}>{format(start)}</Text>
+            </Pane>
           </Pane>
-        </Pane>
+        </Split>
         <EvergreenLink
           href={event.externalLink}
           padding={minorScale(2)}
