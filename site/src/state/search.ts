@@ -12,7 +12,6 @@ const createHash = (obj: object) => {
             return value
         })
     )
-    console.log('uuid: ', uuid)
     return uuid.v5(str, uuid.v5.DNS)
 }
 
