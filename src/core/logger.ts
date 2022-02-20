@@ -1,5 +1,5 @@
 import _ from 'radash'
-import config from '../config'
+import config from './config'
 import runtime from './runtime'
 
 

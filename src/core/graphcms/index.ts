@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request'
 import { GraphCMS } from './client'
-import config from '../../config'
+import config from '../config'
 
 export type { GraphCMS }
 

@@ -1,6 +1,6 @@
 import NodeGeocoder from 'node-geocoder'
 import { GeoClient } from './client'
-import config from '../../config'
+import config from '../config'
 
 export type { GeoClient }
 

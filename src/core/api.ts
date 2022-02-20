@@ -4,7 +4,7 @@
  */
 import _ from 'radash'
 import axios, { AxiosResponse } from 'axios'
-import config from '../config'
+import config from './config'
 
 // Keeping this minimal. Only adding
 // function identifiers as needed

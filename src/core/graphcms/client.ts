@@ -1,7 +1,7 @@
 import { gql, GraphQLClient } from 'graphql-request'
 import * as t from '../types'
 import { slugger } from '../model'
-import { ENRICHMENT_VERSION } from '../../const'
+import { ENRICHMENT_VERSION } from '../const'
 
 
 /**
@@ -260,27 +260,6 @@ export class GraphCMS {
         ...data,
         enrichmentVersion: ENRICHMENT_VERSION,
         enrichedAt: new Date().toISOString()
-      }
-    })
-  }
-
-  async trackError(itemType: ItemType, itemId: string, source: string, requestId: string): Promise<void> {
-    const mutation = gql`
-      mutation MakeErrorTrackingRecord($data: ErrorTrackingCreateInput!) {
-        createErrorTracking(data: $data) {
-          id
-        }
-      }
-    `
-    await this.client.request(mutation, {
-      data: {
-        source,
-        requestId,
-        [itemType]: {
-          connect: {
-            id: itemId
-          }
-        }
       }
     })
   }

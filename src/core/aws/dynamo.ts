@@ -1,5 +1,5 @@
 import DynamoDB from 'aws-sdk/clients/dynamodb.js'
-import config from '../../config'
+import config from '../config'
 
 
 const createDynamoInstance = () => {
