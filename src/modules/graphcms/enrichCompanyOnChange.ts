@@ -7,7 +7,6 @@ import { useLambda } from '@exobase/lambda'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../core/config'
 import { ENRICHMENT_VERSION } from '../../core/const'
-import logger from '../../core/logger'
 import makeApi, { PraxisApi } from '../../core/api'
 import Hashable from '../../core/graphcms/hashable'
 
@@ -32,7 +31,7 @@ async function onCompanyChange({ args, services }: Props<Args, Services>) {
   const company = await graphcms.findCompany(companyId)
 
   if (!Hashable.hasChanged(company, identify)) {
-    logger.debug('Skipping company because hash is still valid', {
+    console.log('Skipping company because hash is still valid', {
       hash: company.hash
     })
     return

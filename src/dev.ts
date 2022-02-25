@@ -1,7 +1,7 @@
 import { getFunctionMap, start, lambdaFrameworkMapper } from '@exobase/local'
 
 start({
-  port: '7700',
+  port: process.env.PORT,
   framework: lambdaFrameworkMapper,
   functions: getFunctionMap(process.cwd()).map((f) => ({ ...f,
     func: require(f.paths.import).default

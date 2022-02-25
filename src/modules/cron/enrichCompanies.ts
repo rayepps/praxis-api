@@ -6,7 +6,6 @@ import { useLambda } from '@exobase/lambda'
 import config from '../../core/config'
 import { ENRICHMENT_VERSION } from '../../core/const'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
-import logger from '../../core/logger'
 
 
 interface Args {}
@@ -22,7 +21,7 @@ const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
 async function enrichCompanies({ services }: Props<Args, Services>): Promise<Response> {
   const { graphcms } = services
   const companies = await graphcms.listCompaniesNeedingEnrichment(ENRICHMENT_VERSION)
-  logger.debug(`Found ${companies.length} companies that need enrichment`, {
+  console.log(`Found ${companies.length} companies that need enrichment`, {
     companies: companies.map(e => ({ 
       id: e.id, 
       currentEnrichmentVersion: ENRICHMENT_VERSION,

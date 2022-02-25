@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "source ./env.sh && ts-node --transpile-only ./src/dev.ts",
+    "dev": "source ./env.sh && PORT=7709 ts-node --transpile-only ./src/dev.ts",
     "build": "tsc"
   },
   "dependencies": {

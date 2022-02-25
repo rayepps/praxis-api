@@ -1,6 +1,5 @@
 import _ from 'radash'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
-import logger from '../../core/logger'
 
 import type { Props } from '@exobase/core'
 import { useJsonArgs, useService } from '@exobase/hooks'
@@ -18,7 +17,7 @@ async function cleanupPastEvents({ services }: Props<Args, Services>) {
 
   const events = await graphcms.findEventsInThePast()
 
-  logger.debug(`Found ${events.length} events in the past`, {
+  console.log(`Found ${events.length} events in the past`, {
     events: events.map(e => ({ id: e.id, startDate: e.startDate }))
   })
 
