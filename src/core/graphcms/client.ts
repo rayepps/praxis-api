@@ -20,7 +20,7 @@ import { ENRICHMENT_VERSION } from '../const'
 //   )
 // }
 
-type ItemType = 'company' | 'event' | 'training'
+// type ItemType = 'company' | 'event' | 'training'
 
 export class GraphCMS {
 

@@ -1,20 +1,15 @@
 import _ from 'radash'
 import { createHmac } from 'crypto'
-import {
-  ComposedApiFunc,
-  ApiRequestProps
-} from '../http/types'
-import errors from '../http/errors'
-
+import type { Props, ApiFunction } from '@exobase/core'
+import { errors } from '@exobase/core'
 
 /**
  * See https://github.com/GraphCMS/graphcms-utils
  */
-export async function withWebhookSignature(func: ComposedApiFunc, secret: string, props: ApiRequestProps) {
+export async function withWebhookSignature(func: ApiFunction, secret: string, props: Props) {
+  const { headers, body } = props.req
 
-  const { headers, body } = props.meta
-  
-  const signature = headers['gcms-signature']
+  const signature = headers['gcms-signature'] as string
 
   if (!signature) {
     throw errors.unauthorized({
@@ -49,6 +44,6 @@ export async function withWebhookSignature(func: ComposedApiFunc, secret: string
   return await func(props)
 }
 
-export const useWebhookSignatureAuthentication = (secret: string) => (func: ComposedApiFunc) => {
+export const useWebhookSignatureAuthentication = (secret: string) => (func: ApiFunction) => {
   return _.partial(withWebhookSignature, func, secret)
 }

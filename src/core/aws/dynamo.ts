@@ -1,16 +1,14 @@
 import DynamoDB from 'aws-sdk/clients/dynamodb.js'
-import config from '../config'
-
 
 const createDynamoInstance = () => {
   return new DynamoDB({
-    region: config.region
+    region: 'us-east-1'
   })
 }
 
 const createDynamoDocumentClientInstance = () => {
   return new DynamoDB.DocumentClient({
-    region: config.region
+    region: 'us-east-1'
   })
 }
 

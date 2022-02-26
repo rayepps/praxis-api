@@ -1,10 +1,10 @@
 import _ from 'radash'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import { customAlphabet } from 'nanoid'
 
 // See: https://developers.short.io/reference#linkspost
 
-const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 const nanoid = customAlphabet(alphabet, 10)
 
 type CreateLinkResponse = {
@@ -28,30 +28,26 @@ type CreateLinkResponse = {
   redirectType: 302 | 301
 }
 
-const createRedirectLink = async ({
-  url,
-  title
-}: {
-  url: string,
-  title: string
-}): Promise<CreateLinkResponse> => {
+const createRedirectLink = async ({ url, title }: { url: string; title: string }): Promise<CreateLinkResponse> => {
   const path = nanoid()
-  const [err, response] = await _.try<AxiosResponse>(axios)({
-    url: 'https://api.short.io/links',
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json', 
-      'Content-Type': 'application/json',
-      'Authorization': 'sk_zONn5ZMHN0GO5hpP'
-    },
-    data: JSON.stringify({
-      allowDuplicates: false, 
-      domain: 'link.praxisco.us',
-      originalURL: url,
-      path,
-      title
+  const [err, response] = await _.try(async () => {
+    return axios({
+      url: 'https://api.short.io/links',
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'sk_zONn5ZMHN0GO5hpP'
+      },
+      data: JSON.stringify({
+        allowDuplicates: false,
+        domain: 'link.praxisco.us',
+        originalURL: url,
+        path,
+        title
+      })
     })
-  })
+  })()
   if (err) throw err
   return {
     ...response.data,
