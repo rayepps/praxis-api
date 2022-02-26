@@ -2,6 +2,7 @@ import _ from 'radash'
 import URI from 'urijs'
 import * as t from '../../core/types'
 import type { Props } from '@exobase/core'
+import { useLogger } from '../../core/hooks/useLogger'
 import { useJsonArgs, useService } from '@exobase/hooks'
 import { useApiKeyAuthentication } from '@exobase/auth'
 import { useLambda } from '@exobase/lambda'
@@ -44,6 +45,7 @@ async function createLink({ args, services }: Props<Args, Services>): Promise<Re
 }
 
 export default _.compose(
+  useLogger(),
   useLambda(),
   useApiKeyAuthentication(config.apiKey),
   useJsonArgs<Args>(yup => ({

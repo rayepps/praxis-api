@@ -2,6 +2,7 @@ import _ from 'radash'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 
 import type { Props } from '@exobase/core'
+import { useLogger } from '../../core/hooks/useLogger'
 import { useJsonArgs, useService } from '@exobase/hooks'
 import { useLambda } from '@exobase/lambda'
 
@@ -28,6 +29,7 @@ async function cleanupPastEvents({ services }: Props<Args, Services>) {
 }
 
 export default _.compose(
+  useLogger(),
   useLambda(),
   useJsonArgs<Args>(yup => ({
     operation: yup.string(),

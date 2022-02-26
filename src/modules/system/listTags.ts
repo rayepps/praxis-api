@@ -1,6 +1,7 @@
 import _ from 'radash'
 import * as t from '../../core/types'
 import type { Props } from '@exobase/core'
+import { useLogger } from '../../core/hooks/useLogger'
 import { useService } from '@exobase/hooks'
 import { useLambda } from '@exobase/lambda'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
@@ -24,6 +25,7 @@ async function listTags({ services }: Props<Args, Services>): Promise<Response> 
 }
 
 export default _.compose(
+  useLogger(),
   useLambda(),
   useService<Services>({
     graphcms: makeGraphCMS()

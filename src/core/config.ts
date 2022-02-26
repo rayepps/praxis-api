@@ -16,7 +16,9 @@ const config = {
   graphcmsApiToken: get('GRAPHCMS_API_TOKEN'),
   graphcmsApiUrl: get('GRAPHCMS_API_URL'),
   googleGeocodingApiKey: get('GOOGLE_GEOCODING_API_KEY'),
-  segmentKey: get('SEGMENT_KEY')
+  segmentKey: get('SEGMENT_KEY'),
+  coralogixKey: get('CORALOGIX_API_KEY'),
+  coralogixUrl: get('CORALOGIX_URL')
 }
 
 export type Config = typeof config

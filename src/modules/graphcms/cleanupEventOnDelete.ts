@@ -1,6 +1,7 @@
 import _ from 'radash'
 import * as t from '../../core/types'
 import type { Props } from '@exobase/core'
+import { useLogger } from '../../core/hooks/useLogger'
 import { useJsonArgs, useService } from '@exobase/hooks'
 import { useApiKeyAuthentication } from '@exobase/auth'
 import { useLambda } from '@exobase/lambda'
@@ -27,6 +28,7 @@ async function onEventDelete({ args, services }: Props<Args, Services>) {
 }
 
 export default _.compose(
+  useLogger(),
   useLambda(),
   useApiKeyAuthentication(config.graphcmsWebhookKey),
   useJsonArgs<Args>(yup => ({

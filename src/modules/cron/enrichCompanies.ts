@@ -1,6 +1,7 @@
 import _ from 'radash'
 import axios from 'axios'
 import type { Props } from '@exobase/core'
+import { useLogger } from '../../core/hooks/useLogger'
 import { useService } from '@exobase/hooks'
 import { useLambda } from '@exobase/lambda'
 import config from '../../core/config'
@@ -53,6 +54,7 @@ async function enrichCompanies({ services }: Props<Args, Services>): Promise<Res
 }
 
 export default _.compose(
+  useLogger(),
   useLambda(),
   useService<Services>({
     graphcms: makeGraphCMS()
