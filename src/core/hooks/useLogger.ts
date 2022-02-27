@@ -51,7 +51,8 @@ const getLogger = () => {
     const lc = new LoggerConfig({
       privateKey: config.coralogixKey,
       applicationName: config.coralogixApplicationName,
-      subsystemName: config.coralogixSubsystemName
+      subsystemName: config.coralogixSubsystemName,
+      debug: true
     })
     CoralogixLogger.configure(lc)
     global._coralogixLogger = new CoralogixLogger(config.coralogixLoggerName)
@@ -63,7 +64,7 @@ export const initLogger = () => {
   const logger = getLogger()
 
   const sendLog = (severity: Severity, args: any[]) => {
-    process.stdout.write('x--> sending log to coralogix')
+    process.stdout.write('x--> sending log to coralogix\n')
     logger.addLog(
       new Log({
         severity,
