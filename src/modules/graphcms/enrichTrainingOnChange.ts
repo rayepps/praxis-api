@@ -36,7 +36,8 @@ async function enrichTrainingOnChange({ args, services }: Props<Args, Services>)
   }
 
   if (!training.company) {
-    throw new Error(`Training is not connected to a company: ${training.id}`)
+    console.error(`Training is not connected to a company: ${training.id}. Quitting training enrichment`)
+    return
   }
 
   const { error, data } = await redirector.links.create({

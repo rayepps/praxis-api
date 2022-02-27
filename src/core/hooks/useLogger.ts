@@ -62,21 +62,17 @@ const getLogger = () => {
 export const initLogger = () => {
   const logger = getLogger()
 
-  const sendLog = (severity: Severity, args: any[]) => {
-    process.stdout.write('x--> sending log to coralogix\n')
-    logger.addLog(
-      new Log({
-        severity,
-        text: argsToText(args)
-      })
-    )
-  }
-
   const intercept = (severity: Severity, original: AnyFunc): AnyFunc => {
-    if ((original as any).__hook === 'log.override') return original
+    if ((original as any).__hook === 'log.override') {
+      return original
+    }
     function logOverride(...args: any[]) {
-      if (!args || args.length === 0) return
-      sendLog(severity, args)
+      logger.addLog(
+        new Log({
+          severity,
+          text: argsToText(args)
+        })
+      )
       original.apply(console, args)
     }
     logOverride.__hook = 'log.override'
