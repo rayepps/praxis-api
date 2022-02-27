@@ -41,7 +41,11 @@ async function enrichTrainingOnChange({ args, services }: Props<Args, Services>)
 
   const { error, data } = await redirector.links.create({
     url: training.directLink,
-    title: `Training: ${training.name} (${trainingId})`
+    title: `Training: ${training.name} id(${trainingId})`,
+    class: 'training',
+    metadata: {
+      trainingId
+    }
   }, { key: config.redirectorApiKey })
   if (error) {
     // quietly log error. Trying not to throw in webhook

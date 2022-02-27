@@ -12,7 +12,6 @@
     "@exobase/core": "^0.0.6",
     "@exobase/hooks": "^0.0.10",
     "@exobase/lambda": "^0.0.10",
-    "analytics-node": "^5.1.0",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "coralogix-logger": "^1.1.28",
@@ -32,7 +31,6 @@
   "devDependencies": {
     "@exobase/local": "^0.0.18",
     "@graphcms/management": "^1.1.2",
-    "@types/analytics-node": "^3.1.6",
     "@types/chai": "^4.2.21",
     "@types/fs-extra": "^9.0.11",
     "@types/minimist": "^1.2.2",

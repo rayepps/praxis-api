@@ -40,7 +40,11 @@ async function onCompanyChange({ args, services }: Props<Args, Services>) {
 
   const { error, data } = await redirector.links.create({
     url: company.directLink,
-    title: `Company: ${company.name} id(${companyId})`
+    title: `Company: ${company.name} id(${companyId})`,
+    class: 'company',
+    metadata: {
+      companyId
+    }
   }, { key: config.redirectorApiKey })
   if (error) {
     // quietly log error. Trying not to throw in webhook

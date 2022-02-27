@@ -11,6 +11,8 @@ const createRedirector = () => {
         {
           url: string
           title: string
+          class: 'company' | 'training' | 'event'
+          metadata?: any
         },
         {
           link: t.LinkRef

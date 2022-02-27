@@ -49,7 +49,11 @@ async function onEventChange({ args, services }: Props<Args, Services>) {
 
   const { error, data } = await redirector.links.create({
     url: event.directLink,
-    title: `Event: ${event.training.name} (${eventId})`
+    title: `Event: ${event.training.name} id(${eventId})`,
+    class: 'event',
+    metadata: {
+      eventId
+    }
   }, { key: config.redirectorApiKey })
   if (error) {
     // quietly log error. Trying not to throw in webhook
