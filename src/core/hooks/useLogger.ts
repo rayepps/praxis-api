@@ -63,10 +63,6 @@ const getLogger = () => {
 export const initLogger = () => {
   const logger = getLogger()
 
-  logger.waitForFlush().then(() => {
-    process.stdout.write('o--> logger flushed\n')
-  })
-
   const sendLog = (severity: Severity, args: any[]) => {
     process.stdout.write('x--> sending log to coralogix\n')
     logger.addLog(
@@ -92,6 +88,8 @@ export const initLogger = () => {
   console.error = intercept(Severity.error, console.error)
   console.warn = intercept(Severity.warning, console.warn)
   console.debug = intercept(Severity.debug, console.debug)
+
+  return logger
 }
 
 /**
@@ -101,8 +99,13 @@ export const initLogger = () => {
  * next function which is the real root hook.
  */
 export const useLogger = () => (func: AnyFunc) => {
-  if (config.env !== 'local') {
-    initLogger()
+  const logger = config.env !== 'local' ? initLogger() : null
+  return async (...args: any[]) => {
+    const [err, result] = await _.try(func)(...args)
+    if (logger) {
+      CoralogixLogger.flush()
+    }
+    if (err) throw err
+    return result
   }
-  return func
 }
