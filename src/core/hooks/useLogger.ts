@@ -102,8 +102,7 @@ export const useLogger = () => (func: AnyFunc) => {
   return async (...args: any[]) => {
     const [err, result] = await _.try(func)(...args)
     if (logger) {
-      await logger?.waitForFlush()
-      CoralogixLogger.flush()
+      await logger.waitForFlush()
     }
     if (err) throw err
     return result
