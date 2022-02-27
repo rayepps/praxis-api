@@ -63,6 +63,10 @@ const getLogger = () => {
 export const initLogger = () => {
   const logger = getLogger()
 
+  logger.waitForFlush().then(() => {
+    process.stdout.write('o--> logger flushed\n')
+  })
+
   const sendLog = (severity: Severity, args: any[]) => {
     process.stdout.write('x--> sending log to coralogix\n')
     logger.addLog(
