@@ -8,7 +8,7 @@ import { useLambda } from '@exobase/lambda'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../core/config'
 import { ENRICHMENT_VERSION } from '../../core/const'
-import makeApi, { PraxisApi } from '../../core/api'
+import makeRedirector, { Redirector } from '../../core/redirector'
 import Hashable from '../../core/graphcms/hashable'
 
 interface Args {
@@ -22,11 +22,11 @@ interface Args {
 
 interface Services {
   graphcms: GraphCMS
-  api: PraxisApi
+  redirector: Redirector
 }
 
 async function onCompanyChange({ args, services }: Props<Args, Services>) {
-  const { graphcms, api } = services
+  const { graphcms, redirector } = services
   const { id: companyId } = args.data
 
   const company = await graphcms.findCompany(companyId)
@@ -38,13 +38,18 @@ async function onCompanyChange({ args, services }: Props<Args, Services>) {
     return
   }
 
-  const externalLink = await api.fetch<t.LinkRef>('linking.createLink', {
+  const { error, data } = await redirector.links.create({
     url: company.directLink,
-    title: `Company: ${company.name} (${companyId})`
-  })
+    title: `Company: ${company.name} id(${companyId})`
+  }, { key: config.redirectorApiKey })
+  if (error) {
+    // quietly log error. Trying not to throw in webhook
+    console.error('Request to redirector for company link', { error, company })
+    return
+  }
 
   await graphcms.enrichCompany(company.id, {
-    externalLink: externalLink.link,
+    externalLink: data.link.link,
     hash: Hashable.hash(company, identify)
   })
 }
@@ -67,7 +72,7 @@ export default _.compose(
   })),
   useService<Services>({
     graphcms: makeGraphCMS(),
-    api: makeApi()
+    redirector: makeRedirector()
   }),
   onCompanyChange
 )

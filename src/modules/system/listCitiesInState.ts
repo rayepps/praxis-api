@@ -2,7 +2,7 @@ import _ from 'radash'
 import * as t from '../../core/types'
 import type { Props } from '@exobase/core'
 import { useLogger } from '../../core/hooks/useLogger'
-import { useJsonArgs, useService } from '@exobase/hooks'
+import { useJsonArgs, useService, useCors } from '@exobase/hooks'
 import { useLambda } from '@exobase/lambda'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 
@@ -30,6 +30,7 @@ async function listCitiesInState({ args, services }: Props<Args, Services>): Pro
 export default _.compose(
   useLogger(),
   useLambda(),
+  useCors(),
   useJsonArgs<Args>(yup => ({
     state: yup.string().required()
   })),

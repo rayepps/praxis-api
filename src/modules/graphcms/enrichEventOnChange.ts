@@ -8,7 +8,7 @@ import { useLambda } from '@exobase/lambda'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import config from '../../core/config'
 import { ENRICHMENT_VERSION } from '../../core/const'
-import makeApi, { PraxisApi } from '../../core/api'
+import makeRedirector, { Redirector } from '../../core/redirector'
 import Hashable from '../../core/graphcms/hashable'
 import makeGeoClient, { GeoClient } from '../../core/geo'
 import { slugger } from '../../core/model'
@@ -26,11 +26,11 @@ interface Args {
 interface Services {
   graphcms: GraphCMS
   geo: GeoClient
-  api: PraxisApi
+  redirector: Redirector
 }
 
 async function onEventChange({ args, services }: Props<Args, Services>) {
-  const { graphcms, geo, api } = services
+  const { graphcms, geo, redirector } = services
   const { id: eventId } = args.data
 
   const event = await graphcms.findEvent(eventId)
@@ -47,10 +47,15 @@ async function onEventChange({ args, services }: Props<Args, Services>) {
     throw new Error(`Training is not connected to a company: ${event.training.id}`)
   }
 
-  const externalLink = await api.fetch<t.LinkRef>('linking.createLink', {
+  const { error, data } = await redirector.links.create({
     url: event.directLink,
     title: `Event: ${event.training.name} (${eventId})`
-  })
+  }, { key: config.redirectorApiKey })
+  if (error) {
+    // quietly log error. Trying not to throw in webhook
+    console.error('Request to redirector failed', { error })
+    return
+  }
 
   const location = await geo.lookupCoordinates(event.location.latitude, event.location.longitude)
 
@@ -64,7 +69,7 @@ async function onEventChange({ args, services }: Props<Args, Services>) {
     slug: makeEventSlug(event, location),
     trainingPrice: event.training.price,
     name: event.training.name,
-    externalLink: externalLink.link,
+    externalLink: data.link.link,
     hash: Hashable.hash(event, identify)
   })
 
@@ -125,7 +130,7 @@ export default _.compose(
   useService<Services>({
     graphcms: makeGraphCMS(),
     geo: makeGeoClient(),
-    api: makeApi()
+    redirector: makeRedirector()
   }),
   onEventChange
 )
