@@ -32,6 +32,9 @@ async function enrichTrainingOnChange({ args, services }: Props<Args, Services>)
   const training = await graphcms.findTraining(trainingId)
 
   if (!Hashable.hasChanged(training, identify)) {
+    console.info('Skipping training enrichment, source properties have not changed since last update', {
+      properties: identify(training)
+    })
     return
   }
 
