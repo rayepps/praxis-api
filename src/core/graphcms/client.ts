@@ -336,9 +336,11 @@ export class GraphCMS {
     await this.client.request(mutation, {
       data: {
         events: {
-          connect: [{
-            id: event.id
-          }]
+          connect: {
+            where: {
+              id: event.id
+            }
+          }
         }
       }
     })
@@ -355,9 +357,11 @@ export class GraphCMS {
       }
     `
     await this.client.request(mutation, {
-      events: {
-        disconnect: {
-          id: event.id
+      data: {
+        events: {
+          disconnect: [{
+            id: event.id
+          }]
         }
       }
     })
