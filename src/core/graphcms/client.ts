@@ -3,14 +3,13 @@ import * as t from '../types'
 import { slugger } from '../model'
 import { ENRICHMENT_VERSION } from '../const'
 
-
 /**
  * Graphql Object Notation
  * Takes in json object and gives back Graph QL
  * friendly query object. In simple terms, gives
  * back the json object stringified without quotes
  * around the keys.
- * 
+ *
  * in: { "name": "ray" }
  * out: "{ name: \"ray\" }"
  */
@@ -23,12 +22,7 @@ import { ENRICHMENT_VERSION } from '../const'
 // type ItemType = 'company' | 'event' | 'training'
 
 export class GraphCMS {
-
-  constructor(
-    private client: GraphQLClient
-  ) {
-
-  }
+  constructor(private client: GraphQLClient) {}
 
   async findTraining(id: string): Promise<t.Training> {
     const query = gql`
@@ -336,11 +330,11 @@ export class GraphCMS {
     await this.client.request(mutation, {
       data: {
         events: {
-          connect: {
+          connect: [{
             where: {
               id: event.id
             }
-          }
+          }]
         }
       }
     })
@@ -359,9 +353,11 @@ export class GraphCMS {
     await this.client.request(mutation, {
       data: {
         events: {
-          disconnect: [{
-            id: event.id
-          }]
+          disconnect: [
+            {
+              id: event.id
+            }
+          ]
         }
       }
     })
@@ -481,14 +477,14 @@ export class GraphCMS {
     total: number
   }> {
     const query = gql`
-      query searchEvents($first: Int, $skip: Int, $stage: Stage!, $where: EventWhereInput, $orderBy: EventOrderByInput) {
-        page: eventsConnection(
-          first: $first
-          skip: $skip
-          stage: $stage
-          where: $where
-          orderBy: $orderBy
-        ) {
+      query searchEvents(
+        $first: Int
+        $skip: Int
+        $stage: Stage!
+        $where: EventWhereInput
+        $orderBy: EventOrderByInput
+      ) {
+        page: eventsConnection(first: $first, skip: $skip, stage: $stage, where: $where, orderBy: $orderBy) {
           edges {
             node {
               id
@@ -551,9 +547,7 @@ export class GraphCMS {
       }
 
       if (search.orderBy && search.orderAs) {
-        const orderBy = search.orderBy === 'date'
-          ? 'startDate'
-          : 'trainingPrice'
+        const orderBy = search.orderBy === 'date' ? 'startDate' : 'trainingPrice'
         vars.orderBy = `${orderBy}_${search.orderAs.toUpperCase()}`
       }
 
@@ -600,14 +594,16 @@ export class GraphCMS {
           })
         } else {
           const today = new Date()
-          const range = preset === 'this-month'
-            ? {
-              startsAfter: today.toISOString(),
-              endsBefore: new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString()
-            } : {
-              startsAfter: new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString(),
-              endsBefore: new Date(today.getFullYear(), today.getMonth() + 2, 0).toISOString()
-            }
+          const range =
+            preset === 'this-month'
+              ? {
+                  startsAfter: today.toISOString(),
+                  endsBefore: new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString()
+                }
+              : {
+                  startsAfter: new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString(),
+                  endsBefore: new Date(today.getFullYear(), today.getMonth() + 2, 0).toISOString()
+                }
           vars.where.AND.push({
             startDate_gt: range.startsAfter,
             endDate_lt: range.endsBefore
@@ -625,7 +621,6 @@ export class GraphCMS {
       events: response.page.edges.map(e => e.node),
       total: response.page.aggregate.count
     }
-
   }
 
   async listEventsNeedingEnrichment(currentEnrichmentVersion: number) {
@@ -648,7 +643,6 @@ export class GraphCMS {
     return response.events
   }
 
-
   async listTrainingsNeedingEnrichment(currentEnrichmentVersion: number) {
     const query = gql`
       query listLameTrainings {
@@ -668,7 +662,7 @@ export class GraphCMS {
     const response = await this.client.request<{ trainings: t.Training[] }>(query)
     return response.trainings
   }
-  
+
   async listCompaniesNeedingEnrichment(currentEnrichmentVersion: number) {
     const query = gql`
       query listLameCompanies {
@@ -688,7 +682,6 @@ export class GraphCMS {
     const response = await this.client.request<{ companies: t.Company[] }>(query)
     return response.companies
   }
-
 }
 
 type SearchEventsResponse = {
