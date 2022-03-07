@@ -149,6 +149,7 @@ export interface Event extends BaseEntity, Syncable, Enrichable, Hashable {
     state: USState
     trainingPrice: number
     name: string
+    images: Asset[]
 }
 
 export interface LocationMapping extends BaseEntity {

@@ -126,6 +126,9 @@ export class GraphCMS {
           state
           directLink
           externalLink
+          images {
+            url
+          }
           training {
             id
             slug
@@ -498,6 +501,9 @@ export class GraphCMS {
               location {
                 latitude
                 longitude
+              }
+              images {
+                url
               }
               training {
                 id
