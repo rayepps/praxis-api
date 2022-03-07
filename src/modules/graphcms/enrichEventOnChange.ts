@@ -71,7 +71,7 @@ async function onEventChange({ args, services }: Props<Args, Services>) {
     city: location.city,
     state: location.state,
     slug: makeEventSlug(event, location),
-    trainingPrice: event.training.price,
+    trainingPrice: Math.round(Number(event.training.price)),
     name: event.training.name,
     externalLink: data.link.link,
     hash: Hashable.hash(event, identify)
