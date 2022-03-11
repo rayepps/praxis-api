@@ -13,6 +13,7 @@
     "@exobase/hooks": "^0.0.10",
     "@exobase/lambda": "^0.0.10",
     "@logtail/node": "^0.1.10",
+    "@slack/web-api": "^6.7.0",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "date-fns": "^2.24.0",

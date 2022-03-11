@@ -78,6 +78,8 @@ const identify = (training: t.Training): object => {
     id: training.id,
     price: training.price,
     directLink: training.directLink,
+    companyThumbnailId: training.company.thumbnail.id,
+    galleryIds: training.gallery.map(img => img.id),
     enrichmentVersion: ENRICHMENT_VERSION
   }
 }

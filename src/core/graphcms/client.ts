@@ -135,6 +135,11 @@ export class GraphCMS {
             price
             displayPrice
             name
+            tags {
+              id
+              slug
+              name
+            }
             description {
               html
             }

@@ -22,7 +22,8 @@ const config = {
   mongoSubdomain: get('MONGO_SUBDOMAIN'),
   redirectorUrl: get('PRAXIS_REDIRECTOR_URL'),
   redirectorApiKey: get('PRAXIS_REDIRECTOR_API_KEY'),
-  logtailToken: get('LOGTAIL_TOKEN')
+  logtailToken: get('LOGTAIL_TOKEN'),
+  slackOauthToken: get('SLACK_OAUTH_TOKEN')
 }
 
 export type Config = typeof config
