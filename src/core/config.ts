@@ -23,7 +23,10 @@ const config = {
   redirectorUrl: get('PRAXIS_REDIRECTOR_URL'),
   redirectorApiKey: get('PRAXIS_REDIRECTOR_API_KEY'),
   logtailToken: get('LOGTAIL_TOKEN'),
-  slackOauthToken: get('SLACK_OAUTH_TOKEN')
+  slackOauthToken: get('SLACK_OAUTH_TOKEN'),
+  redisUsername: get('REDIS_USERNAME'),
+  redisPassword: get('REDIS_PASSWORD'),
+  redisUrl: get('REDIS_URL')
 }
 
 export type Config = typeof config

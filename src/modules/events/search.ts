@@ -5,48 +5,42 @@ import { useLogger } from '../../core/hooks/useLogger'
 import { useJsonArgs, useCors, useService } from '@exobase/hooks'
 import { useLambda } from '@exobase/lambda'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
-
+import makeCache, { CacheClient } from '../../core/cache'
+import { useCachedResponse } from '../../core/hooks/useCachedResponse'
 
 interface Args {
-  pageSize: number
-  page: number
-  orderBy: 'price' | 'date'
-  orderAs: 'asc' | 'desc'
+  pageSize?: number
+  page?: number
+  order?: t.SearchOrder
   type?: t.TrainingType
   tags?: string[]
   state?: string
   city?: string
   company?: string
-  dates?: {
-    preset: 'this-month' | 'next-month' | 'custom'
-    startsAfter?: string
-    endsBefore?: string
-  }
+  date?: `${string}<<${string}`
 }
 
 interface Services {
   graphcms: GraphCMS
+  cache: CacheClient
 }
 
-interface Response {
+type Response = Args & {
   events: t.Event[]
   total: number
 }
 
 async function searchEvents({ args, services }: Props<Args, Services>): Promise<Response> {
   const { graphcms } = services
-  const query = args
-
-  const {
-    events,
-    total
-  } = await graphcms.searchEvents(query)
-
-  return {
-    events,
-    total
+  const query = {
+    ...args,
+    page: args.page ?? 1,
+    pageSize: args.pageSize ?? 25
   }
-
+  const { total, events } = await graphcms.searchEvents(query)
+  return {
+    total, events, ...query
+  }
 }
 
 export default _.compose(
@@ -54,23 +48,22 @@ export default _.compose(
   useLambda(),
   useCors(),
   useJsonArgs<Args>(yup => ({
-    pageSize: yup.number().integer().positive().required(),
-    page: yup.number().integer().positive().required(),
-    orderBy: yup.string().required(),
-    orderAs: yup.string().required(),
+    pageSize: yup.number().integer().positive(),
+    page: yup.number().integer().positive(),
+    order: yup.string(), // TODO: Require specific values
     type: yup.string(),
     tags: yup.array().of(yup.string()),
     state: yup.string(),
     city: yup.string(),
     company: yup.string(),
-    dates: yup.object({
-      preset: yup.string(),
-      startsAfter: yup.string(),
-      endsBefore: yup.string()
-    })
+    date: yup.string()
   })),
   useService<Services>({
-    graphcms: makeGraphCMS()
+    graphcms: makeGraphCMS(),
+    cache: makeCache()
+  }),
+  useCachedResponse<Args, Response>({
+    key: 'px.events.search'
   }),
   searchEvents
 )

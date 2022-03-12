@@ -28,8 +28,8 @@ export default class Hashable {
     const identity = identifier(obj)
     return hash(identity) !== obj.hash.raw
   }
-  static hash<T extends HashableObject>(obj: T, identifier: Identifier<T>): t.Hash {
-    const identity = identifier(obj)
+  static hash<T extends HashableObject>(obj: T, identifier?: Identifier<T>): t.Hash {
+    const identity = identifier ? identifier(obj) : obj
     return {
       raw: hash(identity),
       fields: Object.keys(identity)

@@ -2,6 +2,7 @@ import { gql, GraphQLClient } from 'graphql-request'
 import * as t from '../types'
 import { slugger } from '../model'
 import { ENRICHMENT_VERSION } from '../const'
+import addDays from 'date-fns/addDays'
 
 /**
  * Graphql Object Notation
@@ -41,6 +42,8 @@ export class GraphCMS {
           company {
             id
             name
+            directLink
+            externalLink
             thumbnail {
               id
               url
@@ -152,6 +155,8 @@ export class GraphCMS {
             company {
               name
               slug
+              directLink
+              externalLink
               thumbnail {
                 url
               }
@@ -310,9 +315,11 @@ export class GraphCMS {
         state: event.state,
         slug: slugger(event.state, event.city),
         events: {
-          connect: [{
-            id: event.id
-          }]
+          connect: [
+            {
+              id: event.id
+            }
+          ]
         }
       }
     })
@@ -338,11 +345,13 @@ export class GraphCMS {
     await this.client.request(mutation, {
       data: {
         events: {
-          connect: [{
-            where: {
-              id: event.id
+          connect: [
+            {
+              where: {
+                id: event.id
+              }
             }
-          }]
+          ]
         }
       }
     })
@@ -468,18 +477,13 @@ export class GraphCMS {
   async searchEvents(search: {
     pageSize: number
     page: number
-    orderBy?: 'price' | 'date'
-    orderAs?: 'asc' | 'desc'
+    order?: t.SearchOrder
     type?: t.TrainingType
     tags?: string[]
     state?: string
     city?: string
     company?: string
-    dates?: {
-      preset: 'this-month' | 'next-month' | 'custom'
-      startsAfter?: string
-      endsBefore?: string
-    }
+    date?: 'this-month' | 'next-month' | `${string}<<${string}`
   }): Promise<{
     events: t.Event[]
     total: number
@@ -502,34 +506,35 @@ export class GraphCMS {
               state
               directLink
               externalLink
-              slug
-              location {
-                latitude
-                longitude
-              }
               images {
                 url
               }
               training {
                 id
                 slug
-                name
                 price
                 displayPrice
+                name
                 tags {
+                  id
                   slug
                   name
                 }
+                description {
+                  html
+                }
                 thumbnail {
-                  id
+                  url
+                }
+                gallery {
                   url
                 }
                 company {
-                  id
-                  slug
                   name
+                  slug
+                  directLink
+                  externalLink
                   thumbnail {
-                    id
                     url
                   }
                 }
@@ -554,12 +559,13 @@ export class GraphCMS {
         where: {
           AND: []
         },
-        orderBy: null // TODO
+        orderBy: null // set below
       }
 
-      if (search.orderBy && search.orderAs) {
-        const orderBy = search.orderBy === 'date' ? 'startDate' : 'trainingPrice'
-        vars.orderBy = `${orderBy}_${search.orderAs.toUpperCase()}`
+      if (search.order) {
+        const [priceOrDate, ascOrDesc] = search.order.split(':')
+        const orderField = priceOrDate === 'date' ? 'startDate' : 'trainingPrice'
+        vars.orderBy = `${orderField}_${ascOrDesc.toUpperCase()}`
       }
 
       if (search.tags) {
@@ -596,30 +602,12 @@ export class GraphCMS {
         })
       }
 
-      if (search.dates.preset) {
-        const { preset } = search.dates
-        if (preset === 'custom') {
-          vars.where.AND.push({
-            startDate_gt: search.dates.startsAfter,
-            endDate_lt: search.dates.endsBefore
-          })
-        } else {
-          const today = new Date()
-          const range =
-            preset === 'this-month'
-              ? {
-                  startsAfter: today.toISOString(),
-                  endsBefore: new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString()
-                }
-              : {
-                  startsAfter: new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString(),
-                  endsBefore: new Date(today.getFullYear(), today.getMonth() + 2, 0).toISOString()
-                }
-          vars.where.AND.push({
-            startDate_gt: range.startsAfter,
-            endDate_lt: range.endsBefore
-          })
-        }
+      if (search.date) {
+        const [fromStr, toStr] = search.date.split('<<')
+        vars.where.AND.push({
+          startDate_gt: addDays(new Date(fromStr), -1).toISOString(),
+          endDate_lt: addDays(new Date(toStr), 1).toISOString()
+        })
       }
 
       console.log('variables')

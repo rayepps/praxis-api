@@ -12,6 +12,8 @@
 
 export type TrainingType = 'tactical' | 'medical' | 'survival'
 
+export type SearchOrder = `${'date' | 'price'}:${'asc' | 'desc'}`
+
 
 //
 //  UTILITY Types
