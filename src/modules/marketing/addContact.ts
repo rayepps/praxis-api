@@ -1,7 +1,8 @@
 import _ from 'radash'
 import type { Props } from '@exobase/core'
 import { useLogger } from '../../core/hooks/useLogger'
-import { useJsonArgs, useService, useCors } from '@exobase/hooks'
+import { useJsonArgs, useService } from '@exobase/hooks'
+import { useCors } from '../../core/hooks/useCors'
 import { useLambda } from '@exobase/lambda'
 import makeSlack, { SlackClient } from '../../core/slack'
 

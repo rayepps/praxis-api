@@ -44,6 +44,11 @@ const flatten = (obj: any, prefix: string | null = null) => {
 }
 
 export async function withCachedResponse(func: ApiFunction, config: Config, props: Props<any, { cache: CacheClient }>) {
+  const skipCacheHeader = props.req.headers['x-skip-cache']
+  if (skipCacheHeader === 'yes') {
+    console.debug('Skipping cache per X-Skip-Cache header')
+    return await func(props)
+  }
   const key = `${config.key}.${hash(flatten(config.argsToIdentity(props.args)))}`
   const cached = await props.services.cache.get(key)
   if (cached) {

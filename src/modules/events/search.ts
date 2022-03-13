@@ -2,7 +2,8 @@ import _ from 'radash'
 import * as t from '../../core/types'
 import type { Props } from '@exobase/core'
 import { useLogger } from '../../core/hooks/useLogger'
-import { useJsonArgs, useCors, useService } from '@exobase/hooks'
+import { useJsonArgs, useService } from '@exobase/hooks'
+import { useCors } from '../../core/hooks/useCors'
 import { useLambda } from '@exobase/lambda'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import makeCache, { CacheClient } from '../../core/cache'
@@ -35,7 +36,8 @@ async function searchEvents({ args, services }: Props<Args, Services>): Promise<
   const query = {
     ...args,
     page: args.page ?? 1,
-    pageSize: args.pageSize ?? 25
+    pageSize: args.pageSize ?? 25,
+    order: args.order ?? 'date:asc'
   }
   const { total, events } = await graphcms.searchEvents(query)
   return {
