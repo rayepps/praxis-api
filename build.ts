@@ -30,8 +30,11 @@ function compile(func: Func) {
       {
         entry: [`./src/modules/${func.module}/${func.function}.ts`],
         mode: (process.env.NODE_ENV as 'production' | 'development') ?? 'production',
-        target: 'node',
+        target: 'async-node14',
         output: {
+          library: {
+            type: 'commonjs2'
+          },
           path: path.resolve(__dirname, 'build', 'modules', func.module),
           filename: `${func.function}.js`
         },
