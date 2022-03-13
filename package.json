@@ -11,7 +11,7 @@
     "@exobase/client-builder": "^0.0.2",
     "@exobase/core": "^0.0.6",
     "@exobase/hooks": "^0.0.10",
-    "@exobase/lambda": "^0.0.10",
+    "@exobase/lambda": "^0.0.11",
     "@logtail/node": "^0.1.10",
     "@slack/web-api": "^6.7.0",
     "axios": "^0.21.1",
