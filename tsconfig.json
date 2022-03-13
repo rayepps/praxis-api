@@ -20,8 +20,9 @@
     "outDir": "build",
     "strictPropertyInitialization": false,
     "noImplicitAny": false,
+    "sourceMap": false,
     "typeRoots": ["node_modules/@types"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/build.ts"],
   "exclude": ["./node_modules", "**/*.test.ts"]
 }

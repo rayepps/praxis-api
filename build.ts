@@ -1,0 +1,69 @@
+import path from 'path'
+import webpack from 'webpack'
+import TerserPlugin from 'terser-webpack-plugin'
+import { getFunctionMap } from '@exobase/local'
+import cmd from 'cmdish'
+
+interface Func {
+  module: string
+  function: string
+}
+
+const functions = getFunctionMap(__dirname)
+cmd('rm -rf ./build')
+
+for (const func of functions) {
+  build(func)
+}
+
+async function build(func: Func) {
+  console.log(`processing: ${func.module}/${func.function}.js`)
+  await compile(func)
+  console.log(`compiled: ${func.module}/${func.function}.js`)
+  await zip(func)
+  console.log(`zipped: ${func.module}/${func.function}.js -> ${func.module}/${func.function}.zip`)
+}
+
+function compile(func: Func) {
+  return new Promise<void>((res, rej) => {
+    webpack(
+      {
+        entry: [`./src/modules/${func.module}/${func.function}.ts`],
+        mode: (process.env.NODE_ENV as 'production' | 'development') ?? 'production',
+        target: 'node',
+        output: {
+          path: path.resolve(__dirname, 'build', 'modules', func.module),
+          filename: `${func.function}.js`
+        },
+        resolve: {
+          extensions: ['.ts', '.js']
+        },
+        module: {
+          rules: [
+            {
+              test: /\.ts$/,
+              use: ['ts-loader']
+            }
+          ]
+        },
+        optimization: {
+          minimizer: [
+            new TerserPlugin({
+              extractComments: false
+            })
+          ]
+        }
+      },
+      (err, stats) => {
+        if (err || stats.hasErrors()) rej(err)
+        else res()
+      }
+    )
+  })
+}
+
+function zip(func: Func) {
+  return cmd(`zip -q ${func.function}.zip ${func.function}.js`, {
+    cwd: path.resolve(__dirname, 'build', 'modules', func.module)
+  })
+}
