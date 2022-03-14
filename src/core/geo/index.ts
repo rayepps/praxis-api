@@ -20,7 +20,6 @@ const nodeFetch = require('node-fetch')
 export type { GeoClient }
 
 export default function makeGeoClient() {
-  console.log('nodeFetch', nodeFetch)
   return new GeoClient(
     NodeGeocoder({
       provider: 'google',

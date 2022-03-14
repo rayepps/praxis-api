@@ -13,7 +13,7 @@ const getLogger = () => {
   if (!global._logtailLogger) {
     global._logtailLogger = new Logtail(config.logtailToken, {
       batchSize: 3,
-      batchInterval: 50
+      batchInterval: 10
     })
   }
   return global._logtailLogger
@@ -57,7 +57,10 @@ export const useLogger = () => (func: AnyFunc) => {
   return async (...args: any[]) => {
     const [err, result] = await _.try(func)(...args)
     if (logger) {
-      await (Promise as any).allSettled(logger.pending())
+      const pending = logger.pending()
+      if (pending.length > 0) {
+        await (Promise as any).allSettled()
+      }
     }
     if (err) throw err
     return result
