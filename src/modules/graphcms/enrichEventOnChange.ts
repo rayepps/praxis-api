@@ -36,6 +36,7 @@ async function onEventChange({ args, services }: Props<Args, Services>) {
   const event = await graphcms.findEvent(eventId)
 
   if (!Hashable.hasChanged(event, identify)) {
+    console.log('hash is the same - skipping event enrichment')
     return
   }
 
@@ -87,6 +88,8 @@ async function onEventChange({ args, services }: Props<Args, Services>) {
       state: location.state
     })
   }
+
+  console.log('event enriched')
 }
 
 const identify = (event: t.Event): object => {

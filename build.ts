@@ -9,10 +9,14 @@ interface Func {
   function: string
 }
 
+const whitelist = [
+  // 'enrichEventOnChange'
+]
+
 const functions = getFunctionMap(__dirname)
 cmd('rm -rf ./build')
 
-for (const func of functions) {
+for (const func of whitelist.length > 0 ? functions.filter(f => whitelist.includes(f.function)) : functions) {
   build(func)
 }
 
@@ -50,6 +54,7 @@ function compile(func: Func) {
           ]
         },
         optimization: {
+          minimize: false,
           minimizer: [
             new TerserPlugin({
               extractComments: false

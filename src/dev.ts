@@ -1,11 +1,19 @@
 import { getFunctionMap, start, lambdaFrameworkMapper } from '@exobase/local'
 
+const whitelist = [
+  // 'enrichEventOnChange'
+]
+
+const functions = getFunctionMap(process.cwd())
+
 start({
   port: process.env.PORT,
   framework: lambdaFrameworkMapper,
-  functions: getFunctionMap(process.cwd()).map((f) => ({ ...f,
-    func: require(f.paths.import).default
-  }))
+  functions: (whitelist.length > 0 ? functions.filter(f => whitelist.includes(f.function)) : functions).map((f) => {
+    return { ...f,
+      func: require(f.paths.import.replace('/praxis-api/src', '/praxis-api/build')).default
+    }
+  })
 }, (p) => {
   console.log(`API running at http://localhost:${p}`)
 })
