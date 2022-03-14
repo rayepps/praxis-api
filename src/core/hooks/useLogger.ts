@@ -11,7 +11,10 @@ type AnyFunc = (...args: any[]) => any
 
 const getLogger = () => {
   if (!global._logtailLogger) {
-    global._logtailLogger = new Logtail(config.logtailToken)
+    global._logtailLogger = new Logtail(config.logtailToken, {
+      batchSize: 3,
+      batchInterval: 50
+    })
   }
   return global._logtailLogger
 }

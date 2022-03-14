@@ -1,7 +1,7 @@
 import _ from 'radash'
 import * as t from '../../core/types'
 import type { Props } from '@exobase/core'
-// import { useLogger } from '../../core/hooks/useLogger'
+import { useLogger } from '../../core/hooks/useLogger'
 import { useJsonArgs, useService } from '@exobase/hooks'
 import { useCors } from '../../core/hooks/useCors'
 import { useLambda } from '@exobase/lambda'
@@ -46,7 +46,7 @@ async function searchEvents({ args, services }: Props<Args, Services>): Promise<
 }
 
 export default _.compose(
-  // useLogger(),
+  useLogger(),
   useLambda(),
   useCors(),
   useJsonArgs<Args>(yup => ({
