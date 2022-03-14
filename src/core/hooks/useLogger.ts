@@ -12,8 +12,8 @@ type AnyFunc = (...args: any[]) => any
 const getLogger = () => {
   if (!global._logtailLogger) {
     global._logtailLogger = new Logtail(config.logtailToken, {
-      batchSize: 3,
-      batchInterval: 50
+      batchSize: 2,
+      batchInterval: 15
     })
   }
   return global._logtailLogger
@@ -59,7 +59,7 @@ export const useLogger = () => (func: AnyFunc) => {
     if (logger) {
       const pending = logger.pending()
       if (pending.length > 0) {
-        await (Promise as any).allSettled()
+        await (Promise as any).allSettled(pending)
       }
     }
     if (err) throw err
