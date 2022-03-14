@@ -67,6 +67,9 @@ function compile(func: Func) {
         else res()
       }
     )
+  }).catch((err) => {
+    console.error(err)
+    throw err
   })
 }
 
