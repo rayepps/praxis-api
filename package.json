@@ -23,7 +23,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.4.0",
     "nanoid": "^3.1.29",
-    "node-fetch": "^3.2.3",
+    "node-fetch": "2.6.7",
     "node-geocoder": "^4.0.0",
     "radash": "^1.7.0",
     "redis": "^4.0.4",

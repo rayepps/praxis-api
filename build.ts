@@ -54,10 +54,10 @@ function compile(func: Func) {
           ]
         },
         optimization: {
-          minimize: false,
+          minimize: true,
           minimizer: [
             new TerserPlugin({
-              extractComments: false
+              extractComments: true
             })
           ]
         }

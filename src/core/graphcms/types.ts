@@ -152,6 +152,7 @@ export interface Event extends BaseEntity, Syncable, Enrichable, Hashable {
     trainingPrice: number
     name: string
     images: Asset[]
+    soldOut: boolean
 }
 
 export interface LocationMapping extends BaseEntity {

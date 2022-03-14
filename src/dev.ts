@@ -11,7 +11,7 @@ start({
   framework: lambdaFrameworkMapper,
   functions: (whitelist.length > 0 ? functions.filter(f => whitelist.includes(f.function)) : functions).map((f) => {
     return { ...f,
-      func: require(f.paths.import.replace('/praxis-api/src', '/praxis-api/build')).default
+      func: require(f.paths.import).default
     }
   })
 }, (p) => {

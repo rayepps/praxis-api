@@ -129,6 +129,7 @@ export class GraphCMS {
           state
           directLink
           externalLink
+          soldOut
           images {
             url
           }
@@ -506,6 +507,7 @@ export class GraphCMS {
               state
               directLink
               externalLink
+              soldOut
               images {
                 url
               }
