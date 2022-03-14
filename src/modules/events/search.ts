@@ -46,7 +46,7 @@ async function searchEvents({ args, services }: Props<Args, Services>): Promise<
 }
 
 export default _.compose(
-  useLogger(),
+  // useLogger(),
   useLambda(),
   useCors(),
   useJsonArgs<Args>(yup => ({

@@ -57,7 +57,7 @@ function compile(func: Func) {
           minimize: true,
           minimizer: [
             new TerserPlugin({
-              extractComments: true
+              extractComments: false // false = do not generate LICENSE files
             })
           ]
         }
