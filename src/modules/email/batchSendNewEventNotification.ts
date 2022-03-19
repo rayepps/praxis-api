@@ -51,7 +51,6 @@ export default _.compose(
       city: yup.string().required(),
       state: yup.string().required(),
       startDate: yup.string().required(),
-      name: yup.string().required(),
       slug: yup.string().required(),
       training: yup.object({
         name: yup.string().required(),
