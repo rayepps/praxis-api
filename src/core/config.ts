@@ -16,17 +16,19 @@ const config = {
   graphcmsApiUrl: get('GRAPHCMS_API_URL'),
   googleGeocodingApiKey: get('GOOGLE_GEOCODING_API_KEY'),
   segmentKey: get('SEGMENT_KEY'),
-  mongoUsername: get('MONGO_USER_NAME'),
-  mongoPassword: get('MONGO_PASSWORD'),
-  mongoInstanceName: get('MONGO_INSTANCE_NAME'),
-  mongoSubdomain: get('MONGO_SUBDOMAIN'),
   redirectorUrl: get('PRAXIS_REDIRECTOR_URL'),
   redirectorApiKey: get('PRAXIS_REDIRECTOR_API_KEY'),
   logtailToken: get('LOGTAIL_TOKEN'),
   slackOauthToken: get('SLACK_OAUTH_TOKEN'),
   redisUsername: get('REDIS_USERNAME'),
   redisPassword: get('REDIS_PASSWORD'),
-  redisUrl: get('REDIS_URL')
+  redisUrl: get('REDIS_URL'),
+  dynamoAccessKeyId: get('DYNAMO_ACCESS_KEY_ID'),
+  dynamoSecretAccessKey: get('DYNAMO_SECRET_ACCESS_KEY'),
+  dynamoTableName: get('DYNAMO_TABLE_NAME'),
+  autopilotApiKey: get('AUTOPILOT_API_KEY'),
+  zeploToken: get('ZEPLO_TOKEN'),
+  postmarkToken: get('POSTMARK_TOKEN')
 }
 
 export type Config = typeof config

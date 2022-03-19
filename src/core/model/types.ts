@@ -1,4 +1,22 @@
 
+export interface Contact {
+  id: string
+  email: string
+  phone?: string
+  subscribed: boolean
+}
+
+export type TriggeredEventKey = 'px.event.process-new-events-notification'
+
+export interface TriggeredEvent <T =any> {
+  key: TriggeredEventKey
+  timestamp: number
+  metadata: T
+}
+
+export interface NewEventNotificationTriggeredEventMetadata {
+  eventIds: string[]
+}
 
 export interface LinkRef {
 

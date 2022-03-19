@@ -1,4 +1,4 @@
-
+import crypto from 'crypto'
 
 export const slugger = (...parts: string[]) => {
   return parts
@@ -10,6 +10,11 @@ export const slugger = (...parts: string[]) => {
     .replace(/\-\-+/g, '-')          // --- with -
 }
 
+export const hashEmail = (email: string) => {
+  return crypto.createHash('md5').update(email).digest('hex')
+}
+
 export default {
-  slugger
+  slugger,
+  hashEmail
 }

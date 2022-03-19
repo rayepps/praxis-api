@@ -18,7 +18,7 @@ interface Args {
   state?: string
   city?: string
   company?: string
-  date?: `${string}<<${string}`
+  date?: string | `${string}-${string}`
 }
 
 interface Services {
@@ -65,7 +65,8 @@ export default _.compose(
     cache: makeCache()
   }),
   useCachedResponse<Args, Response>({
-    key: 'px.events.search'
+    key: 'px.events.search',
+    ttl: '5 minutes'
   }),
   searchEvents
 )

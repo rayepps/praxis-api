@@ -3,6 +3,7 @@ import * as t from '../types'
 import { slugger } from '../model'
 import { ENRICHMENT_VERSION } from '../const'
 import addDays from 'date-fns/addDays'
+import parseDate from 'date-fns/parse'
 
 /**
  * Graphql Object Notation
@@ -114,6 +115,69 @@ export class GraphCMS {
       }
     `
     await this.client.request(mutation)
+  }
+
+  async findEventBySlug(slug: string): Promise<t.Event> {
+    const query = gql`
+      query findEvent {
+        event(where: {
+          slug: "${slug}"
+        }) {
+          id
+          startDate
+          endDate
+          city
+          state
+          directLink
+          externalLink
+          soldOut
+          images {
+            url
+          }
+          training {
+            id
+            slug
+            price
+            displayPrice
+            name
+            tags {
+              id
+              slug
+              name
+            }
+            description {
+              html
+            }
+            thumbnail {
+              url
+            }
+            gallery {
+              url
+            }
+            company {
+              name
+              slug
+              directLink
+              externalLink
+              thumbnail {
+                url
+              }
+            }
+          }
+          location {
+            latitude
+            longitude
+          }
+          hash
+          updatedBy {
+            id
+            name
+          }
+        }
+      }
+    `
+    const response = await this.client.request<{ event: t.Event }>(query)
+    return response.event
   }
 
   async findEvent(id: string): Promise<t.Event> {
@@ -484,7 +548,7 @@ export class GraphCMS {
     state?: string
     city?: string
     company?: string
-    date?: 'this-month' | 'next-month' | `${string}<<${string}`
+    date?: string | `${string}-${string}`
   }): Promise<{
     events: t.Event[]
     total: number
@@ -508,6 +572,7 @@ export class GraphCMS {
               directLink
               externalLink
               soldOut
+              slug
               images {
                 url
               }
@@ -549,9 +614,6 @@ export class GraphCMS {
         }
       }
     `
-
-    console.log('search')
-    console.log(JSON.stringify(search, null, 2))
 
     const makeVariables = (): object => {
       const vars = {
@@ -605,15 +667,16 @@ export class GraphCMS {
       }
 
       if (search.date) {
-        const [fromStr, toStr] = search.date.split('<<')
+        const [fromStr, toStr] = search.date?.includes('-')
+          ? search.date?.split('-') ?? ['', '']
+          : [search.date ?? '', search.date ?? '']
+        const fromDate = parseDate(fromStr, 'dd.MM.yyyy', new Date())
+        const toDate = parseDate(toStr, 'dd.MM.yyyy', new Date())
         vars.where.AND.push({
-          startDate_gt: addDays(new Date(fromStr), -1).toISOString(),
-          endDate_lt: addDays(new Date(toStr), 1).toISOString()
+          startDate_gt: addDays(fromDate, -1).toISOString(),
+          endDate_lt: addDays(toDate, 1).toISOString()
         })
       }
-
-      console.log('variables')
-      console.log(JSON.stringify(vars, null, 2))
 
       return vars
     }
@@ -622,6 +685,83 @@ export class GraphCMS {
       events: response.page.edges.map(e => e.node),
       total: response.page.aggregate.count
     }
+  }
+
+  async listRecentlyPublishedEvents({
+    limit
+  }: {
+    limit: number
+  }): Promise<t.Event[]> {
+    const query = gql`
+      query searchEvents(
+        $first: Int
+        $skip: Int
+        $stage: Stage!
+        $where: EventWhereInput
+        $orderBy: EventOrderByInput
+      ) {
+        page: eventsConnection(first: $first, skip: $skip, stage: $stage, where: $where, orderBy: $orderBy) {
+          edges {
+            node {
+              id
+              startDate
+              endDate
+              city
+              state
+              externalLink
+              soldOut
+              slug
+              images {
+                url
+              }
+              training {
+                id
+                slug
+                price
+                displayPrice
+                name
+                tags {
+                  id
+                  slug
+                  name
+                }
+                description {
+                  html
+                }
+                thumbnail {
+                  url
+                }
+                gallery {
+                  url
+                }
+                company {
+                  name
+                  slug
+                  externalLink
+                  thumbnail {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+    const response = await this.client.request<SearchEventsResponse>(query, {
+      first: limit,
+      skip: 0,
+      stage: 'PUBLISHED',
+      where:{
+        AND: [{
+          soldOut_not: true
+        }, {
+          createdAt_gt: addDays(new Date(), -2).toISOString()
+        }]
+      },
+      orderBy: 'publishedAt_DESC'
+    })
+    return response.page.edges.map(e => e.node)
   }
 
   async listEventsNeedingEnrichment(currentEnrichmentVersion: number) {

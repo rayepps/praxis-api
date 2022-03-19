@@ -3,22 +3,40 @@ import * as uuid from 'uuid'
 import type { Props, ApiFunction } from '@exobase/core'
 import { CacheClient } from '../cache'
 
+type UnitOfTime = 'second' | 'minute' | 'hour' | 'seconds' | 'minutes' | 'hours'
+
 export type Config<T = any, R = any> = {
   /**
    * Set the specified expire time, in seconds
    */
   key: string
-  ttl: number
+  ttl: `${number} ${UnitOfTime}`
   argsToIdentity: (args: T) => any
   responseToCache: (response: R) => string
   cacheToResponse: (cached: string) => R
 }
 
 const configDefaults: Partial<Config> = {
-  ttl: 60 * 60, // 1 hour in seconds
+  ttl: '1 hour', // 60 * 60, // 1 hour in seconds
   argsToIdentity: a => a,
   responseToCache: r => JSON.stringify(r),
   cacheToResponse: c => JSON.parse(c)
+}
+
+const parseTtl = (ttl:  `${number} ${UnitOfTime}`): number => {
+  const [num, unit] = ttl.split(' ') as [string, UnitOfTime]
+  const n = parseInt(num)
+  switch (unit) {
+    case 'hour':
+    case 'hours':
+      return n * 60 * 60
+    case 'minute':
+    case 'minutes':
+      return n * 60
+    case 'second':
+    case 'seconds':
+      return n
+  }
 }
 
 const hash = (obj: object) => {
@@ -46,7 +64,7 @@ const flatten = (obj: any, prefix: string | null = null) => {
 export async function withCachedResponse(func: ApiFunction, config: Config, props: Props<any, { cache: CacheClient }>) {
   const skipCacheHeader = props.req.headers['x-skip-cache']
   if (skipCacheHeader === 'yes') {
-    console.debug('Skipping cache per X-Skip-Cache header')
+    console.debug('Skipping cache per X-Skip-Cache: yes')
     return await func(props)
   }
   const key = `${config.key}.${hash(flatten(config.argsToIdentity(props.args)))}`
@@ -57,7 +75,7 @@ export async function withCachedResponse(func: ApiFunction, config: Config, prop
   }
   console.debug(`Cache miss key: ${key}`)
   const response = await func(props)
-  await props.services.cache.set(key, config.responseToCache(response), { ttl: config.ttl })
+  await props.services.cache.set(key, config.responseToCache(response), { ttl: parseTtl(config.ttl) })
   return response
 }
 

@@ -7,6 +7,8 @@
     "build": "ts-node build.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.54.1",
+    "@aws-sdk/util-dynamodb": "^3.54.1",
     "@exobase/auth": "^0.0.14",
     "@exobase/client-builder": "^0.0.2",
     "@exobase/core": "^0.0.6",
@@ -21,13 +23,12 @@
     "graphql": "^15.6.0",
     "graphql-request": "^3.5.0",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^4.4.0",
     "nanoid": "^3.1.29",
     "node-fetch": "2.6.7",
     "node-geocoder": "^4.0.0",
+    "postmark": "^3.0.1",
     "radash": "^1.7.0",
     "redis": "^4.0.4",
-    "urijs": "^1.19.7",
     "uuid": "^8.3.2",
     "yup": "^0.32.9"
   },
