@@ -17,7 +17,9 @@ const functions = getFunctionMap(__dirname)
 cmd('rm -rf ./build')
 
 for (const func of whitelist.length > 0 ? functions.filter(f => whitelist.includes(f.function)) : functions) {
-  build(func)
+  build(func).catch(err => {
+    console.error(err)
+  })
 }
 
 async function build(func: Func) {
@@ -63,11 +65,14 @@ function compile(func: Func) {
         }
       },
       (err, stats) => {
-        if (err || stats.hasErrors()) rej(err)
+        if (err || stats.hasErrors()) {
+          console.log(stats)
+          rej(err)
+        }
         else res()
       }
     )
-  }).catch((err) => {
+  }).catch(err => {
     console.error(err)
     throw err
   })

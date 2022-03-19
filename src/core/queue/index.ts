@@ -1,9 +1,8 @@
 import axios from 'axios'
 import makeQueueClient from './client'
-import config from '../config'
 
 const makeQueue = () => {
-  return makeQueueClient(axios, config.autopilotApiKey)
+  return makeQueueClient(axios)
 }
 
 export { QueueClient } from './client'
