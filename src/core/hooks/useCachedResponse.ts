@@ -17,7 +17,7 @@ export type Config<T = any, R = any> = {
 }
 
 const configDefaults: Partial<Config> = {
-  ttl: '1 hour', // 60 * 60, // 1 hour in seconds
+  ttl: '1 hour',
   argsToIdentity: a => a,
   responseToCache: r => JSON.stringify(r),
   cacheToResponse: c => JSON.parse(c)

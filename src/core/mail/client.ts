@@ -19,7 +19,7 @@ const createPostmarkClient = (postmark: ServerClient) => ({
     }[]
   }) => {
     const stream: Stream = 'broadcast'
-    await postmark.sendEmailBatchWithTemplates(
+    const response = await postmark.sendEmailBatchWithTemplates(
       messages.map(msg => ({
         TemplateAlias: alias,
         From: from,
@@ -30,6 +30,9 @@ const createPostmarkClient = (postmark: ServerClient) => ({
         TrackOpens: true
       }))
     )
+    if (response?.length > 0 && !!response[0].ErrorCode) {
+      throw response[0]
+    }
   }
 })
 

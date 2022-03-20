@@ -674,7 +674,7 @@ export class GraphCMS {
         const toDate = parseDate(toStr, 'dd.MM.yyyy', new Date())
         vars.where.AND.push({
           startDate_gt: addDays(fromDate, -1).toISOString(),
-          endDate_lt: addDays(toDate, 1).toISOString()
+          startDate_lt: addDays(toDate, 1).toISOString()
         })
       }
 
