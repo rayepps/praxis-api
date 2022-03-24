@@ -12,13 +12,13 @@ import { useCachedResponse } from '../../core/hooks/useCachedResponse'
 interface Args {
   pageSize?: number
   page?: number
-  order?: t.EventSearchOrder
+  order?: t.TrainingSearchOrder
   type?: t.TrainingType
   tags?: string[]
   state?: string
   city?: string
+  appointmentOnly?: boolean
   company?: string
-  date?: string | `${string}-${string}`
 }
 
 interface Services {
@@ -27,21 +27,21 @@ interface Services {
 }
 
 type Response = Args & {
-  events: t.Event[]
+  trainings: t.Training[]
   total: number
 }
 
-async function searchEvents({ args, services }: Props<Args, Services>): Promise<Response> {
+async function listAppointmentOnly({ args, services }: Props<Args, Services>): Promise<Response> {
   const { graphcms } = services
   const query = {
     ...args,
     page: args.page ?? 1,
     pageSize: args.pageSize ?? 25,
-    order: args.order ?? 'date:asc'
+    order: args.order ?? 'price:asc'
   }
-  const { total, events } = await graphcms.searchEvents(query)
+  const { total, trainings } = await graphcms.searchTrainings(query)
   return {
-    total, events, ...query
+    total, trainings, ...query
   }
 }
 
@@ -57,16 +57,15 @@ export default _.compose(
     tags: yup.array().of(yup.string()),
     state: yup.string(),
     city: yup.string(),
+    appointmentOnly: yup.boolean(),
     company: yup.string(),
-    date: yup.string()
   })),
   useService<Services>({
     graphcms: makeGraphCMS(),
     cache: makeCache()
   }),
-  useCachedResponse<Args, Response>({
-    key: 'px.events.search',
-    ttl: '5 minutes'
+  useCachedResponse({
+    key: 'px.trainings.appointment-only'
   }),
-  searchEvents
+  listAppointmentOnly
 )

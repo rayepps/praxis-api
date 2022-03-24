@@ -5,10 +5,10 @@ import * as t from '../types'
 // data in the record in a special -- either less
 // or more explicity -- way.
 
-export interface ContactRecord extends t.Contact {
-  HK: string
-  SK: String
-}
+// export interface ContactRecord extends t.Contact {
+//   HK: string
+//   SK: String
+// }
 
 export interface TriggeredEventRecord extends t.TriggeredEvent {
   HK: string

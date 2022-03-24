@@ -24,43 +24,43 @@ const stamps = {
 }
 
 const createDatabase = (dynamo: DynamoDBClient) => ({
-  //
-  //  CONTACTS
-  //
-  addContact: methods.addItem({
-    dynamo,
-    toRecord: (contact: t.Contact): t.ContactRecord => ({
-      ...contact,
-      HK: `A#CONTACT#${contact.id}`,
-      SK: 'T#CONTACT'
-    })
-  }),
-  findContactById: methods.getItem({
-    dynamo,
-    toModel: mappers.ContactRecord.toModel,
-    argsToKey: (id: string) => ({
-      HK: `A#CONTACT#${id}`,
-      SK: `T#CONTACT`
-    })
-  }),
-  updateContact: methods.updateItem({
-    dynamo,
-    keyArgToKey: (id: string) => ({
-      HK: `A#CONTACT#${id}`,
-      SK: `T#CONTACT`
-    })
-  }),
-  iterateSubscribedContacts: methods.iterate(
-    methods.scan({
-      dynamo,
-      filterExpression: 'SK = :sk',
-      indexName: 'reverse',
-      argToAttributes: () => ({
-        ':sk': 'T#CONTACT'
-      }),
-      toModel: mappers.ContactRecord.toModel
-    }),
-  ),
+  // //
+  // //  CONTACTS
+  // //
+  // addContact: methods.addItem({
+  //   dynamo,
+  //   toRecord: (contact: t.Contact): t.ContactRecord => ({
+  //     ...contact,
+  //     HK: `A#CONTACT#${contact.id}`,
+  //     SK: 'T#CONTACT'
+  //   })
+  // }),
+  // findContactById: methods.getItem({
+  //   dynamo,
+  //   toModel: mappers.ContactRecord.toModel,
+  //   argsToKey: (id: string) => ({
+  //     HK: `A#CONTACT#${id}`,
+  //     SK: `T#CONTACT`
+  //   })
+  // }),
+  // updateContact: methods.updateItem({
+  //   dynamo,
+  //   keyArgToKey: (id: string) => ({
+  //     HK: `A#CONTACT#${id}`,
+  //     SK: `T#CONTACT`
+  //   })
+  // }),
+  // iterateSubscribedContacts: methods.iterate(
+  //   methods.scan({
+  //     dynamo,
+  //     filterExpression: 'SK = :sk',
+  //     indexName: 'reverse',
+  //     argToAttributes: () => ({
+  //       ':sk': 'T#CONTACT'
+  //     }),
+  //     toModel: mappers.ContactRecord.toModel
+  //   }),
+  // ),
 
   //
   //  TRIGGERED EVENTS

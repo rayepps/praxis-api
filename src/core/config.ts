@@ -7,10 +7,6 @@ const get = <T = string>(name: string, defaultValue: T = null, cast: (v: any) =>
 const config = {
   env: get('PRAXIS_ENV'),
   apiKey: get('PRAXIS_API_KEY'),
-  baseUrl: (() => {
-    const url = get('PRAXIS_API_URL')
-    return url.endsWith('/') ? url.replace(/\/$/, '') : url
-  })(),
   graphcmsWebhookKey: get('GRAPHCMS_WEBHOOK_KEY'),
   graphcmsApiToken: get('GRAPHCMS_API_TOKEN'),
   graphcmsApiUrl: get('GRAPHCMS_API_URL'),
@@ -28,7 +24,8 @@ const config = {
   dynamoTableName: get('DYNAMO_TABLE_NAME'),
   autopilotApiKey: get('AUTOPILOT_API_KEY'),
   zeploToken: get('ZEPLO_TOKEN'),
-  postmarkToken: get('POSTMARK_TOKEN')
+  postmarkToken: get('POSTMARK_TOKEN'),
+  mongoUri: get('MONGO_URI')
 }
 
 export type Config = typeof config

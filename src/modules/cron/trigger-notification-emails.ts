@@ -10,6 +10,7 @@ import * as t from '../../core/types'
 import makeQueue, { QueueClient } from '../../core/queue'
 import config from '../../core/config'
 import { useApiKeyAuthentication } from '@exobase/auth'
+import makeMongo, { MongoClient } from '../../core/mongo'
 
 
 interface Args {}
@@ -18,10 +19,11 @@ interface Services {
   graphcms: GraphCMS
   db: Database
   queue: QueueClient
+  mongo: MongoClient
 }
 
 async function triggerNewEventNotificationEmail({ services }: Props<Args, Services>) {
-  const { graphcms, db, queue } = services
+  const { graphcms, db, queue, mongo } = services
 
   // Check to see if we should run the email now
   // - have we already done this in the last 23 hours?
@@ -89,34 +91,41 @@ async function triggerNewEventNotificationEmail({ services }: Props<Args, Servic
   console.log('x--> EVENTS TO ADD [final]:')
   console.log(eventsToSend)
 
-  // db.iterate will pull records from the db in the biggest
-  // batches it can then call the callback for each record and
-  // repeat until no matching records remain.
-  //
-  // Here we're pulling every subscriber. Grouping them into groups
-  // of max 50 and then queueing the request to generate and send
-  // the email for those 50 contacts.
-  const queueBatch = async (contacts: t.Contact[], delay: number) => {
-    console.log('x--> QUEUEING BATCH:', { contacts, delay })
-    await queue.push({
-      endpoint: 'email/batchSendNewEventNotification',
-      delay,
-      body: {
-        contacts: contacts,
-        events: eventsToSend
-      }
-    })
+  // TODO:
+  // - filter out supressions (currently postmark will do this for us)
+  // - handle error
+  // - handle in batches
+  const [err, contacts] = await mongo.findContactsWithTag({
+    tag: 'joined.by.site-subscribe-popup'
+  })
+  if (err) {
+    console.error(err)
+    throw err
   }
-  let group: t.Contact[] = []
-  await db.iterateSubscribedContacts(null, async (contact: t.Contact, idx: number) => {
-    if (group.length > 50) {
-      await queueBatch(group, idx /* seconds delayed */)
-      group = []
-    } else {
-      group = [...group, contact]
+
+  console.log('x--> CONTACTS:')
+  console.log(contacts)
+
+  const ray = contacts.find(c => c.email === 'ray@unishine.dev')
+
+  // Do the email for me. Then do the email for everyone else
+  // If anything is jacked I have 30 mins to fix it or stop
+  // the queued send email request in Zeplo
+  await queue.push({
+    endpoint: 'email/batchSendNewEventNotification',
+    body: {
+      contacts: ray,
+      events: eventsToSend
     }
   })
-  await queueBatch(group, 60 /* seconds delayed */)
+  await queue.push({
+    endpoint: 'email/batch-send-notification-emails',
+    delay: 60 * 30, // 30 minutes
+    body: {
+      contacts: contacts,
+      events: eventsToSend
+    }
+  })
 
   // Add a new triggered event record to record that this action 
   // has taken place
@@ -138,7 +147,8 @@ export default _.compose(
   useService<Services>({
     graphcms: makeGraphCMS(),
     db: makeDatabase(),
-    queue: makeQueue()
+    queue: makeQueue(),
+    mongo: makeMongo()
   }),
   triggerNewEventNotificationEmail
 )

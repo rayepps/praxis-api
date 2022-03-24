@@ -6,6 +6,8 @@ import { useLambda } from '@exobase/lambda'
 import * as t from '../../core/types'
 import makeMail, { MailClient } from '../../core/mail'
 import formatDate from 'date-fns/format'
+import { useApiKeyAuthentication } from '@exobase/auth'
+import config from '../../core/config'
 
 interface Args {
   contacts: t.Contact[]
@@ -16,7 +18,7 @@ interface Services {
   mail: MailClient
 }
 
-async function batchSendNewEventNotification({ args, services }: Props<Args, Services>) {
+async function batchSendNewEventNotificationEmails({ args, services }: Props<Args, Services>) {
   const { mail } = services
   const { contacts, events } = args
 
@@ -41,6 +43,7 @@ async function batchSendNewEventNotification({ args, services }: Props<Args, Ser
 export default _.compose(
   useLogger(),
   useLambda(),
+  useApiKeyAuthentication(config.apiKey),
   useJsonArgs<Args>(yup => ({
     contacts: yup.array(
       yup.object({
@@ -63,5 +66,5 @@ export default _.compose(
   useService<Services>({
     mail: makeMail()
   }),
-  batchSendNewEventNotification
+  batchSendNewEventNotificationEmails
 )

@@ -11,7 +11,7 @@ export const slugger = (...parts: string[]) => {
 }
 
 export const hashEmail = (email: string) => {
-  return crypto.createHash('md5').update(email).digest('hex')
+  return crypto.createHash('md5').update(`px.email.${email}`).digest('hex')
 }
 
 export default {

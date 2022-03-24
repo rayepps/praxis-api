@@ -6,22 +6,25 @@ import { useService } from '@exobase/hooks'
 import { useCors } from '../../core/hooks/useCors'
 import { useLambda } from '@exobase/lambda'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
+import makeCacheClient, { CacheClient } from '../../core/cache'
+import { useCachedResponse } from '../../core/hooks/useCachedResponse'
 
 interface Args {}
 
 interface Services {
   graphcms: GraphCMS
+  cache: CacheClient
 }
 
 interface Response {
-  tags: t.Tag[]
+  companies: t.Company[]
 }
 
-async function listTags({ services }: Props<Args, Services>): Promise<Response> {
+async function listCompanies({ services }: Props<Args, Services>): Promise<Response> {
   const { graphcms } = services
-  const tags = await graphcms.listTags()
+  const companies = await graphcms.listCompanies()
   return {
-    tags
+    companies
   }
 }
 
@@ -30,7 +33,12 @@ export default _.compose(
   useLambda(),
   useCors(),
   useService<Services>({
-    graphcms: makeGraphCMS()
+    graphcms: makeGraphCMS(),
+    cache: makeCacheClient()
   }),
-  listTags
+  useCachedResponse({
+    key: 'px.companies.all',
+    ttl: '5 minutes'
+  }),
+  listCompanies
 )

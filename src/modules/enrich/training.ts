@@ -10,6 +10,7 @@ import config from '../../core/config'
 import { ENRICHMENT_VERSION } from '../../core/const'
 import makeRedirector, { Redirector } from '../../core/redirector'
 import Hashable from '../../core/graphcms/hashable'
+import makeGeoClient, { GeoClient } from '../../core/geo'
 
 interface Args {
   operation: 'update' | 'create' | 'enrich'
@@ -23,10 +24,11 @@ interface Args {
 interface Services {
   graphcms: GraphCMS
   redirector: Redirector
+  geo: GeoClient
 }
 
 async function enrichTrainingOnChange({ args, services }: Props<Args, Services>) {
-  const { graphcms, redirector } = services
+  const { graphcms, geo, redirector } = services
   const { id: trainingId } = args.data
 
   const training = await graphcms.findTraining(trainingId)
@@ -43,14 +45,17 @@ async function enrichTrainingOnChange({ args, services }: Props<Args, Services>)
     return
   }
 
-  const { error, data } = await redirector.links.create({
-    url: training.directLink,
-    title: `Training: ${training.name} id(${trainingId})`,
-    class: 'training',
-    metadata: {
-      trainingId
-    }
-  }, { key: config.redirectorApiKey })
+  const { error, data } = await redirector.links.create(
+    {
+      url: training.directLink,
+      title: `Training: ${training.name} id(${trainingId})`,
+      class: 'training',
+      metadata: {
+        trainingId
+      }
+    },
+    { key: config.redirectorApiKey }
+  )
   if (error) {
     // quietly log error. Trying not to throw in webhook
     console.error('Request to redirector failed', { error })
@@ -62,6 +67,11 @@ async function enrichTrainingOnChange({ args, services }: Props<Args, Services>)
   const hasGalleryImages = training.gallery.length > 0
   const gallery = hasGalleryImages ? training.gallery : [training.company.thumbnail]
 
+  // Location - For appointment only trainings
+  const location = training.location
+    ? await geo.lookupCoordinates(training.location.latitude, training.location.longitude)
+    : null
+
   await graphcms.enrichTraining(training.id, {
     gallery,
     thumbnail: {
@@ -69,6 +79,8 @@ async function enrichTrainingOnChange({ args, services }: Props<Args, Services>)
     } as t.Asset,
     externalLink: data.link.link,
     displayPrice: formatPrice(training.price),
+    city: location?.city ?? null,
+    state: location?.state ?? null,
     hash: Hashable.hash(training, identify)
   })
 }
@@ -80,6 +92,8 @@ const identify = (training: t.Training): object => {
     directLink: training.directLink,
     companyThumbnailId: training.company.thumbnail.id,
     galleryIds: training.gallery.map(img => img.id),
+    latitude: training.location?.latitude,
+    longitude: training.location?.longitude,
     enrichmentVersion: ENRICHMENT_VERSION
   }
 }
@@ -108,7 +122,8 @@ export default _.compose(
   })),
   useService<Services>({
     graphcms: makeGraphCMS(),
-    redirector: makeRedirector()
+    redirector: makeRedirector(),
+    geo: makeGeoClient()
   }),
   enrichTrainingOnChange
 )

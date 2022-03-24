@@ -1,9 +1,24 @@
 
+export type Id <model extends string = any> = `px.${model}.${string}`
+
+export type ContactTag = 'joined.by.site-subscribe-popup'
+  | 'joined.by.site-contact-form'
+  | 'joined.by.site-partner-form'
+  | 'joined.by.giveaway'
+  | `joined.campaign.${string}`
+  | `joined.giveaway.${string}`
+
+export type ContactSupression = {
+  timestamp: number
+  campaign: string
+}
+
 export interface Contact {
-  id: string
+  id: Id<'contact'>
   email: string
   phone?: string
-  subscribed: boolean
+  tags: ContactTag[]
+  supressions: ContactSupression[]
 }
 
 export type TriggeredEventKey = 'px.event.process-new-events-notification'

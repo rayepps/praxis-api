@@ -4,16 +4,17 @@ import { useLogger } from '../../core/hooks/useLogger'
 import { useJsonArgs, useService } from '@exobase/hooks'
 import { useCors } from '../../core/hooks/useCors'
 import { useLambda } from '@exobase/lambda'
-import makeDatabase, { Database } from '../../core/db'
+import makeMongo, { MongoClient } from '../../core/mongo'
 import * as t from '../../core/types'
 import * as mappers from '../../core/view/mappers'
 
 interface Args {
-  id: string
+  id: t.Id<'contact'>
+  campaign: string
 }
 
 interface Services {
-  db: Database
+  mongo: MongoClient
 }
 
 interface Response {
@@ -21,36 +22,48 @@ interface Response {
 }
 
 async function unsubscribeContact({ args, services }: Props<Args, Services>): Promise<Response> {
-  const { id } = args
-  const { db } = services
-  const contact = await db.findContactById(id)
+  const { id, campaign } = args
+  const { mongo } = services
+  const [err, contact] = await mongo.findContactById({ id })
+  if (err) {
+    throw errors.notFound({
+      key: 'px.marketing.unsubscribe.find-err',
+      details: `Could not find a subscriber with the given id(${id})`
+    })
+  }
   if (!contact) {
     throw errors.badRequest({
       key: 'px.marketing.unsubscribe.not-found',
       details: `Could not find a subscriber with the given id(${id})`
     })
   }
-  const patch = {
-    subscribed: false
+  const supression: t.ContactSupression = {
+    timestamp: new Date().getTime(),
+    campaign
   }
-  await db.updateContact(id, patch)
+  await mongo.addContactSupression({
+    id,
+    supression
+  })
   return {
     contact: mappers.ContactView.toView({
       ...contact,
-      ...patch
+      ...supression
     })
   }
 }
 
+// TODO: Add rate limiting
 export default _.compose(
   useLogger(),
   useLambda(),
   useCors(),
   useJsonArgs<Args>(yup => ({
-    id: yup.string().required()
+    id: yup.string().required(),
+    campaign: yup.string().required()
   })),
   useService<Services>({
-    db: makeDatabase()
+    mongo: makeMongo()
   }),
   unsubscribeContact
 )

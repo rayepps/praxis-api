@@ -12,7 +12,10 @@
 
 export type TrainingType = 'tactical' | 'medical' | 'survival'
 
-export type SearchOrder = `${'date' | 'price'}:${'asc' | 'desc'}`
+export type EventSearchOrder = `${'date' | 'price'}:${'asc' | 'desc'}`
+export type TrainingSearchOrder = `${'price'}:${'asc' | 'desc'}`
+
+export type PriceUnit = 'per_training' | 'per_hour'
 
 
 //
@@ -121,13 +124,18 @@ export interface Training extends BaseEntity, Enrichable, Syncable, Hashable {
     externalLink: string
     tags: Tag[]
     price: number
+    priceUnit: PriceUnit
+    displayPrice: string | null
     type: TrainingType
     description: string
     gallery: Asset[]
     thumbnail: Asset
     events: Event[]
     slug: string
-    displayPrice: string | null
+    appointmentOnly: boolean
+    location: Location
+    city: string
+    state: string
 }
 
 export interface Instructor extends BaseEntity {
@@ -153,6 +161,14 @@ export interface Event extends BaseEntity, Syncable, Enrichable, Hashable {
     name: string
     images: Asset[]
     soldOut: boolean
+}
+
+export interface Giveaway extends BaseEntity {
+    name: string
+    key: string
+    endDate: string
+    active: boolean
+    events: Event[]
 }
 
 export interface LocationMapping extends BaseEntity {

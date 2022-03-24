@@ -40,6 +40,14 @@ export class GraphCMS {
           externalLink
           price
           displayPrice
+          priceUnit
+          city
+          state
+          appointmentOnly
+          location {
+            latitude
+            longitude
+          }
           company {
             id
             name
@@ -203,6 +211,7 @@ export class GraphCMS {
             price
             displayPrice
             name
+            priceUnit
             tags {
               id
               slug
@@ -542,7 +551,7 @@ export class GraphCMS {
   async searchEvents(search: {
     pageSize: number
     page: number
-    order?: t.SearchOrder
+    order?: t.EventSearchOrder
     type?: t.TrainingType
     tags?: string[]
     state?: string
@@ -687,11 +696,142 @@ export class GraphCMS {
     }
   }
 
-  async listRecentlyPublishedEvents({
-    limit
-  }: {
-    limit: number
-  }): Promise<t.Event[]> {
+  async searchTrainings(search: {
+    pageSize: number
+    page: number
+    order?: t.TrainingSearchOrder
+    type?: t.TrainingType
+    tags?: string[]
+    state?: string
+    city?: string
+    company?: string
+    appointmentOnly?: boolean
+  }): Promise<{
+    trainings: t.Training[]
+    total: number
+  }> {
+    const query = gql`
+      query searchTrainings(
+        $first: Int
+        $skip: Int
+        $stage: Stage!
+        $where: TrainingWhereInput
+        $orderBy: TrainingOrderByInput
+      ) {
+        page: trainingsConnection(first: $first, skip: $skip, stage: $stage, where: $where, orderBy: $orderBy) {
+          edges {
+            node {
+              id
+              slug
+              type
+              name
+              directLink
+              externalLink
+              price
+              displayPrice
+              priceUnit
+              appointmentOnly
+              city
+              state
+              description {
+                html
+              }
+              location {
+                latitude
+                longitude
+              }
+              company {
+                id
+                name
+                directLink
+                externalLink
+                thumbnail {
+                  id
+                  url
+                }
+              }
+              gallery {
+                id
+                url
+              }
+              tags {
+                id
+                name
+                slug
+              }
+              thumbnail {
+                url
+              }
+              hash
+            }
+          }
+          aggregate {
+            count
+          }
+        }
+      }
+    `
+
+    const makeVariables = (): object => {
+      const vars = {
+        first: search.pageSize,
+        skip: search.pageSize * (search.page - 1),
+        stage: 'PUBLISHED',
+        where: {
+          AND: []
+        },
+        orderBy: null // set below
+      }
+
+      if (search.order) {
+        const [_price, ascOrDesc] = search.order.split(':')
+        vars.orderBy = `price_${ascOrDesc.toUpperCase()}`
+      }
+
+      if (search.tags) {
+        vars.where.AND.push({
+          tags_some: {
+            slug_in: search.tags
+          }
+        })
+      }
+
+      if (search.type) {
+        vars.where.AND.push({
+          type: search.type
+        })
+      }
+
+      if (search.state) {
+        vars.where.AND.push({
+          state: search.state
+        })
+      }
+
+      if (search.company) {
+        vars.where.AND.push({
+          company: {
+            slug: search.company
+          }
+        })
+      }
+
+      if (search.appointmentOnly) {
+        vars.where.AND.push({
+          appointmentOnly: search.appointmentOnly
+        })
+      }
+
+      return vars
+    }
+    const response = await this.client.request<SearchTrainingsResponse>(query, makeVariables())
+    return {
+      trainings: response.page.edges.map(e => e.node),
+      total: response.page.aggregate.count
+    }
+  }
+
+  async listRecentlyPublishedEvents({ limit }: { limit: number }): Promise<t.Event[]> {
     const query = gql`
       query searchEvents(
         $first: Int
@@ -752,12 +892,15 @@ export class GraphCMS {
       first: limit,
       skip: 0,
       stage: 'PUBLISHED',
-      where:{
-        AND: [{
-          soldOut_not: true
-        }, {
-          createdAt_gt: addDays(new Date(), -2).toISOString()
-        }]
+      where: {
+        AND: [
+          {
+            soldOut_not: true
+          },
+          {
+            createdAt_gt: addDays(new Date(), -2).toISOString()
+          }
+        ]
       },
       orderBy: 'publishedAt_DESC'
     })
@@ -823,12 +966,141 @@ export class GraphCMS {
     const response = await this.client.request<{ companies: t.Company[] }>(query)
     return response.companies
   }
+
+  async listGiveaways() {
+    const query = gql`
+      query ListGiveaways {
+        giveaways {
+          id
+          name
+          key
+          endDate
+          active
+          events {
+            id
+            startDate
+            endDate
+            city
+            state
+            externalLink
+            soldOut
+            slug
+            images {
+              url
+            }
+            training {
+              id
+              slug
+              price
+              displayPrice
+              name
+              tags {
+                id
+                slug
+                name
+              }
+              description {
+                html
+              }
+              thumbnail {
+                url
+              }
+              gallery {
+                url
+              }
+              company {
+                name
+                slug
+                externalLink
+                thumbnail {
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+    const response = await this.client.request<{ giveaways: t.Giveaway[] }>(query)
+    return response.giveaways
+  }
+
+  async findGiveawayById(id: string): Promise<t.Giveaway> {
+    const query = gql`
+      query FindGiveawayById {
+        giveaway(where: {
+          id: "${id}"
+        }) {
+          id
+          name
+          key
+          endDate
+          active
+          events {
+            id
+            startDate
+            endDate
+            city
+            state
+            externalLink
+            soldOut
+            slug
+            images {
+              url
+            }
+            training {
+              id
+              slug
+              price
+              displayPrice
+              name
+              tags {
+                id
+                slug
+                name
+              }
+              description {
+                html
+              }
+              thumbnail {
+                url
+              }
+              gallery {
+                url
+              }
+              company {
+                name
+                slug
+                externalLink
+                thumbnail {
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+    const response = await this.client.request<{ giveaway: t.Giveaway }>(query)
+    return response.giveaway
+  }
 }
 
 type SearchEventsResponse = {
   page: {
     edges: {
       node: t.Event
+    }[]
+    aggregate: {
+      count: number
+    }
+  }
+}
+
+type SearchTrainingsResponse = {
+  page: {
+    edges: {
+      node: t.Training
     }[]
     aggregate: {
       count: number
