@@ -114,7 +114,7 @@ async function triggerNewEventNotificationEmail({ services }: Props<Args, Servic
   await queue.push({
     endpoint: 'email/batchSendNewEventNotification',
     body: {
-      contacts: ray,
+      contacts: [ray],
       events: eventsToSend
     }
   })

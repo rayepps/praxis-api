@@ -7,7 +7,7 @@ import { useCors } from '../../core/hooks/useCors'
 import { useLambda } from '@exobase/lambda'
 import makeSlack, { SlackClient } from '../../core/slack'
 import makeMongo, { MongoClient } from '../../core/mongo'
-import { hashEmail } from '../../core/model'
+import { hashEmail, createId } from '../../core/model'
 import * as mappers from '../../core/view/mappers'
 
 type Source = 'site.partner.form' | 'site.contact.form' | 'site.subscribe.popup'
@@ -31,7 +31,7 @@ async function addContact({ args, services }: Props<Args, Services>): Promise<Re
   const { slack, mongo } = services
   await slack.sendMessage(`New submission from ${source}: ${email}`)
   const contact: t.Contact = {
-    id: `px.contact.${hashEmail(email)}`,
+    id: createId.contact(),
     email,
     phone: null,
     tags: [getSourceTag(source)],
