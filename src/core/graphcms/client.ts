@@ -132,6 +132,7 @@ export class GraphCMS {
           slug: "${slug}"
         }) {
           id
+          createdAt
           startDate
           endDate
           city
@@ -154,6 +155,7 @@ export class GraphCMS {
               name
             }
             description {
+              markdown
               html
             }
             thumbnail {
@@ -195,6 +197,7 @@ export class GraphCMS {
           id: "${id}"
         }) {
           id
+          createdAt
           startDate
           endDate
           city
@@ -218,6 +221,7 @@ export class GraphCMS {
               name
             }
             description {
+              markdown
               html
             }
             thumbnail {
@@ -574,6 +578,7 @@ export class GraphCMS {
           edges {
             node {
               id
+              createdAt
               startDate
               endDate
               city
@@ -597,6 +602,7 @@ export class GraphCMS {
                   name
                 }
                 description {
+                  markdown
                   html
                 }
                 thumbnail {
@@ -734,6 +740,7 @@ export class GraphCMS {
               city
               state
               description {
+                markdown
                 html
               }
               location {
@@ -844,6 +851,7 @@ export class GraphCMS {
           edges {
             node {
               id
+              createdAt
               startDate
               endDate
               city
@@ -866,6 +874,7 @@ export class GraphCMS {
                   name
                 }
                 description {
+                  markdown
                   html
                 }
                 thumbnail {
@@ -1000,6 +1009,7 @@ export class GraphCMS {
                 name
               }
               description {
+                markdown
                 html
               }
               thumbnail {
@@ -1060,6 +1070,7 @@ export class GraphCMS {
                 name
               }
               description {
+                markdown
                 html
               }
               thumbnail {
