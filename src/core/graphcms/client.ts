@@ -77,6 +77,63 @@ export class GraphCMS {
     return response.training
   }
 
+
+  async findTrainingBySlug(slug: string): Promise<t.Training> {
+    const query = gql`
+      query findTrainingBySlug {
+        training(where: {
+          slug: "${slug}"
+        }) {
+          id
+          slug
+          type
+          name
+          directLink
+          externalLink
+          price
+          displayPrice
+          priceUnit
+          city
+          state
+          appointmentOnly
+          location {
+            latitude
+            longitude
+          }
+          description {
+            markdown
+            html
+          }
+          company {
+            id
+            name
+            directLink
+            externalLink
+            thumbnail {
+              id
+              url
+            }
+          }
+          gallery {
+            id
+            url
+          }
+          tags {
+            id
+            name
+            slug
+          }
+          thumbnail {
+            url
+          }
+          hash
+        }
+      }
+    `
+    const response = await this.client.request<{ training: t.Training }>(query)
+    return response.training
+  }
+
   async findTrainingAuthor(id: string): Promise<t.Author> {
     const query = gql`
       query findTrainingAuthor {

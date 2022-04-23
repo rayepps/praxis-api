@@ -68,14 +68,21 @@ export async function withCachedResponse(func: ApiFunction, config: Config, prop
     return await func(props)
   }
   const key = `${config.key}.${hash(flatten(config.argsToIdentity(props.args)))}`
-  const cached = await props.services.cache.get(key)
+  const [err, cached] = await _.try(props.services.cache.get)(key)
+  if (err) {
+    console.error('Cache error on GET. Falling back to function', err)
+    return await func(props)
+  }
   if (cached) {
     console.debug(`Cache hit for key: ${key}`)
     return config.cacheToResponse(cached)
   }
   console.debug(`Cache miss key: ${key}`)
   const response = await func(props)
-  await props.services.cache.set(key, config.responseToCache(response), { ttl: parseTtl(config.ttl) })
+  const [setErr] = await _.try(props.services.cache.set)(key, config.responseToCache(response), { ttl: parseTtl(config.ttl) })
+  if (setErr) {
+    console.error('Cache error on SET. Function result not persisted.', setErr)
+  }
   return response
 }
 
