@@ -13,6 +13,11 @@ export type ContactSupression = {
   campaign: string
 }
 
+export type GeoLocation = {
+  longitude: number
+  latitude: number
+}
+
 export interface Contact {
   id: Id<'contact'>
   email: string

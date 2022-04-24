@@ -77,7 +77,6 @@ export class GraphCMS {
     return response.training
   }
 
-
   async findTrainingBySlug(slug: string): Promise<t.Training> {
     const query = gql`
       query findTrainingBySlug {
@@ -745,7 +744,7 @@ export class GraphCMS {
         const fromDate = parseDate(fromStr, 'dd.MM.yyyy', new Date())
         const toDate = parseDate(toStr, 'dd.MM.yyyy', new Date())
         vars.where.AND.push({
-          startDate_gt: addDays(fromDate, -1).toISOString(),
+          startDate_gt: fromDate.toISOString(),
           startDate_lt: addDays(toDate, 1).toISOString()
         })
       }
@@ -757,6 +756,35 @@ export class GraphCMS {
       events: response.page.edges.map(e => e.node),
       total: response.page.aggregate.count
     }
+  }
+
+  async lookupStateTrainingCount(): Promise<Record<string, number>> {
+    const query = gql`
+      query QueryLocationMappings {
+        locationMappings {
+          id
+          state
+          events {
+            id
+          }
+        }
+      }
+    `
+    const response = await this.client.request<{ locationMappings: { state: string; events: any[] }[] }>(query)
+    const counts = response.locationMappings.map(x => ({ state: x.state, count: x.events.length }))
+    return counts.reduce((acc, item) => {
+      if (acc[item.state]) {
+        return {
+          ...acc,
+          [item.state]: acc[item.state] + item.count
+        }
+      } else {
+        return {
+          ...acc,
+          [item.state]: item.count
+        }
+      }
+    }, {} as Record<string, number>)
   }
 
   async searchTrainings(search: {

@@ -8,6 +8,7 @@ import { useLambda } from '@exobase/lambda'
 import makeGraphCMS, { GraphCMS } from '../../core/graphcms'
 import makeCache, { CacheClient } from '../../core/cache'
 import { useCachedResponse } from '../../core/hooks/useCachedResponse'
+import makeGeoClient, { GeoClient } from '../../core/geo'
 
 interface Args {
   pageSize?: number
@@ -19,11 +20,13 @@ interface Args {
   city?: string
   company?: string
   date?: string | `${string}-${string}`
+  near?: t.GeoLocation
 }
 
 interface Services {
   graphcms: GraphCMS
   cache: CacheClient
+  geo: GeoClient
 }
 
 type Response = Args & {
@@ -32,9 +35,13 @@ type Response = Args & {
 }
 
 async function searchEvents({ args, services }: Props<Args, Services>): Promise<Response> {
-  const { graphcms } = services
+  const { graphcms, geo } = services
+  const location = args.near
+    ? await geo.lookupCoordinates(args.near.latitude, args.near.longitude)
+    : null
   const query = {
     ...args,
+    state: args.state ?? location?.state ?? undefined,
     page: args.page ?? 1,
     pageSize: args.pageSize ?? 25,
     order: args.order ?? 'date:asc'
@@ -58,11 +65,13 @@ export default _.compose(
     state: yup.string(),
     city: yup.string(),
     company: yup.string(),
-    date: yup.string()
+    date: yup.string(),
+    near: yup.mixed()
   })),
   useService<Services>({
     graphcms: makeGraphCMS(),
-    cache: makeCache()
+    cache: makeCache(),
+    geo: makeGeoClient(),
   }),
   useCachedResponse<Args, Response>({
     key: 'px.events.search',
