@@ -12,8 +12,8 @@
 
 export type TrainingType = 'tactical' | 'medical' | 'survival'
 
-export type EventSearchOrder = `${'date' | 'price'}:${'asc' | 'desc'}`
-export type TrainingSearchOrder = `${'price'}:${'asc' | 'desc'}`
+export type EventSearchOrder = `${'date' | 'price' | 'created-at'}:${'asc' | 'desc'}`
+export type TrainingSearchOrder = `${'price' | 'created-at'}:${'asc' | 'desc'}`
 
 export type PriceUnit = 'per_training' | 'per_hour'
 

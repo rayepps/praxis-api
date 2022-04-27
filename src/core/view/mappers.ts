@@ -2,6 +2,20 @@ import * as t from '../types'
 import addDays from 'date-fns/addDays'
 import isAfter from 'date-fns/isAfter'
 
+export class UserView {
+  static toView(model: t.User): t.UserView {
+    return {
+      _view: 'px.user',
+      id: model.id,
+      fullName: model.fullName,
+      email: model.email,
+      phone: model.phone,
+      role: model.role,
+      createdAt: model.createdAt
+    }
+  }
+}
+
 export class ContactView {
   static toView(model: t.Contact): t.ContactView {
     return {
@@ -23,4 +37,10 @@ export class EventView {
       recentlyPublished: isAfter(new Date(model.publishedAt), addDays(new Date(), -2))
     }
   }
+}
+
+export default {
+  UserView,
+  ContactView,
+  EventView
 }

@@ -7,6 +7,7 @@ const get = <T = string>(name: string, defaultValue: T = null, cast: (v: any) =>
 const config = {
   env: get('PRAXIS_ENV'),
   apiKey: get('PRAXIS_API_KEY'),
+  tokenSignatureSecret: get('TOKEN_SIG_SECRET'),
   graphcmsWebhookKey: get('GRAPHCMS_WEBHOOK_KEY'),
   graphcmsApiToken: get('GRAPHCMS_API_TOKEN'),
   graphcmsApiUrl: get('GRAPHCMS_API_URL'),

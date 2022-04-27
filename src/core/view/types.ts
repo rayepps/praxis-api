@@ -1,4 +1,15 @@
 import type { Event } from '../graphcms/types'
+import { UserRole } from '../model/types'
+
+export interface UserView {
+  _view: 'px.user'
+  id: string
+  email: string
+  createdAt: number
+  fullName: string
+  phone: string
+  role: UserRole
+}
 
 export type ContactView = {
   _view: 'px.contact'

@@ -7,3 +7,9 @@ export class Contact {
     return _.shake(document) as t.Contact
   }
 }
+
+export class User {
+  static fromDocument(document: t.UserDocument): t.User {
+    return document as t.User
+  }
+}

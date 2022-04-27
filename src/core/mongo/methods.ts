@@ -2,7 +2,7 @@ import _ from 'radash'
 import * as Mongo from 'mongodb'
 import * as t from '../types'
 
-type Collection = 'contacts'
+type Collection = 'contacts' | 'users'
 
 export const addItem =
   <TDocument, TModel>({

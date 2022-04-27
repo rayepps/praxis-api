@@ -12,3 +12,5 @@ export interface MongoDocument {
 export type ContactDocument = MongoDocument & t.Contact & {
   tag_map: { [tag: string]: true }
 }
+
+export type UserDocument = MongoDocument & t.User

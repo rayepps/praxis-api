@@ -1,5 +1,30 @@
 
-export type Id <model extends string = any> = `px.${model}.${string}`
+//
+//  LEGEND
+//
+//  _ = private, should not be deliverd to client, ever, internal
+//  $ = nosql non-normal duplication of source record, compressed
+//
+//  This convention helps us easily identify internal fields that
+//  should never be exposed to the user -- namely in the mappers.
+//  It also helps identify non-normalized fields that need to be
+//  kept in sync with the source.
+//
+
+export type Model = 'user' | 'contact'
+export type Id <M extends Model> = `px.${M}.${string}`
+
+export type UserRole = 'user' | 'admin' | 'admin-observer'
+
+export interface User {
+  id: Id<'user'>
+  email: string
+  createdAt: number
+  fullName: string
+  phone: string
+  role: UserRole
+  _passwordHash: string
+}
 
 export type ContactTag = 'joined.by.site-subscribe-popup'
   | 'joined.by.site-contact-form'

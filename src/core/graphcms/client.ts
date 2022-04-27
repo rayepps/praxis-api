@@ -668,6 +668,7 @@ export class GraphCMS {
                   url
                 }
                 company {
+                  id
                   name
                   slug
                   directLink
@@ -698,8 +699,12 @@ export class GraphCMS {
       }
 
       if (search.order) {
-        const [priceOrDate, ascOrDesc] = search.order.split(':')
-        const orderField = priceOrDate === 'date' ? 'startDate' : 'trainingPrice'
+        const [field, ascOrDesc] = search.order.split(':')
+        const orderField = (() => {
+          if (field === 'date') return 'startDate'
+          if (field === 'price') return 'trainingPrice'
+          return 'createdAt'
+        })()
         vars.orderBy = `${orderField}_${ascOrDesc.toUpperCase()}`
       }
 

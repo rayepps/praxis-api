@@ -4,13 +4,26 @@ import * as t from '../types'
 import * as mappers from './mappers'
 import { addItem, findItem, findManyItems, updateOne } from './methods'
 
-const mid = (fullId: t.Id) => {
+const mid = (fullId: t.Id<any>) => {
   return new Mongo.ObjectId(fullId.replace(/px\.(.+?)\./, ''))
 }
 
 const createMongoClient = (client: Mongo.MongoClient) => {
   const db = client.connect().then(c => c.db('main'))
   return {
+    
+    //
+    // USERS
+    //
+    findUserByEmail: findItem({
+      db,
+      collection: 'users',
+      toQuery: ({ email }: { email: string }) => ({
+        email
+      }),
+      toModel: mappers.User.fromDocument
+    }),
+
     //
     // CONTACTS
     //
