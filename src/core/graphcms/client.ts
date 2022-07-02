@@ -167,6 +167,60 @@ export class GraphCMS {
     })
     return response.events
   }
+  
+  async listEventsForCompany(companyId: string): Promise<t.Event[]> {
+    const query = gql`
+      query ListEventsForCompany($where: EventWhereInput!) {
+        events(where: $where) {
+          id
+          createdAt
+          updatedAt
+          startDate
+          endDate
+          city
+          state
+          slug
+          directLink
+          externalLink
+          soldOut
+          images {
+            url
+            id
+          }
+          training {
+            id
+          }
+          location {
+            latitude
+            longitude
+          }
+          hash
+          updatedBy {
+            id
+            name
+          }
+          createdBy {
+            id
+            name
+          }
+        }
+      }
+    `
+    const response = await this.client.request<{ events: t.Event[] }>(query, {
+      where: {
+        AND: [{
+          training: {
+            company: {
+              id: companyId
+            }
+          }
+        }, {
+          startDate_gt: new Date().toISOString()
+        }]
+      }
+    })
+    return response.events
+  }
 
   async unpublishEvent(event: t.Event): Promise<void> {
     const mutation = gql`
@@ -514,6 +568,75 @@ export class GraphCMS {
     })
   }
 
+  async exportCompany(companyId: string): Promise<t.Company[]> {
+    const query = gql`
+      query ExportCompanyById {
+        company(where: {
+          id: "${companyId}"
+        }) {
+          id
+          slug
+          name
+          description {
+            markdown
+          }
+          directLink
+          externalLink
+          thumbnail {
+            id
+            url
+          }
+          trainings {
+            id
+            slug
+            type
+            name
+            directLink
+            externalLink
+            price
+            displayPrice
+            priceUnit
+            appointmentOnly
+            city
+            state
+            description {
+              markdown
+              html
+            }
+            location {
+              latitude
+              longitude
+            }
+            company {
+              id
+              name
+              directLink
+              externalLink
+              thumbnail {
+                id
+                url
+              }
+            }
+            gallery {
+              id
+              url
+            }
+            tags {
+              id
+              name
+              slug
+            }
+            thumbnail {
+              url
+            }
+          }
+        }
+      }
+    `
+    const response = await this.client.request<{ companies: t.Company[] }>(query)
+    return response.companies
+  }
+
   async listCompanies(): Promise<t.Company[]> {
     const query = gql`
       query listCompanies {
@@ -521,8 +644,21 @@ export class GraphCMS {
           id
           name
           slug
+          directLink
+          externalLink
           thumbnail {
+            id
             url
+          }
+          createdAt
+          updatedAt
+          updatedBy {
+            id
+            name
+          }
+          createdBy {
+            id
+            name
           }
         }
       }
@@ -1039,6 +1175,54 @@ export class GraphCMS {
           id
           enrichedAt
           enrichmentVersion
+        }
+      }
+    `
+    const response = await this.client.request<{ trainings: t.Training[] }>(query)
+    return response.trainings
+  }
+  
+  async listTrainingsForCompany(companyId: string) {
+    const query = gql`
+      query listTrainingsForCompany {
+        trainings(first: 200, where: {
+          company: {
+            id: "${companyId}"
+          }
+        }) {
+          id
+          slug
+          price
+          displayPrice
+          name
+          tags {
+            id
+            slug
+            name
+          }
+          description {
+            markdown
+            html
+          }
+          thumbnail {
+            url
+          }
+          gallery {
+            url
+          }
+          company {
+            id
+          }
+          createdAt
+          updatedAt
+          updatedBy {
+            id
+            name
+          }
+          createdBy {
+            id
+            name
+          }
         }
       }
     `

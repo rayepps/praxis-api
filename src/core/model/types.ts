@@ -11,10 +11,10 @@
 //  kept in sync with the source.
 //
 
-export type Model = 'user' | 'contact'
+export type Model = 'user' | 'contact' | 'company' | 'event' | 'training'
 export type Id <M extends Model> = `px.${M}.${string}`
-
-export type UserRole = 'user' | 'admin' | 'admin-observer'
+export type UserRole = 'user' | 'admin' | 'admin-observer' | 'super-admin'
+type TrainingType = 'tactical' | 'medical' | 'survival'
 
 export interface User {
   id: Id<'user'>
@@ -24,6 +24,7 @@ export interface User {
   phone: string
   role: UserRole
   _passwordHash: string
+  _legacyId?: string
 }
 
 export type ContactTag = 'joined.by.site-subscribe-popup'
@@ -38,9 +39,15 @@ export type ContactSupression = {
   campaign: string
 }
 
-export type GeoLocation = {
+export type Coordinates = {
   longitude: number
   latitude: number
+}
+
+export type GeoLocation = Coordinates & {
+  city: string
+  state: string
+  zip: string
 }
 
 export interface Contact {
@@ -90,4 +97,75 @@ export interface LinkRef {
    * A descriptive title for this link
    */
   title: string
+}
+
+export interface AssetModel {
+  id: string
+  url: string
+}
+
+export interface TagModel {
+  label: string
+  slug: string
+}
+
+export interface CompanyModel {
+  id: Id<'company'>
+  name: string
+  slug: string
+  description: string
+  directLink: string
+  trackedLink: string
+  images: AssetModel[]
+  trainings: TrainingModel[]
+  _legacyId: string | null
+  published: boolean
+  updatedAt: number
+  createdAt: number
+  updater: Pick<User, 'fullName' | 'id'>
+  creator: Pick<User, 'fullName' | 'id'>
+}
+
+export interface TrainingModel {
+  id: Id<'training'>
+  name: string
+  type: TrainingType
+  schedule: 'event' | 'appointment'
+  slug: string
+  directLink: string
+  trackedLink: string
+  priceUnit: 'course' | 'hour'
+  price: number
+  displayPrice: string
+  tags: TagModel[]
+  description: string
+  images: AssetModel[]
+  location: null | GeoLocation
+  events: EventModel[]
+  company: Omit<CompanyModel, 'trainings'>
+  _legacyId: string | null
+  published: boolean
+  updatedAt: number
+  createdAt: number
+  updater: Pick<User, 'fullName' | 'id'>
+  creator: Pick<User, 'fullName' | 'id'>
+}
+
+export interface EventModel {
+  id: Id<'event'>
+  slug: string
+  training: Omit<TrainingModel, 'events'>
+  soldOut: boolean
+  start: number
+  end: number
+  directLink: string
+  trackedLink: string
+  images: AssetModel[]
+  location: null | GeoLocation
+  published: boolean
+  _legacyId: string | null
+  updatedAt: number
+  createdAt: number
+  updater: Pick<User, 'fullName' | 'id'>
+  creator: Pick<User, 'fullName' | 'id'>
 }

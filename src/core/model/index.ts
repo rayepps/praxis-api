@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { Id } from './types'
+import { Id, Model } from './types'
 
 export const slugger = (...parts: string[]) => {
   return parts
@@ -15,9 +15,9 @@ export const hashEmail = (email: string) => {
   return crypto.createHash('md5').update(`px.email.${email}`).digest('hex')
 }
 
-const _id = (model: string): Id => {
+const _id = <TModel extends Model> (model: TModel): Id<TModel> => {
   const rand = crypto.randomBytes(12).toString('hex')
-  return `px.${model}.${rand}`
+  return `px.${model}.${rand}` as Id<TModel>
 }
 
 export const createId = {
@@ -29,5 +29,6 @@ export const createId = {
 export default {
   slugger,
   hashEmail,
-  createId
+  createId,
+  id: _id
 }

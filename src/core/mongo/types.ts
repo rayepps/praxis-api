@@ -14,3 +14,15 @@ export type ContactDocument = MongoDocument & t.Contact & {
 }
 
 export type UserDocument = MongoDocument & t.User
+
+export type CompanyDocument = MongoDocument & Omit<t.CompanyModel, 'trainings'>
+
+export type TrainingDocument = MongoDocument & Omit<t.TrainingModel, 'events'> & {
+  _companyId: ObjectId
+}
+
+export type EventDocument = MongoDocument & t.EventModel & {
+  _trainingId: ObjectId
+  _companyId: ObjectId
+  _tags: Record<string, true> /** <tag.slug, true> **/
+}

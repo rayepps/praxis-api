@@ -26,7 +26,10 @@ const config = {
   autopilotApiKey: get('AUTOPILOT_API_KEY'),
   zeploToken: get('ZEPLO_TOKEN'),
   postmarkToken: get('POSTMARK_TOKEN'),
-  mongoUri: get('MONGO_URI')
+  mongoUri: get('MONGO_URI'),
+  imageKitPublicKey: get('IMAGE_KIT_PUBLIC_KEY'),
+  imageKitPrivateKey: get('IMAGE_KIT_PRIVATE_KEY'),
+  imageKitUrlEndpoint: get('IMAGE_KIT_URL_ENDPOINT'),
 }
 
 export type Config = typeof config

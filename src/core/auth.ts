@@ -12,14 +12,23 @@ export const permissions = {
       self: (userId: t.Id<'user'>) => createPermission('user', 'update', userId),
       any: () => createPermission('user', 'update', '*')
     }
+  },
+  event: {
+    create: {
+      any: () => createPermission('event', 'create', '*'),
+      owned: (companyId: t.Id<'company'>) => createPermission('event', 'create', companyId),
+    }
   }
 }
 
 export const permissionsForUser = (user: t.User) => {
   switch (user.role) {
-    case 'admin':
+    case 'super-admin':
       return [
         permissions.user.create(),
+      ]
+    case 'admin':
+      return [
         permissions.user.read.any(),
         permissions.user.read.self(user.id),
         permissions.user.update.any(),
